@@ -107,6 +107,13 @@ do not implement it. Comment the exact conflict, add `needs-human-review`,
 remove `loop-changes-requested`, and end the pass. This prevents the next loop
 iteration from retrying a decision only a human can make.
 
+Before escalating, check whether that decision has already been made. Read the
+issue for a Decision section and read the verdict in full. A verdict that
+records an answer and then lists must-fix items is not a decision still
+pending — the answer stands and the items are ordinary repair work. Escalating
+an answered question sends it back to a human who has already spent the
+thought, and it stalls the PR for a full human round trip.
+
 ## 3. Pick
 
 Using the Linear connector, list issues on the resolved team that meet every
@@ -173,7 +180,7 @@ Decide which of three this change is:
 
 | The change is | Do this |
 |---|---|
-| User-visible and live once merged | Write the entry into the declared file, in the same commit as the work |
+| User-visible and live once merged | Write the entry into the declared path, in the same commit as the work — into the file it names, or, when it names a directory of one-file-per-entry fragments, as a NEW file following that directory's README/naming scheme (never by editing an existing entry) |
 | Not user-visible | Put `Changelog: none — <reason>` on its own line in the PR body |
 | User-visible but behind a flag | Put `Changelog: deferred — <gate>` on its own line in the PR body |
 
@@ -250,3 +257,29 @@ a human answers and removes that label.
 Never use "this is unclear" as the question. State the exact decision, the
 available options, and which acceptance criterion it affects. End the pass so
 the next iteration can pick different work.
+
+## 10. When the answer comes back
+
+An answer is not durable until it is in the issue. It arrives in chat, in a PR
+comment, or in a Linear comment — none of which the next agent reads before
+picking up the work, and all of which leave the issue still stating the open
+question, or still carrying the criterion the answer overrode. Two agents then
+read the same issue and get opposite instructions.
+
+So before building on an answer, and before writing a PR that claims one:
+
+1. **Write it into the issue.** Replace the "what needs deciding" text with a
+   dated Decision section: what was asked, what was chosen, and why the other
+   options were not. This is the record; the conversation is not.
+2. **Amend any criterion the answer overrode.** If the decision means an
+   acceptance criterion now bends, edit that criterion to say so. An issue must
+   never carry two requirements that contradict, because the next agent to read
+   it cannot tell which one won.
+3. **Then** drop `blocked` / `needs-human-review` and build.
+4. **Cite the issue, not the conversation.** A PR body that says "you picked B"
+   cannot be checked by anyone who was not in that conversation — including the
+   reviewer. Point at the issue's Decision section instead.
+
+Never re-open a question the issue already answers. If the recorded decision
+looks wrong, raise that as a new question that names it — do not present it as
+though it had never been made.

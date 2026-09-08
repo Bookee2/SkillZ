@@ -188,6 +188,25 @@ must resolve the reason, change the issue or repository configuration as
 needed, and remove `needs-human-review` before the reviewer reviews that unchanged
 commit again.
 
+### Writing up a resolved escalation
+
+When a human has answered an escalation and you are posting the verdict that
+records it, say so unambiguously, and do not file the remaining work under a
+heading that reads like a precondition. "Still to fix before merge" placed
+directly under a decision reads as *the decision is conditional on these*, and
+a builder acting on that will send the question back to the human who has
+already answered it.
+
+Say plainly that the escalation is resolved and the answer stands, then list
+what is left as ordinary must-fix items under their own heading. If the
+decision is not yet written into the issue, say that too and name it as the
+fix — the issue is the record, and a decision living only in a PR comment is
+one the next agent will not find.
+
+Before escalating anything, check the issue for a Decision section and read the
+PR's own history: a question the issue already answers is not an open question,
+and re-raising it costs a human round trip for nothing.
+
 ## 5. Hard limits
 
 - Never merge or enable auto-merge.

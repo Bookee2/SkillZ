@@ -51,14 +51,16 @@ neither does.
 
    ```json
    { "team": "TrailGoat", "project": "optional", "site": "https://trailgoat.run",
-     "changelog": "static/changelog.html" }
+     "changelog": "changelog/" }
    ```
 
    `team` is required — a Linear team name or key. Resolve it through the Linear
    connector to get the team's real key. `project`, when set, is the default
    project for issues this repo files. `site`, when set, is what a merge to the
    default branch deploys. `changelog`, when set, is the repo-relative path to
-   the user-facing changelog that step 4's gate enforces.
+   the user-facing changelog that step 4's gate enforces — a single file
+   (`CHANGELOG.md`) or a directory of one-file-per-entry fragments
+   (`changelog/`, TrailGoat's shape since TG-266).
 3. **No binding** — never guess a team and never search Linear for something
    plausible. `kb-spec`, with the user present, may propose the closest team by
    repo slug, confirm it, and write the file. The three unattended skills report
@@ -191,8 +193,10 @@ gh pr diff NUMBER --name-only        # does it touch the declared path?
 
 Merge only when **one** of these holds:
 
-1. **The diff touches the declared changelog file.** Nothing further to check —
-   the entry's wording is `kb-review`'s business, not this skill's.
+1. **The diff touches the declared changelog path.** When the binding names a
+   directory, any file under it counts (`changelog/2026-08-31-01-foo.html`
+   touches `changelog/`). Nothing further to check — the entry's wording is
+   `kb-review`'s business, not this skill's.
 2. **The body carries an explicit `Changelog:` declaration** on its own line,
    in one of exactly two forms:
 

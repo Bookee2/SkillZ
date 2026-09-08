@@ -36,7 +36,7 @@ The repo declares its own Linear team in `<repo root>/.claude/linear.json`:
   "team": "TrailGoat",
   "project": "Race catalog",
   "site": "https://trailgoat.run",
-  "changelog": "static/changelog.html"
+  "changelog": "changelog/"
 }
 ```
 
@@ -45,7 +45,7 @@ The repo declares its own Linear team in `<repo root>/.claude/linear.json`:
 | `team` | yes | Linear team name or key. The pass is bound to this team. |
 | `project` | no | Default Linear project for issues this repo files. Omit when the team has no projects — the team alone is the boundary. |
 | `site` | no | What a merge to the default branch deploys. `kb-merge` names it before merging; absent means assume a merge may reach production. |
-| `changelog` | no | Repo-relative path to the **user-facing** changelog a merge must keep current — `static/changelog.html`, `CHANGELOG.md`, whatever the repo publishes. When set, `kb-merge` will not merge a PR that neither touches it nor declares why it doesn't. Omit only when the repo publishes no changelog at all. |
+| `changelog` | no | Repo-relative path to the **user-facing** changelog a merge must keep current — a single file (`CHANGELOG.md`) or a directory of one-file-per-entry fragments (`changelog/`, TrailGoat's shape since TG-266; touching any file under it counts). When set, `kb-merge` will not merge a PR that neither touches it nor declares why it doesn't. Omit only when the repo publishes no changelog at all. |
 
 Resolve the team through the Linear connector to get its real **key** (`TG`,
 `PS`, …). That key — never a literal from this file or a skill — is what
