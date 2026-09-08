@@ -1,0 +1,286 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>TrailGoat component sheet</title>
+<meta name="theme-color" content="#1a1b26" data-tg-theme>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Red+Hat+Display:wght@700;800&family=Red+Hat+Text:wght@400;500;600;700&family=Red+Hat+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="tokyo.css">
+<script src="icons.js"></script>
+<script src="tokyo-shell.js"></script>
+<style>
+    /* Page-local: only what this sheet needs that the library does not carry. */
+    .sheet-sec { margin-top: 44px; }
+    .sheet-sec > h2 { margin-bottom: 14px; }
+    .demo-row { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+    .demo-note { color: var(--muted); font-size: 0.85rem; margin-top: 8px; }
+    .swatches { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 8px; }
+    .swatch { border: 1px solid var(--line); border-radius: var(--r-card); overflow: hidden; background: var(--bg-2); }
+    .swatch i { display: block; height: 44px; }
+    .swatch b { display: block; padding: 6px 9px 2px; font: 500 var(--mono-cap) var(--mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink); }
+    .swatch small { display: block; padding: 0 9px 8px; font: 400 0.72rem var(--mono); color: var(--muted); }
+    .type-row { display: grid; grid-template-columns: 140px 1fr; gap: 14px; align-items: baseline; padding: 10px 0; border-bottom: 1px solid var(--line); }
+    .type-row .label-caps { color: var(--muted); }
+    @media (max-width: 600px) { .type-row { grid-template-columns: 1fr; gap: 4px; } }
+    .pos { position: relative; display: inline-block; }
+</style>
+</head>
+<body>
+<div class="backdrop" aria-hidden="true"><div class="aurora"></div></div>
+
+<header class="topbar" id="site-topbar">
+    <a class="wordmark" href="#top">Trail<span class="grad">Goat</span></a>
+    <button type="button" class="nav-burger" aria-label="Menu" aria-expanded="false" aria-controls="site-menu">
+        <span class="nav-burger-box"><span></span><span></span><span></span></span>
+    </button>
+    <div class="topbar-tools" id="site-menu">
+        <nav class="nav" aria-label="Sections">
+            <a href="#foundations" aria-current="page">Foundations</a>
+            <a href="#chrome">Chrome</a>
+            <a href="#content">Content</a>
+            <a href="#data">Data</a>
+        </nav>
+        <div class="unit-toggle" role="group" aria-label="Units">
+            <button type="button" class="active" aria-pressed="true">mi</button>
+            <button type="button" aria-pressed="false">km</button>
+        </div>
+        <div class="pos">
+            <button type="button" class="btn-quiet btn-icon" aria-label="Settings" aria-haspopup="menu" aria-expanded="false" data-menu="#settings-menu"><i data-ico="sliders" data-cls="ico"></i></button>
+            <div class="menu" id="settings-menu" hidden style="min-width:260px; padding:12px">
+                <div class="menu-head">Theme</div>
+                <div class="theme-grid" role="group" aria-label="Theme" data-theme-grid></div>
+                <div class="menu-head">Account</div>
+                <a class="menu-row" href="#">My dashboard</a>
+                <button type="button" class="menu-row">Sign out</button>
+            </div>
+        </div>
+    </div>
+</header>
+
+<main class="wrap" id="top">
+    <section class="hero">
+        <span class="eyebrow"><span class="dot"></span>Component sheet</span>
+        <h1>Every piece of the <span class="grad">TrailGoat</span> look, on one page.</h1>
+        <p class="hero-sub">Built from <code>tokyo.css</code> alone. Switch the palette from the gear to see Forest and First Light; resize to 390px to see the phone shell. One solid accent button per view — this is it.</p>
+        <div class="hero-cta">
+            <a class="btn btn-primary" href="#content">Plan a run <span class="arrow">→</span></a>
+            <a class="btn btn-ghost" href="#data">See the data</a>
+        </div>
+    </section>
+
+    <section class="sheet-sec" id="foundations">
+        <div class="kicker">01 · Foundations</div>
+        <h2>Palette, type, ladder</h2>
+        <div class="card-grid" style="margin-top:18px">
+            <div class="panel">
+                <div class="panel-head-row"><div><div class="panel-title">Ground &amp; ink</div><p class="panel-sub">Four steps of ground, four of ink, one accent.</p></div></div>
+                <div class="swatches">
+                    <div class="swatch"><i style="background:var(--bg-well)"></i><b>--bg-well</b><small>inset</small></div>
+                    <div class="swatch"><i style="background:var(--bg-0)"></i><b>--bg-0</b><small>page</small></div>
+                    <div class="swatch"><i style="background:var(--bg-1)"></i><b>--bg-1</b><small>panel</small></div>
+                    <div class="swatch"><i style="background:var(--bg-2)"></i><b>--bg-2</b><small>raised</small></div>
+                    <div class="swatch"><i style="background:var(--ink)"></i><b>--ink</b><small>text</small></div>
+                    <div class="swatch"><i style="background:var(--muted)"></i><b>--muted</b><small>secondary</small></div>
+                    <div class="swatch"><i style="background:var(--accent)"></i><b>--accent</b><small>on duty</small></div>
+                    <div class="swatch"><i style="background:var(--gold)"></i><b>--gold</b><small>brand / coach</small></div>
+                </div>
+            </div>
+            <div class="panel">
+                <div class="panel-head-row"><div><div class="panel-title">Feature palette</div><p class="panel-sub">Data and iconography only. Never a button.</p></div></div>
+                <div class="swatches">
+                    <div class="swatch"><i style="background:var(--c-fuel)"></i><b>fuel</b><small>--c-fuel</small></div>
+                    <div class="swatch"><i style="background:var(--c-pace)"></i><b>pace</b><small>--c-pace</small></div>
+                    <div class="swatch"><i style="background:var(--c-crew)"></i><b>crew</b><small>--c-crew</small></div>
+                    <div class="swatch"><i style="background:var(--c-course)"></i><b>course</b><small>--c-course</small></div>
+                    <div class="swatch"><i style="background:var(--c-gear)"></i><b>gear</b><small>--c-gear</small></div>
+                    <div class="swatch"><i style="background:var(--c-weather)"></i><b>weather</b><small>--c-weather</small></div>
+                    <div class="swatch"><i style="background:var(--c-climb)"></i><b>climb</b><small>--c-climb</small></div>
+                    <div class="swatch"><i style="background:var(--c-aid)"></i><b>aid</b><small>--c-aid</small></div>
+                </div>
+            </div>
+        </div>
+        <div class="panel" style="margin-top:18px">
+            <div class="panel-title">Type</div>
+            <div class="type-row"><span class="label-caps">Display 800</span><span style="font: 800 2rem/1.05 var(--display); letter-spacing:-0.02em">Leadville Trail 100</span></div>
+            <div class="type-row"><span class="label-caps">Display 700</span><span style="font: 700 1.15rem var(--display)">Panel title</span></div>
+            <div class="type-row"><span class="label-caps">Body 400</span><span>Fifty-mile splits, a crew that knows where to be, and a fuel plan that survives mile 70.</span></div>
+            <div class="type-row"><span class="label-caps">Chrome 600</span><span style="font-weight:600; font-size:0.92rem">Open Run Planner</span></div>
+            <div class="type-row"><span class="label-caps">Label</span><span class="data-label" style="color:var(--accent)">Aid stations · Night · Cutoffs</span></div>
+            <div class="type-row"><span class="label-caps">Figure</span><span class="data" style="font-size:1.4rem; font-weight:700">12,000<span class="u"> ft</span> · 9:42<span class="u"> /mi</span> · 26<span class="u"> h</span></span></div>
+            <div class="type-row"><span class="label-caps">Code</span><span>Bump <code>app/assets.py</code> when <code>tokens.css</code> changes.</span></div>
+        </div>
+    </section>
+
+    <section class="sheet-sec" id="chrome">
+        <div class="kicker">02 · Chrome</div>
+        <h2>Buttons, chips, controls</h2>
+        <div class="panel" style="margin-top:18px">
+            <div class="panel-title">Buttons</div>
+            <p class="panel-sub">One solid accent per view (it is in the hero). Everything below is the neutral ladder.</p>
+            <div class="demo-row" style="margin-top:14px">
+                <button type="button" class="export-btn"><i data-ico="download"></i>Export PDF</button>
+                <button type="button" class="export-btn tonal"><i data-ico="map"></i>Open map</button>
+                <button type="button" class="export-btn gold">Request it</button>
+                <button type="button" class="export-btn" disabled>Disabled</button>
+                <button type="button" class="btn-quiet">Sign in</button>
+                <button type="button" class="btn-quiet btn-icon" aria-label="Search"><i data-ico="search"></i></button>
+                <button type="button" class="link-action">Copy link</button>
+                <button type="button" class="btn-danger">Delete plan</button>
+                <button type="button" class="btn-danger armed">Really delete</button>
+                <button type="button" class="export-btn sm" data-toast="Plan saved to your account." data-toast-accent="var(--c-crew)">Show a toast</button>
+                <button type="button" class="export-btn sm" data-modal="#demo-modal">Open a dialog</button>
+            </div>
+        </div>
+        <div class="card-grid" style="margin-top:18px">
+            <div class="panel">
+                <div class="panel-title">Chips &amp; pills</div>
+                <div class="demo-row" style="margin-top:14px">
+                    <span class="section-chip">Fueling</span>
+                    <span class="section-chip tg-here" aria-current="true">Pacing</span>
+                    <span class="section-chip">Crew</span>
+                    <span class="pill">offline</span>
+                    <span class="pill on">saved</span>
+                    <span class="pill gold">beta</span>
+                    <span class="pill hue" style="--hue:var(--c-climb)">cutoff missed</span>
+                    <span class="kind">race</span>
+                    <span class="num-tile" style="--hue:var(--c-course)">1</span>
+                    <button type="button" class="tg-info" aria-label="What is this?">i</button>
+                </div>
+                <p class="demo-note">The gradient ring (<code>.tg-here</code>) appears on exactly one element per view.</p>
+            </div>
+            <div class="panel">
+                <div class="panel-title">Segmented &amp; toggles</div>
+                <div class="demo-row" style="margin-top:14px">
+                    <div class="unit-toggle" role="group"><button type="button" class="active" aria-pressed="true">°F</button><button type="button" aria-pressed="false">°C</button></div>
+                    <div class="segmented" role="group"><button type="button" class="active" aria-pressed="true">Table</button><button type="button" aria-pressed="false">Cards</button><button type="button" aria-pressed="false">Chart</button></div>
+                </div>
+                <div class="tg-elev-toggles" style="margin-top:14px">
+                    <button type="button" class="tg-tog on" style="--tg:var(--c-course)"><span class="tg-dot"></span>Aid stations</button>
+                    <button type="button" class="tg-tog" style="--tg:var(--c-fuel)"><span class="tg-dot"></span>Climbs</button>
+                    <button type="button" class="tg-tog on" style="--tg:var(--c-gear)"><span class="tg-dot"></span>Night</button>
+                    <button type="button" class="tg-tog" style="--tg:var(--gold)"><span class="tg-dot"></span>Altitude</button>
+                </div>
+                <div class="meter-row" style="margin-top:16px"><div class="meter"><i style="width:62%"></i></div><span class="meter-val">62% · 14 MB</span></div>
+            </div>
+        </div>
+    </section>
+
+    <section class="sheet-sec" id="content">
+        <div class="kicker">03 · Content</div>
+        <h2>Cards, sections, forms</h2>
+        <div class="tools" style="margin-top:18px">
+            <a class="tool" href="#" style="--card-acc:var(--c-pace)"><div class="tool-emoji"><i data-ico="flag"></i></div><h3><span class="num-tile" style="--hue:var(--c-pace)">1</span>Run Planner</h3><p>Splits, aid ETAs and night hours from the course file.</p><span class="go">Open Planner <span class="arrow">→</span></span></a>
+            <a class="tool" href="#" style="--card-acc:var(--c-fuel)"><div class="tool-emoji"><i data-ico="droplet"></i></div><h3><span class="num-tile" style="--hue:var(--c-fuel)">2</span>Fueling</h3><p>Carbs, fluid and sodium per hour, built into a pack.</p><span class="go">Open Fueling <span class="arrow">→</span></span></a>
+            <a class="tool" href="#" style="--card-acc:var(--c-crew)"><div class="tool-emoji"><i data-ico="crew"></i></div><h3><span class="num-tile" style="--hue:var(--c-crew)">3</span>Crew sheet</h3><p>One link your crew opens at every aid station.</p><span class="go">Open Crew <span class="arrow">→</span></span></a>
+        </div>
+
+        <details class="rd-section panel" open style="--acc:var(--c-aid); margin-top:18px">
+            <summary><span class="rd-sec-ico"><i data-ico="pin"></i></span>Aid stations <span class="rd-sec-sub">7 stops · 3 crew-access</span></summary>
+            <p class="rd-note">A collapsible section card. The summary band carries the section's hue; the table below becomes cards on a phone.</p>
+            <div class="plan-scroll">
+            <table class="plan-table cards">
+                <thead><tr><th>Aid station</th><th>Mile</th><th>Arrive</th><th>Elapsed</th><th>Gain</th><th>Cutoff</th></tr></thead>
+                <tbody>
+                    <tr><td><span class="aid-badge" style="background:var(--c-course)">A</span> May Queen</td><td class="cell-key">13.5</td><td class="cell-key">06:22</td><td class="cell-detail" data-label="elapsed">2:22</td><td class="cell-detail t-up" data-label="gain">+1,120</td><td class="plan-none">—</td></tr>
+                    <tr><td><span class="aid-badge" style="background:var(--gold)">A</span> Outward Bound</td><td class="cell-key">23.5</td><td class="cell-key">08:40</td><td class="cell-detail" data-label="elapsed">4:40</td><td class="cell-detail t-up" data-label="gain">+1,980</td><td class="cell-detail t-pace" data-label="cutoff">10:00</td></tr>
+                    <tr><td><span class="aid-badge" style="background:var(--c-gear)">A</span> Twin Lakes</td><td class="cell-key">37.9</td><td class="cell-key">12:05</td><td class="cell-detail" data-label="elapsed">8:05</td><td class="cell-detail t-down" data-label="gain">−1,460</td><td class="cell-detail t-pace" data-label="cutoff">14:00</td></tr>
+                    <tr><td><span class="aid-badge" style="background:var(--c-fuel)">A</span> Hope Pass</td><td class="cell-key">43.5</td><td class="cell-key">14:48</td><td class="cell-detail" data-label="elapsed">10:48</td><td class="cell-detail t-up grade-hard" data-label="gain">+3,240</td><td class="plan-none">—</td></tr>
+                </tbody>
+            </table>
+            </div>
+        </details>
+
+        <div class="card-grid-2" style="margin-top:18px">
+            <div class="panel">
+                <div class="panel-title">Form fields</div>
+                <div class="field-grid" style="margin-top:14px">
+                    <label class="field"><span class="field-label">Goal time <em>hh:mm</em></span><input type="text" value="26:00" inputmode="numeric"></label>
+                    <label class="field"><span class="field-label">Start</span><input type="datetime-local" value="2026-08-15T04:00"></label>
+                    <label class="field"><span class="field-label">Terrain</span><select><option>Mountain</option><option>Rolling</option><option>Flat</option></select></label>
+                </div>
+                <label class="field" style="margin-top:14px"><span class="field-label">Night fade <span class="slider-hint">+8%</span></span><input type="range" class="slider" min="0" max="20" value="8"></label>
+                <p class="help">Estimated finish <strong>25:48</strong> · leaves 12 min under the cutoff</p>
+                <label class="check-row"><input type="checkbox" checked> Remember on this device</label>
+                <details class="advanced"><summary>Advanced</summary><div class="dropzone" style="margin-top:10px">Drop a GPX here, or click to choose</div></details>
+            </div>
+            <div class="stack">
+                <div class="stats">
+                    <div class="stat hue" style="--hue:var(--c-pace)"><div class="stat-label">Distance</div><div class="stat-val">100.2<span class="u">mi</span></div><div class="stat-sub">out and back</div></div>
+                    <div class="stat hue" style="--hue:var(--c-fuel)"><div class="stat-label">Gain</div><div class="stat-val">15,600<span class="u">ft</span></div><div class="stat-sub">Hope Pass twice</div></div>
+                    <div class="stat hue" style="--hue:var(--gold)"><div class="stat-label">High point</div><div class="stat-val">12,600<span class="u">ft</span></div><div class="stat-sub">~63% O₂</div></div>
+                    <div class="stat"><div class="stat-label">Night</div><div class="stat-val">9<span class="u">h</span> 40<span class="u">m</span></div><div class="stat-sub">20:14 → 05:54</div></div>
+                </div>
+                <div class="metric-grid">
+                    <div class="metric" style="--stat-acc:var(--teal)"><div class="metric-label">Fluid / hr</div><div class="metric-num">620<span class="metric-unit">ml</span></div></div>
+                    <div class="metric" style="--stat-acc:var(--gold)"><div class="metric-label">Carbs / hr</div><div class="metric-num">72<span class="metric-unit">g</span></div></div>
+                </div>
+                <div class="callout"><b>Cutoff is tight at Twin Lakes.</b> Your plan arrives 12 minutes before it closes. Consider a 3-minute dwell.</div>
+                <div class="callout warn"><b>Heat index above 90°F</b> from 11:00 to 15:00 on the return.</div>
+                <div class="notice"><i data-ico="download"></i><span class="notice-txt">Add TrailGoat to your home screen for the offline planner.</span><button type="button" class="export-btn sm">Install</button><button type="button" class="btn-x" aria-label="Dismiss">×</button></div>
+            </div>
+        </div>
+
+        <ul class="list-cards" style="margin-top:18px">
+            <li><a class="list-card" href="#" style="--acc:var(--c-course)"><span class="name">Western States 100</span><small>Olympic Valley, CA · 100.2 mi · 18,000 ft</small></a></li>
+            <li><a class="list-card" href="#" style="--acc:var(--c-climb)"><span class="name">Hardrock 100</span><small>Silverton, CO · 102.5 mi · 33,000 ft</small></a></li>
+            <li><a class="list-card" href="#" style="--acc:var(--gold)"><span class="name">UTMB</span><small>Chamonix, FR · 171 km · 10,000 m</small></a></li>
+        </ul>
+
+        <div class="card-grid-2" style="margin-top:18px">
+            <div class="empty"><b>No plans yet</b>Open a course and your plans will collect here.</div>
+            <div class="card"><div class="skel live" style="width:60%"></div><div class="skel live" style="width:40%; margin-top:10px"></div><div class="skel live" style="width:82%; margin-top:10px"></div></div>
+        </div>
+    </section>
+
+    <section class="sheet-sec" id="data">
+        <div class="kicker">04 · Data</div>
+        <h2>Sparklines, meters, chat</h2>
+        <div class="card-grid" style="margin-top:18px">
+            <div class="panel"><div class="panel-title">Sparkline</div><p class="panel-sub">Inline SVG, hue fill at 18%.</p>
+                <svg class="spark" viewBox="0 0 200 58" preserveAspectRatio="none" style="--hue:var(--c-course); margin-top:10px"><path class="spark-fill" d="M0 50 L20 40 L40 44 L60 26 L80 30 L100 12 L120 20 L140 8 L160 24 L180 18 L200 30 L200 58 L0 58 Z"/><polyline class="spark-line" points="0,50 20,40 40,44 60,26 80,30 100,12 120,20 140,8 160,24 180,18 200,30"/></svg>
+                <div class="cs-mix"><span class="sfx-trail" style="flex:0 0 62%"></span><span class="sfx-gravel" style="flex:0 0 24%"></span><span class="sfx-paved" style="flex:0 0 9%"></span><span class="sfx-unknown" style="flex:1"></span></div>
+            </div>
+            <div class="panel"><div class="panel-title">Week bars</div><p class="panel-sub">Flat fills in the section hue.</p>
+                <div class="bars" style="--hue:var(--c-pace); margin-top:10px"><i style="height:30%"></i><i style="height:55%"></i><i style="height:40%"></i><i style="height:80%"></i><i style="height:20%"></i><i style="height:95%"></i><i style="height:60%"></i></div>
+            </div>
+            <div class="panel"><div class="panel-title">Coach</div>
+                <div class="coach-log" style="margin-top:12px">
+                    <div class="coach-msg user">How much should I slow down for the night section?</div>
+                    <div class="coach-msg assistant">Plan on 8–12% over your daytime pace on technical trail. Your Hope Pass descent lands at 21:40, so the fade starts there.</div>
+                </div>
+            </div>
+        </div>
+        <div class="group-head">Group header with a hairline</div>
+        <ul class="checks"><li><b>Tabular figures</b> line up digit for digit.</li><li><b>Units</b> ride with the number, tracked out in caps.</li><li><b>One accent</b> marks the primary verb and nothing else.</li></ul>
+    </section>
+
+    <div class="cta-band"><h2>Build it in the same voice.</h2><p>Every class on this page is in <code>tokyo.css</code>. Copy the structure, keep the tokens.</p><a class="export-btn" href="#top">Back to top</a></div>
+</main>
+
+<footer class="foot">
+    <div class="foot-grid">
+        <div class="foot-col"><h4>Contact</h4><a class="foot-link" href="#">kris@trailgoat.run</a><p class="foot-note">Questions, courses, bugs.</p></div>
+        <div class="foot-col"><h4>Support</h4><a class="export-btn" href="#">Donate</a><p class="foot-note">The planner is free to use — donations feed the goat.</p></div>
+        <div class="foot-col"><h4>Connect</h4><a class="foot-link" href="#">Strava</a></div>
+    </div>
+    <div class="foot-legal"><a href="#">About</a><span>·</span><a href="#">Privacy</a><span>·</span><a href="#">Changelog</a></div>
+    <div class="foot-credits"><p>© 2026 TrailGoat · Built with the Tokyo Night palette</p></div>
+</footer>
+
+<div class="tg-modal-scrim" id="demo-modal" hidden role="dialog" aria-modal="true" aria-labelledby="demo-modal-title">
+    <div class="tg-modal">
+        <div class="kicker">Open in…</div>
+        <h3 id="demo-modal-title">Where should this plan go?</h3>
+        <p class="muted small">A dialog is the palette's box, centred. Choices are glass rows.</p>
+        <div class="stack" style="margin-top:14px">
+            <button type="button" class="menu-row" style="border:1px solid var(--line); background:var(--glass-2); border-radius:var(--r-card); padding:14px 16px; color:var(--ink)">Run Planner <small class="muted">· splits and aid ETAs</small></button>
+            <button type="button" class="menu-row" style="border:1px solid var(--line); background:var(--glass-2); border-radius:var(--r-card); padding:14px 16px; color:var(--ink)">Crew sheet <small class="muted">· a link for the van</small></button>
+        </div>
+        <div class="tg-modal-foot"><button type="button" class="export-btn" data-close>Cancel</button></div>
+    </div>
+</div>
+</body>
+</html>

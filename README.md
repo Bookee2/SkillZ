@@ -5,7 +5,8 @@ the workflow they add up to.
 
 The first four are **the loop** — a spec-to-merge pipeline that runs across
 Linear and GitHub. One human decision gates it; the rest is agents doing one
-small, verifiable unit of work per pass.
+small, verifiable unit of work per pass. The fifth, `/kb-tokyo`, is a different
+animal: it builds things that have to look right.
 
 ## The loop
 
@@ -51,14 +52,49 @@ agent is going to build this" — which is why a skill is not allowed to cross i
 - **Escalations skip, they don't stop.** `needs-human-review` takes one PR out
   of the automated queue. Independent work keeps landing.
 
+## Beyond the loop
+
+### `/kb-tokyo` — build it in the product's design language
+
+Hand it an idea — a report, a dashboard, a one-page tool, a marketing sheet, a
+new page for the site — and it returns finished HTML that is indistinguishable
+from the product it belongs to. It researches the subject first, interviews you
+on the decisions a design system cannot make (who opens this, what the one
+primary action is, where the data comes from), then builds, renders and checks
+its own work at desktop and phone widths.
+
+**This one is product-specific, and the other four are not.** It carries
+TrailGoat's design language: the Tokyo Night palette, the Red Hat type, the
+neutral interaction ladder, the terminal topbar, the cards and chips and tables,
+the Leaflet and Chart.js recipes. Installed as-is it builds TrailGoat things.
+
+What is portable is the shape:
+
+```
+skills/kb-tokyo/
+  SKILL.md                     the four phases, and the rules a build may not break
+  references/design-system.md  the full reference — every token, with the file it came from
+  assets/tokyo.css             a standalone distillation: tokens, themes, components
+  assets/icons.js              the icon set
+  assets/starter.html          a page rendering every component, to look at
+```
+
+Point those four files at your own product and the skill works the same way. The
+reference is the *why* and the *exactly*; the stylesheet is the *paste this*; the
+starter page is what stops an agent inventing a card that almost matches.
+
+The rules it enforces are the ones a design system usually loses first: one solid
+accent per view, feature hues on data and never on chrome, two radii, no emoji,
+44px tap targets, and a `prefers-reduced-motion` path for every animation.
+
 ## Install
 
 ```bash
 git clone https://github.com/Bookee2/SkillZ.git && cd SkillZ && ./install.sh
 ```
 
-This copies the four skills to `~/.claude/skills/` and the shared target
-resolver to `~/.claude/kb-loop/`, so they're available in every project. It
+This copies the skills to `~/.claude/skills/` and the shared target resolver to
+`~/.claude/kb-loop/`, so they're available in every project. It
 backs up anything it would overwrite. To preview without writing:
 
 ```bash
@@ -95,6 +131,8 @@ stale issue prefixes — live in [`kb-loop/resolve-target.md`](kb-loop/resolve-t
 
 ## Requirements
 
+The loop needs:
+
 - Claude Code
 - The [Linear](https://linear.app) connector, authorized
 - [`gh`](https://cli.github.com), authenticated
@@ -102,14 +140,19 @@ stale issue prefixes — live in [`kb-loop/resolve-target.md`](kb-loop/resolve-t
 - Labels in your GitHub repo: `loop-approved`, `loop-changes-requested`,
   `needs-human-review`
 
+`/kb-tokyo` needs none of that — only Claude Code, and a browser to render with
+if you want it to check its own output (it uses Playwright and Chromium when
+they are there).
+
 ## Layout
 
 ```
 skills/
   kb-spec/SKILL.md     kb-build/SKILL.md
   kb-review/SKILL.md   kb-merge/SKILL.md
+  kb-tokyo/            SKILL.md + references/ + assets/
 kb-loop/
-  resolve-target.md    # shared target resolution, referenced by all four
+  resolve-target.md    # shared target resolution, referenced by the four loop skills
 install.sh
 ```
 
