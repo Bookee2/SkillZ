@@ -1,0 +1,4 @@
+interface:
+  display_name: "TG-render"
+  short_description: "Render TrailGoat race flyovers in batches"
+  default_prompt: "Use $tg-render to render these TrailGoat races: "

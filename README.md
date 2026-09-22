@@ -3,6 +3,13 @@
 A growing collection of [Claude Code](https://claude.com/claude-code) skills, and
 the workflow they add up to.
 
+`tg-render` is also a Codex skill: it turns one or more TrailGoat catalogue
+course names into locally rendered 3D flyovers, with a resumable sequential
+batch runner. Its source is [`skills/tg-render`](skills/tg-render/SKILL.md).
+Install it for Codex with `./install-codex.sh` (or preview with
+`./install-codex.sh --dry-run`), then invoke `$tg-render` from any project.
+Its default output stays local; it does not publish videos to TrailGoat.
+
 The first four are **the loop** — a spec-to-merge pipeline that runs across
 Linear and GitHub. One human decision gates it; the rest is agents doing one
 small, verifiable unit of work per pass.
