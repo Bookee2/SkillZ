@@ -3,12 +3,14 @@
 A growing collection of [Claude Code](https://claude.com/claude-code) skills, and
 the workflow they add up to.
 
-`tg-render` is also a Codex skill: it turns one or more TrailGoat catalogue
-course names into locally rendered 3D flyovers, with a resumable sequential
-batch runner. Its source is [`skills/tg-render`](skills/tg-render/SKILL.md).
-Install it for Codex with `./install-codex.sh` (or preview with
-`./install-codex.sh --dry-run`), then invoke `$tg-render` from any project.
-Its default output stays local; it does not publish videos to TrailGoat.
+`/tg-render` turns one or more TrailGoat catalogue course names into locally
+rendered 3D flyovers, with a resumable sequential batch runner that checks each
+encode against the reference bitrate budget. It works in Claude Code
+(`./install.sh`) and in Codex (`./install-codex.sh`, then `$tg-render`). It
+sets up a fresh machine itself: it finds or clones the TrailGoat checkout,
+the encoder venv and Blender, and refuses to run on a stale flythrough engine.
+Its output stays local; it does not publish videos to TrailGoat. Source:
+[`skills/tg-render`](skills/tg-render/SKILL.md).
 
 The first four are **the loop** — a spec-to-merge pipeline that runs across
 Linear and GitHub. One human decision gates it; the rest is agents doing one
@@ -61,12 +63,15 @@ agent is going to build this" — which is why a skill is not allowed to cross i
 ## Install
 
 ```bash
-git clone https://github.com/Bookee2/SkillZ.git && cd SkillZ && ./install.sh
+git clone https://github.com/Bookee2/SkillZ.git && cd SkillZ && ./install.sh           # Claude Code
+install-codex.sh     # Codex (tg-render)
 ```
 
-This copies the four skills to `~/.claude/skills/` and the shared target
-resolver to `~/.claude/kb-loop/`, so they're available in every project. It
-backs up anything it would overwrite. To preview without writing:
+This copies the skills to `~/.claude/skills/` and the shared target resolver to
+`~/.claude/kb-loop/`, so they're available in every project on that computer.
+It backs up anything it would overwrite. Name skills to install only those
+(`./install.sh tg-render`). To pick up changes on another computer,
+`git pull && ./install.sh`. To preview without writing:
 
 ```bash
 ./install.sh --dry-run
@@ -115,6 +120,7 @@ stale issue prefixes — live in [`kb-loop/resolve-target.md`](kb-loop/resolve-t
 skills/
   kb-spec/SKILL.md     kb-build/SKILL.md
   kb-review/SKILL.md   kb-merge/SKILL.md
+  tg-render/SKILL.md   tg-render/scripts/batch_render.py
 kb-loop/
   resolve-target.md    # shared target resolution, referenced by all four
 install.sh

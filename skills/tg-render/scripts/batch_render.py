@@ -9,6 +9,9 @@ import sys
 from datetime import datetime, timezone
 
 OUTPUTS = ("hero.mp4", "hero.webm", "hero-phone.mp4", "poster.webp", "contact-sheet.png")
+FPS = 24
+# kb/s ceilings: Perpetua Coast (the reference film) plus 15 % headroom
+BUDGET_KBPS = {"hero-phone.mp4": 770, "hero.webm": 1240, "hero.mp4": 1875}
 
 
 def now():
@@ -53,11 +56,32 @@ def complete(out):
     return all((out / filename).is_file() and (out / filename).stat().st_size > 0 for filename in OUTPUTS)
 
 
+def frame_count(out):
+    frames = out / "frames"
+    return sum(1 for f in frames.glob("f_*.png")) if frames.is_dir() else 0
+
+
+def budget(out):
+    """{file: {"mb", "kbps"}} plus the files over their bitrate ceiling."""
+    secs = frame_count(out) / FPS
+    sizes, over = {}, []
+    for name, ceiling in BUDGET_KBPS.items():
+        path = out / name
+        if not path.is_file() or not secs:
+            continue
+        kbps = path.stat().st_size * 8 / 1000 / secs
+        sizes[name] = {"mb": round(path.stat().st_size / 1e6, 1), "kbps": round(kbps)}
+        if kbps > ceiling:
+            over.append(f"{name} {kbps:.0f} kb/s > {ceiling}")
+    return sizes, over
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--repo", type=Path, required=True)
     parser.add_argument("--manifest", type=Path, required=True)
     parser.add_argument("--dry-run", action="store_true")
+    parser.add_argument("--reencode", action="store_true", help="re-run encode.py on rendered frames; never renders")
     args = parser.parse_args()
     repo = args.repo.resolve()
     run = repo / "scripts/flythrough/run.sh"
@@ -76,24 +100,38 @@ def main():
         status_path = out / "batch-status.json"
         log_path = out / "batch-render.log"
         status = {"id": cid, "name": name, "out": str(out), "started_at": now(), "state": "running", "log": str(log_path)}
-        if complete(out):
+        if args.reencode:
+            if not frame_count(out):
+                status.update(state="failed", finished_at=now(), note="no rendered frames to re-encode")
+                atomic_json(status_path, status)
+                print(f"FAILED {cid}: no frames under {out / 'frames'}", flush=True)
+                failures += 1
+                continue
+            cmd = [str(repo / ".venv/bin/python"), str(repo / "scripts/flythrough/encode.py"), str(out)]
+        elif complete(out):
             status["state"] = "complete"
             status["finished_at"] = now()
             status["note"] = "already encoded; skipped"
+            status["files"], status["over_budget"] = budget(out)
             atomic_json(status_path, status)
             print(f"SKIP {cid}: outputs already complete", flush=True)
             continue
+        else:
+            cmd = [str(run), str(cid), str(out)]
         atomic_json(status_path, status)
         print(f"START {cid}: {name}", flush=True)
         with log_path.open("a") as log:
             log.write(f"\n=== {now()} course {cid}: {name} ===\n")
             log.flush()
-            result = subprocess.run([str(run), str(cid), str(out)], cwd=repo, stdout=log, stderr=subprocess.STDOUT, check=False)
+            result = subprocess.run(cmd, cwd=repo, stdout=log, stderr=subprocess.STDOUT, check=False)
         status["finished_at"] = now()
         status["exit_code"] = result.returncode
         status["state"] = "complete" if result.returncode == 0 and complete(out) else "failed"
+        status["files"], status["over_budget"] = budget(out)
         atomic_json(status_path, status)
         print(f"{status['state'].upper()} {cid}: {log_path}", flush=True)
+        for line in status["over_budget"]:
+            print(f"  OVER BUDGET {cid}: {line}", flush=True)
         failures += status["state"] == "failed"
     return 1 if failures else 0
 
