@@ -3,17 +3,19 @@
 # Install the SkillZ skills into ~/.claude so Claude Code picks them up
 # in every project.
 #
-#   ./install.sh            install (backs up anything it replaces)
-#   ./install.sh --dry-run  show what would happen, write nothing
+#   ./install.sh                  install everything (backs up anything it replaces)
+#   ./install.sh tg-render        install only the named skills
+#   ./install.sh --dry-run [...]  show what would happen, write nothing
 #
 set -euo pipefail
 
 SRC="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 DEST="${CLAUDE_HOME:-$HOME/.claude}"
-SKILLS=(kb-spec kb-build kb-review kb-merge)
+SKILLS=(kb-spec kb-build kb-review kb-merge tg-render)
 
 DRY_RUN=0
-[[ "${1:-}" == "--dry-run" ]] && DRY_RUN=1
+[[ "${1:-}" == "--dry-run" ]] && DRY_RUN=1 && shift
+(( $# )) && SKILLS=("$@")
 
 say()  { printf '%s\n' "$*"; }
 run()  { if (( DRY_RUN )); then say "  would: $*"; else "$@"; fi; }
@@ -44,12 +46,15 @@ for skill in "${SKILLS[@]}"; do
   say "  /$skill"
 done
 
-say ""
-say "Shared resolver:"
-backup "$DEST/kb-loop/resolve-target.md"
-run mkdir -p "$DEST/kb-loop"
-run cp "$SRC/kb-loop/resolve-target.md" "$DEST/kb-loop/resolve-target.md"
-say "  kb-loop/resolve-target.md"
+# The kb loop's shared resolver, whenever a kb-* skill is being installed.
+if [[ " ${SKILLS[*]} " == *" kb-"* ]]; then
+  say ""
+  say "Shared resolver:"
+  backup "$DEST/kb-loop/resolve-target.md"
+  run mkdir -p "$DEST/kb-loop"
+  run cp "$SRC/kb-loop/resolve-target.md" "$DEST/kb-loop/resolve-target.md"
+  say "  kb-loop/resolve-target.md"
+fi
 
 say ""
 if (( DRY_RUN )); then
