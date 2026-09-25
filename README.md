@@ -12,6 +12,18 @@ the encoder venv and Blender, and refuses to run on a stale flythrough engine.
 Its output stays local; it does not publish videos to TrailGoat. Source:
 [`skills/tg-render`](skills/tg-render/SKILL.md).
 
+`/kb-motion` is a motion-graphics studio for any product. Type
+`/kb-motion <what kind of motion> for <which product>` and it researches the
+product (design tokens, real data, the live site) and current best practice,
+interviews you, confirms a plan, then builds a page of live HTML examples. It
+carries a catalog of everything built so far (particle fields that morph into
+words, profiles and maps; GPU and WebGPU particle sims; data-driven hero
+readouts; scroll stories; contours from terrain tiles; ridgelines and sand
+signatures; view transitions; GSAP; state-machine mascots), the lessons behind
+them, vetted sources, and the working code in
+[`skills/kb-motion/assets`](skills/kb-motion/assets/README.md). Install just this
+one with `./install.sh kb-motion`.
+
 The first four are **the loop** — a spec-to-merge pipeline that runs across
 Linear and GitHub. One human decision gates it; the rest is agents doing one
 small, verifiable unit of work per pass.
@@ -121,6 +133,7 @@ skills/
   kb-spec/SKILL.md     kb-build/SKILL.md
   kb-review/SKILL.md   kb-merge/SKILL.md
   tg-render/SKILL.md   tg-render/scripts/batch_render.py
+  kb-motion/           # SKILL.md, references/ (catalog, lessons, research), assets/ (code)
 kb-loop/
   resolve-target.md    # shared target resolution, referenced by all four
 install.sh
