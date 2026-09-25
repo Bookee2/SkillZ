@@ -10,7 +10,7 @@ set -euo pipefail
 
 SRC="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 DEST="${CLAUDE_HOME:-$HOME/.claude}"
-SKILLS=(kb-spec kb-build kb-review kb-merge)
+SKILLS=(kb-spec kb-build kb-review kb-merge kb-motion)
 
 DRY_RUN=0
 [[ "${1:-}" == "--dry-run" ]] && DRY_RUN=1

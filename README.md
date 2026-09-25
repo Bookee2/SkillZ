@@ -10,6 +10,17 @@ Install it for Codex with `./install-codex.sh` (or preview with
 `./install-codex.sh --dry-run`), then invoke `$tg-render` from any project.
 Its default output stays local; it does not publish videos to TrailGoat.
 
+`kb-motion` is a motion-graphics studio for any product: type
+`/kb-motion <what kind of motion> for <which product>` and it researches the
+product (design tokens, real data, the live site) and current best practice,
+interviews you, confirms a plan, then builds a page of live HTML examples. It
+carries a catalog of everything built so far (particle fields that morph into
+words, profiles and maps; GPU and WebGPU particle sims; data-driven hero
+readouts; scroll stories; contours from terrain tiles; ridgelines and sand
+signatures; view transitions; GSAP; state-machine mascots), the lessons behind
+them, vetted sources, and the working code in
+[`skills/kb-motion/assets`](skills/kb-motion/assets/README.md).
+
 The first four are **the loop** — a spec-to-merge pipeline that runs across
 Linear and GitHub. One human decision gates it; the rest is agents doing one
 small, verifiable unit of work per pass.
@@ -64,7 +75,7 @@ agent is going to build this" — which is why a skill is not allowed to cross i
 git clone https://github.com/Bookee2/SkillZ.git && cd SkillZ && ./install.sh
 ```
 
-This copies the four skills to `~/.claude/skills/` and the shared target
+This copies the loop skills and `kb-motion` to `~/.claude/skills/` and the shared target
 resolver to `~/.claude/kb-loop/`, so they're available in every project. It
 backs up anything it would overwrite. To preview without writing:
 
@@ -115,6 +126,7 @@ stale issue prefixes — live in [`kb-loop/resolve-target.md`](kb-loop/resolve-t
 skills/
   kb-spec/SKILL.md     kb-build/SKILL.md
   kb-review/SKILL.md   kb-merge/SKILL.md
+  kb-motion/           # SKILL.md, references/ (catalog, lessons, research), assets/ (code)
 kb-loop/
   resolve-target.md    # shared target resolution, referenced by all four
 install.sh
