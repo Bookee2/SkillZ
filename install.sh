@@ -20,13 +20,19 @@ DRY_RUN=0
 say()  { printf '%s\n' "$*"; }
 run()  { if (( DRY_RUN )); then say "  would: $*"; else "$@"; fi; }
 
-# Back up an existing path to <path>.bak.<n>, keeping earlier backups.
+# Move an existing path to $DEST/skillz-backups/<name>.bak.<n>, keeping
+# earlier backups. Backups must live outside skills/: Claude Code loads every
+# folder there that has a SKILL.md, so a backup beside the skill shows up as a
+# duplicate skill.
+BACKUPS="$DEST/skillz-backups"
 backup() {
-  local path="$1" n=1
+  local path="$1" n=1 name
   [[ -e "$path" ]] || return 0
-  while [[ -e "$path.bak.$n" ]]; do n=$(( n + 1 )); done
-  say "  backing up existing $path -> $(basename "$path").bak.$n"
-  run mv "$path" "$path.bak.$n"
+  name="$(basename "$path")"
+  while [[ -e "$BACKUPS/$name.bak.$n" ]]; do n=$(( n + 1 )); done
+  say "  backing up existing $path -> skillz-backups/$name.bak.$n"
+  run mkdir -p "$BACKUPS"
+  run mv "$path" "$BACKUPS/$name.bak.$n"
 }
 
 (( DRY_RUN )) && say "Dry run — nothing will be written." && say ""
