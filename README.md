@@ -24,6 +24,17 @@ them, vetted sources, and the working code in
 [`skills/kb-motion/assets`](skills/kb-motion/assets/README.md). Install just this
 one with `./install.sh kb-motion`.
 
+`/kb-secbrain` feeds the second brain (the claude-obsidian vault at
+`~/Documents/SecondBrain`). One pass collects the week's research and
+development learning (Claude Code sessions, memory updates, merged PRs and
+review verdicts, commits and research docs across `~/Desktop/Projects`, and
+Linear if it's connected) into a dated note in the vault inbox. It then
+ingests un-ingested inbox material into the wiki through claude-obsidian's
+reviewed transactions, in a bounded tranche per run, and skips anything
+already ingested by hash. It's built to run unattended from a weekly
+scheduled task in the Claude desktop app. Install just this one with
+`./install.sh kb-secbrain`.
+
 The first four are **the loop** — a spec-to-merge pipeline that runs across
 Linear and GitHub. One human decision gates it; the rest is agents doing one
 small, verifiable unit of work per pass.
@@ -134,6 +145,7 @@ skills/
   kb-review/SKILL.md   kb-merge/SKILL.md
   tg-render/SKILL.md   tg-render/scripts/batch_render.py
   kb-motion/           # SKILL.md, references/ (catalog, lessons, research), assets/ (code)
+  kb-secbrain/         # SKILL.md, scripts/collect.py (weekly harvest), scripts/pending.py (un-ingested inbox)
 kb-loop/
   resolve-target.md    # shared target resolution, referenced by all four
 install.sh
