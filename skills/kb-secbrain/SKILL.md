@@ -12,14 +12,21 @@ judgment, skip it and list it under *Needs review* in the report.
 
 ## Paths
 
-```bash
-VAULT="$HOME/Documents/SecondBrain"                       # Obsidian vault (claude-obsidian workspace)
-PRODUCT_ROOT="$HOME/Desktop/Projects/claude-obsidian"     # claude-obsidian source; KB loads it with --plugin-dir
-CORE="$PRODUCT_ROOT/scripts/claude-obsidian.py"
-SKILL_DIR="$HOME/.claude/skills/kb-secbrain"
-STATE="$HOME/.claude/kb-secbrain/state.json"              # {"collected_until": "YYYY-MM-DD", "last_run": "..."}
-WORK="$(mktemp -d -t kb-secbrain)"                        # or the session scratchpad
-```
+Always run commands with these literal absolute paths. Don't use shell
+variables, `cd`, pipes or `>` redirection. The unattended run's permission
+rules match the literal command text, and a scheduled run has no one to click
+"allow".
+
+- Vault (claude-obsidian workspace): `/Users/kb/Documents/SecondBrain`
+- claude-obsidian core: `python3 /Users/kb/Desktop/Projects/claude-obsidian/scripts/claude-obsidian.py …`
+  (the source for its skills is `/Users/kb/Desktop/Projects/claude-obsidian`)
+- Helpers: `python3 /Users/kb/.claude/skills/kb-secbrain/scripts/collect.py …` and `…/pending.py …`
+- State: `/Users/kb/.claude/kb-secbrain/state.json` (`{"collected_until": "YYYY-MM-DD", "last_run": "…"}`)
+- Work dir (digest and transaction bundle): `/Users/kb/.claude/kb-secbrain/work/`. Write files there
+  with the Write tool, and overwrite the previous run's files.
+
+Below, `$CORE`, `$VAULT`, `$SKILL_DIR`, `$STATE` and `$WORK` are shorthand for
+those paths. Expand them before running anything.
 
 The inbox folder is `source_inbox` from `$VAULT/.claude-obsidian.json`
 (currently `inbox`). Weekly notes go in `inbox/Weekly Learning/`.
@@ -32,10 +39,10 @@ The inbox folder is `source_inbox` from `$VAULT/.claude-obsidian.json`
 
 ## 0. Preflight
 
-1. `python3 "$CORE" doctor --vault "$VAULT"` must report `"ok": true`. If
+1. `python3 /Users/kb/Desktop/Projects/claude-obsidian/scripts/claude-obsidian.py doctor --vault /Users/kb/Documents/SecondBrain` must report `"ok": true`. If
    `mutation_lock_held` is true or a transaction under
    `$VAULT/.vault-meta/transactions/` has a journal that is not complete, run
-   `python3 "$CORE" transaction recover --help` and recover it first. If
+   `python3 /Users/kb/Desktop/Projects/claude-obsidian/scripts/claude-obsidian.py transaction recover --help` and recover it first. If
    recovery fails, skip ingest and report it.
 2. Read `$STATE` (it may be missing).
 
@@ -52,7 +59,7 @@ title that covers only the new days. Never edit an existing inbox file.
 **Harvest.**
 
 ```bash
-python3 "$SKILL_DIR/scripts/collect.py" --since START --until END --out "$WORK/digest.md"
+python3 /Users/kb/.claude/skills/kb-secbrain/scripts/collect.py --since START --until END --out /Users/kb/.claude/kb-secbrain/work/digest.md
 ```
 
 It gathers Claude Code sessions (titles, KB's prompts, Claude's closing
@@ -124,10 +131,10 @@ wiki itself is written only by transactions). Then update `$STATE`:
 **Scope.**
 
 ```bash
-python3 "$SKILL_DIR/scripts/pending.py" --vault "$VAULT" --json > "$WORK/pending.json"
+python3 /Users/kb/.claude/skills/kb-secbrain/scripts/pending.py --json
 ```
 
-This lists inbox files whose SHA-256 isn't in `.raw/.manifest.json` or the
+Read the JSON from stdout. It lists inbox files whose SHA-256 isn't in `.raw/.manifest.json` or the
 source ledger. The vault uses that hash as its "already ingested" mark, so
 nothing gets ingested twice, and the inbox is never modified or cleared.
 
@@ -160,9 +167,18 @@ Unattended settings (these replace the skill's "ask the user" points):
 - **Egress**: none. Don't fetch any URL. Sources are local files, and URLs
   inside them are kept as locators only. `gh` and Linear are used only in
   collect.
-- **Weekly notes**: treat them as `conversation`/`decision`-type sources with
-  `authority: primary` (KB's own work), independence key `kb-dev-log`. Claims
-  they carry stay `developing` unless an existing source already supports them.
+- **Claude-written sources** (weekly notes, session reports, research notes):
+  `authority: synthetic` with `content_kind: synthetic`. The engine rejects
+  other pairings. Weekly notes use independence key `kb-dev-log`. Their claims
+  stay `provisional` unless an independent source already supports them.
+- **Sensitive files**: never ingest the files listed in the SecondBrain memory
+  `~/.claude/projects/-Users-kb-Documents-SecondBrain/memory/sensitive-inbox-files-excluded.md`
+  (HR, pay, PIP, W-9, transcripts, named-employee docs). Read it every run and
+  filter them out without asking. Raw captures are create-only and can't be
+  removed afterwards. Redact learner-email watermarks from course PDFs.
+- **Reuse a pending draft**: if another session left an inspected but unapplied
+  ingest bundle for the same inbox files, re-inspect it. Apply it if it's still
+  valid and additive. Don't redraft the same pages.
 - **Approval**: the weekly schedule is KB's standing approval to apply
   transactions that create pages, captures and ledger records, add sections or
   bullets to existing pages, and refresh `wiki/index.md`, `wiki/log.md`,
@@ -175,9 +191,8 @@ Unattended settings (these replace the skill's "ask the user" points):
   already exists).
 
 ```bash
-python3 "$CORE" transaction inspect "$WORK/ingest-bundle.json" --vault "$VAULT"
-python3 "$CORE" transaction apply "$WORK/ingest-bundle.json" --vault "$VAULT" \
-  --approved-plan-sha256 "<approval_sha256 from inspect>"
+python3 /Users/kb/Desktop/Projects/claude-obsidian/scripts/claude-obsidian.py transaction inspect /Users/kb/.claude/kb-secbrain/work/ingest-bundle.json --vault /Users/kb/Documents/SecondBrain
+python3 /Users/kb/Desktop/Projects/claude-obsidian/scripts/claude-obsidian.py transaction apply /Users/kb/.claude/kb-secbrain/work/ingest-bundle.json --vault /Users/kb/Documents/SecondBrain --approved-plan-sha256 <approval_sha256 from inspect>
 ```
 
 On exit 75, re-read the targets and rebuild the bundle once. If it fails
