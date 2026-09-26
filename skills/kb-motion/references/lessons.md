@@ -65,3 +65,16 @@
 - Keep an index of every technique linking to its demo so options can be compared.
 - For heavy offline/remote work keep a PROGRESS.md and, if asked, an hourly
   wake-up (CronCreate) that resumes from it.
+
+## Rendered video (particles to MP4)
+- Make every frame a pure function of t and expose `seek(t)` + `window.DURATION`; then
+  kb-ytvideo's `render.js` renders it with motion blur and no dropped frames.
+- Precompute particle targets offline (Python/Pillow) and inline them: image and font
+  loads are async, but render.js seeks as soon as fonts are ready.
+- Bloom: blur a particles-only layer, never the composited frame, or the ground lifts
+  to grey. 16k dots made a pointillist goat that read as grey; 30k with brighter final
+  shapes reads clearly at 1080p.
+- Tie each shape to the data: give every particle one race position so route and
+  profile morphs keep miles aligned; it reads as the same course changing form.
+- Label two nearby peaks with one caption ("Hope Pass, twice"); two labels collide.
+- Big MP4s (~28 MB) can fail to upload to phone viewers; send a 720p preview too.

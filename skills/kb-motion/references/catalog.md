@@ -80,6 +80,19 @@ alpha ~0.045 at that count. ~2 days with fallback. **Demo** (T2).
 (−gy, gx) of a real height grid, with fading trails and a headlamp; flat ground
 respawns. **Demo** (lab P3).
 
+**Particle video opener (rendered, with music)** — a 12 s YouTube channel opener:
+dust → a real course's GPS route drawn start to finish (headlamp front) → the same
+course's elevation silhouette (each particle keeps its race position, so mile 50 on
+the map becomes mile 50 on the profile) → the mascot in its own colours → mascot +
+wordmark lockup landing on a musical impact. Targets are sampled offline in Python
+(Pillow + numpy: mascot pixels weighted to edges, wordmark from the brand TTF, route by
+arc length, profile area denser at the ridge) and inlined as base64 Float32 arrays; the
+page exposes `seek(t)` so kb-ytvideo's `render.js` renders it frame-accurately with
+motion blur. Canvas 2D, 30k particles, bilinear additive splats into a float buffer,
+glow from a blurred particles-only layer. Music is synthesized in numpy (100 BPM,
+sections on the morph downbeats). TrailGoat source: `~/Movies/TrailGoat Launch/motion/opener/`
+(prep.py, opener.js, music.py). Effort: ~half a day.
+
 ## Data signatures
 
 **Course signatures, five ways** — per-course mini graphics from a 64–120
