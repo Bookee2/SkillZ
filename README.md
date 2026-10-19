@@ -50,6 +50,19 @@ then a digest. It writes to the production database and runs from the
 TrailGoat checkout (it changes there when started elsewhere). Use it with
 `/loop 3h /tg-ingest`. Install just this one with `./install.sh tg-ingest`.
 
+`/kb-unreal` is an Unreal Engine motion studio built on everything already
+proven on Kris's Mac. Type `/kb-unreal <the idea> [for <brand or client>]` and
+it loads a capability map of every Unreal, Blender and video production so far
+(the block swarm, the 150k-particle engine, the Motion Design stage, the
+Cassini space set, the Electric Dreams canyon run, Cesium flyovers, scripted
+Sequencer, out-of-process Movie Render Queue renders, sound design, delivery),
+checks the machine (`scripts/preflight.sh`), researches the brief and the Epic
+samples on disk, interviews you, confirms a treatment, then builds with 720p
+drafts and a note-to-render loop until sign-off. It closes out every run by
+improving itself: lessons, techniques, taste notes and a run log go back into
+its `references/` here, and `scripts/selfupdate.sh` reinstalls it. Install
+just this one with `./install.sh kb-unreal`.
+
 The first four are **the loop** — a spec-to-merge pipeline that runs across
 Linear and GitHub. One human decision gates it; the rest is agents doing one
 small, verifiable unit of work per pass.
@@ -163,6 +176,7 @@ skills/
   kb-secbrain/         # SKILL.md, scripts/collect.py (weekly harvest), scripts/pending.py (un-ingested inbox)
   kb-ytvideo/          # SKILL.md, engine/ (motion.js, build.py, render.js), scripts/, brands/, reference/, examples/
   tg-ingest/SKILL.md   # one ingest pass; runs from the TrailGoat checkout
+  kb-unreal/           # SKILL.md, references/ (taste, capabilities, techniques, lessons, pipeline, samples, assets, interview, research, runs), assets/ (runner, camera paths, render wrapper), scripts/ (preflight, selfupdate)
 kb-loop/
   resolve-target.md    # shared target resolution, referenced by all four
 install.sh
