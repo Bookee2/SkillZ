@@ -1,0 +1,19 @@
+<title>01 Chapter · Fuel plan</title>
+<div data-slot="shape">
+  <div class="L" id="Lnext"><div class="row" style="transform:translate(-50%,-50%);gap:12px;color:var(--bright);font-size:32px;font-weight:600">Up next<span id="icA"></span></div></div>
+  <div class="L" id="Lch">
+    <div class="a display" style="left:-330px;top:-84px;font-size:150px;line-height:150px;color:var(--c-fuel)">02</div>
+    <div class="a display" style="left:-86px;top:-64px;font-size:64px;color:var(--bright);white-space:nowrap">Fuel plan</div>
+    <div class="a" style="left:-84px;top:18px;font-size:28px;color:var(--muted);white-space:nowrap">Every aid station, planned</div>
+  </div>
+</div><!--/shape-->
+<script>
+document.getElementById('icA').innerHTML=M.icon('arrow',30,BRAND.bright);
+M.scene({
+  W:1920,H:1080,T:2.9,intro:0.08,
+  bg:BRAND.canvas+' url(brand:topo-16x9) center/cover',
+  SH:{next:{w:260,h:92,r:46,bg:BRAND.panel,cam:2.0}, ch:{w:860,h:300,r:48,bg:BRAND.panel,cam:1.5}},
+  start:'next', SEQ:[[0.95,'ch']],
+  layers:[{el:'Lnext',tin:0.08,tout:0.95,o:{din:0.03}},{el:'Lch',tin:0.95,tout:null}],
+});
+</script>

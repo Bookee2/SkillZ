@@ -1,0 +1,18 @@
+<title>03 Short hook panel (9:16 top band)</title>
+<div data-slot="shape">
+  <div class="L" id="Lbrand"><div class="row" style="transform:translate(-50%,-50%);gap:18px;color:var(--bright);font-size:46px;font-weight:700"><img src="brand:avatar" style="width:64px;height:64px;border-radius:32px">TrailGoat</div></div>
+  <div class="L" id="Lhook">
+    <div class="a display" style="left:0;top:-58px;transform:translateX(-50%);font-size:76px;line-height:1;color:var(--bright);white-space:nowrap">Plan your first ultra</div>
+    <div class="row" style="left:0;top:40px;transform:translateX(-50%);gap:14px;font-size:34px;color:var(--muted)"><span id="icR"></span>Course · pacing · fuel · crew</div>
+  </div>
+</div><!--/shape-->
+<script>
+document.getElementById('icR').innerHTML=M.icon('route',34,BRAND.accent,2.4);
+// Transparent panel for the top band that vertical.py leaves free (y 0–556 at 1080x1920).
+M.scene({
+  W:1080,H:1920,T:4,intro:0.1,bg:null,center:[540,290],
+  SH:{brand:{w:330,h:104,r:52,bg:BRAND.panel,cam:1.3}, hook:{w:960,h:230,r:48,bg:BRAND.panel,cam:1.0}},
+  start:'brand', SEQ:[[1.1,'hook']],
+  layers:[{el:'Lbrand',tin:0.1,tout:1.1},{el:'Lhook',tin:1.1,tout:null}],
+});
+</script>

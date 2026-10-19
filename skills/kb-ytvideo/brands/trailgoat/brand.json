@@ -1,0 +1,36 @@
+{
+  "name": "TrailGoat",
+  "source": "marketing/launch-kit-2026/source/tokyo.css (Tokyo Night, the site's default theme)",
+  "colors": {
+    "canvas": "#1a1b26",
+    "well": "#15161e",
+    "panel": "#24283b",
+    "raised": "#2e3350",
+    "ink": "#c0caf5",
+    "bright": "#e6eafc",
+    "muted": "#9aa5ce",
+    "line": "#3b4261",
+    "accent": "#7aa2f7",
+    "accentInk": "#15161e"
+  },
+  "data": {
+    "fuel": "#ff9e64", "pace": "#7aa2f7", "crew": "#9ece6a", "course": "#0db9d7",
+    "gear": "#bb9af7", "weather": "#d98ae0", "climb": "#f7768e", "aid": "#7dcfff", "gold": "#e0af68"
+  },
+  "fonts": {
+    "display": {"family": "Red Hat Display", "file": "RedHatDisplay-ExtraBold.ttf", "weight": "800"},
+    "text": {"family": "Red Hat Text", "file": "RedHatText.ttf", "weight": "300 700"},
+    "mono": {"family": "Red Hat Mono", "file": "RedHatMono.ttf", "weight": "300 700"}
+  },
+  "assets": {
+    "avatar": "avatar.png",
+    "wordmark": "wordmark.png",
+    "topo-16x9": "topo-16x9.png",
+    "topo-9x16": "topo-9x16.png"
+  },
+  "rules": [
+    "One accent on duty (accent). Feature colors are for data and section icons only, never chrome.",
+    "Dark ground; panels are one step lighter; text is ink, headlines bright.",
+    "Display font for headlines and captions, Text for UI copy, Mono for numbers, miles and times."
+  ]
+}
