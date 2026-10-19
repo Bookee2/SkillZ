@@ -35,6 +35,21 @@ already ingested by hash. It's built to run unattended from a weekly
 scheduled task in the Claude desktop app. Install just this one with
 `./install.sh kb-secbrain`.
 
+`/kb-ytvideo` makes motion graphics for YouTube videos and for Shorts, Reels
+and TikTok: word-timed B-roll cutaways and panels over OBS screen takes or
+talking-head footage, 9:16 reframes, word-by-word social captions, and
+standalone intros, chapter cards, lower thirds and end cards, rendered
+frame-accurately with motion blur in a brand (TrailGoat Tokyo Night by
+default). Run `scripts/setup.sh` once per machine (it lives in the skill).
+Built on motion-broll by Bart (MIT, `LICENSE-upstream`). Install just this one
+with `./install.sh kb-ytvideo`.
+
+`/tg-ingest` runs one crawl-and-ingest pass for the TrailGoat race catalog:
+the UltraSignup sweep (once a day), the GPX hunt, import, enrichment and audit,
+then a digest. It writes to the production database and runs from the
+TrailGoat checkout (it changes there when started elsewhere). Use it with
+`/loop 3h /tg-ingest`. Install just this one with `./install.sh tg-ingest`.
+
 The first four are **the loop** — a spec-to-merge pipeline that runs across
 Linear and GitHub. One human decision gates it; the rest is agents doing one
 small, verifiable unit of work per pass.
@@ -146,6 +161,8 @@ skills/
   tg-render/SKILL.md   tg-render/scripts/batch_render.py
   kb-motion/           # SKILL.md, references/ (catalog, lessons, research), assets/ (code)
   kb-secbrain/         # SKILL.md, scripts/collect.py (weekly harvest), scripts/pending.py (un-ingested inbox)
+  kb-ytvideo/          # SKILL.md, engine/ (motion.js, build.py, render.js), scripts/, brands/, reference/, examples/
+  tg-ingest/SKILL.md   # one ingest pass; runs from the TrailGoat checkout
 kb-loop/
   resolve-target.md    # shared target resolution, referenced by all four
 install.sh
