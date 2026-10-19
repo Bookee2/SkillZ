@@ -14,7 +14,7 @@ the Tokyo Night palette), the page's own stylesheet, `static/tg-store.js`
 `static/trail-map.js` (maps and charts). A rule in this document that
 disagrees with one of those files is wrong; fix the document.
 
-**Companion.** The `/kb-tokyo` skill (`.claude/skills/kb-tokyo/`) carries a
+**Companion.** The `/kb-design` skill (`.claude/skills/kb-design/`) carries a
 standalone stylesheet distilled from this document so the same look can be
 built outside the repo. This document is the *why* and the *exactly*; the
 skill's `assets/tokyo.css` is the *paste this*.

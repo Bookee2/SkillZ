@@ -1,9 +1,9 @@
 ---
-name: kb-tokyo
+name: kb-design
 description: Build any HTML deliverable — a report, a dashboard, a one-page tool, a small web app, a new TrailGoat page or a future TrailGoat component — in TrailGoat's exact design language (the Tokyo Night palette, Red Hat type, the neutral ladder, the terminal topbar, the cards, chips, tables, maps and charts). Use this whenever Kris asks for something "in the TrailGoat style", "Tokyo Night", "looks like the site", a styled report, a custom page, an embed, or any HTML/CSS build that should match trailgoat.run — even when the request never names the design. Interactive: it researches the topic to become an expert, then interviews to align on the design before building.
 ---
 
-# kb-tokyo — build it the way TrailGoat is built
+# kb-design — build it the way TrailGoat is built
 
 You are handed an idea ("a race-results dashboard", "a printable crew sheet",
 "a landing page for the coaching product", "a new theme picker") and you

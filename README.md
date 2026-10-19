@@ -65,7 +65,7 @@ just this one with `./install.sh kb-unreal`.
 
 The first four are **the loop** — a spec-to-merge pipeline that runs across
 Linear and GitHub. One human decision gates it; the rest is agents doing one
-small, verifiable unit of work per pass. `/kb-tokyo` is a different animal: it
+small, verifiable unit of work per pass. `/kb-design` is a different animal: it
 builds things that have to look right.
 
 ## The loop
@@ -114,7 +114,7 @@ agent is going to build this" — which is why a skill is not allowed to cross i
 
 ## Beyond the loop
 
-### `/kb-tokyo` — build it in the product's design language
+### `/kb-design` — build it in the product's design language
 
 Hand it an idea — a report, a dashboard, a one-page tool, a marketing sheet, a
 new page for the site — and it returns finished HTML that is indistinguishable
@@ -131,7 +131,7 @@ the Leaflet and Chart.js recipes. Installed as-is it builds TrailGoat things.
 What is portable is the shape:
 
 ```
-skills/kb-tokyo/
+skills/kb-design/
   SKILL.md                     the four phases, and the rules a build may not break
   references/design-system.md  the full reference — every token, with the file it came from
   assets/tokyo.css             a standalone distillation: tokens, themes, components
@@ -203,7 +203,7 @@ The loop needs:
 - Labels in your GitHub repo: `loop-approved`, `loop-changes-requested`,
   `needs-human-review`
 
-`/kb-tokyo` needs none of that — only Claude Code, and a browser to render with
+`/kb-design` needs none of that — only Claude Code, and a browser to render with
 if you want it to check its own output (it uses Playwright and Chromium when
 they are there).
 
@@ -219,7 +219,7 @@ skills/
   kb-ytvideo/          # SKILL.md, engine/ (motion.js, build.py, render.js), scripts/, brands/, reference/, examples/
   tg-ingest/SKILL.md   # one ingest pass; runs from the TrailGoat checkout
   kb-unreal/           # SKILL.md, references/ (taste, capabilities, techniques, lessons, pipeline, samples, assets, interview, research, runs), assets/ (runner, camera paths, render wrapper), scripts/ (preflight, selfupdate)
-  kb-tokyo/            # SKILL.md, references/design-system.md, assets/ (tokyo.css, shell, icons, starter)
+  kb-design/           # SKILL.md, references/design-system.md, assets/ (tokyo.css, shell, icons, starter)
 kb-loop/
   resolve-target.md    # shared target resolution, referenced by the four loop skills
 install.sh

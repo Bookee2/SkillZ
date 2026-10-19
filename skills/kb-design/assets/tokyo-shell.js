@@ -1,4 +1,4 @@
-/* TrailGoat shell behaviours for a standalone page (kb-tokyo).
+/* TrailGoat shell behaviours for a standalone page (kb-design).
  * The site's own idiom: one IIFE, window.TrailGoat* globals, no framework.
  *   TrailGoatTheme  { get, set, list, DEFAULT }  — html.theme-* + localStorage 'tg_theme'
  *   TrailGoatToast(msg, { accent, duration })     — bottom-right toast stack
