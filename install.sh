@@ -11,7 +11,7 @@ set -euo pipefail
 
 SRC="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 DEST="${CLAUDE_HOME:-$HOME/.claude}"
-SKILLS=(kb-spec kb-build kb-review kb-merge tg-render kb-motion kb-secbrain kb-ytvideo tg-ingest kb-unreal kb-design)
+SKILLS=(kb-spec kb-build kb-review kb-merge tg-render tg-films kb-motion kb-secbrain kb-ytvideo tg-ingest kb-unreal kb-design)
 
 DRY_RUN=0
 [[ "${1:-}" == "--dry-run" ]] && DRY_RUN=1 && shift
