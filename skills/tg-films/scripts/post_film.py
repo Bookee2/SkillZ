@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Dress a rendered TrailGoat flyover for YouTube: one command per film.
 
-    post_film.py film.json [--skip-intro] [--skip-end] [--skip-hud] [--upload]
+    post_film.py film.json [--skip-intro] [--skip-end] [--skip-hud] [--meta-only] [--upload]
 
 film.json:
 {
@@ -121,6 +121,62 @@ def chapter_marks(rec: dict, hud: dict, shots: dict | None, intro_s: float, card
     return out
 
 
+# ---------- data credits ----------
+# Terrain comes from Mapzen's Terrain Tiles on AWS; Tilezen asks for each source dataset to be credited "in a place
+# reasonable to the medium" (https://github.com/tilezen/joerd/blob/master/docs/attribution.md): the US data is USGS
+# 3DEP/SRTM (public domain, credit asked), and several countries' DEMs carry their own required notice. The coastline is
+# OpenStreetMap (ODbL: "© OpenStreetMap contributors" plus openstreetmap.org/copyright in the credits or description).
+EU_DEM = {'albania', 'andorra', 'austria', 'belgium', 'bosnia and herzegovina', 'bulgaria', 'croatia', 'cyprus', 'czech republic',
+          'czechia', 'denmark', 'estonia', 'finland', 'france', 'germany', 'greece', 'hungary', 'iceland', 'ireland', 'italy', 'kosovo',
+          'latvia', 'liechtenstein', 'lithuania', 'luxembourg', 'malta', 'monaco', 'montenegro', 'netherlands', 'north macedonia',
+          'norway', 'poland', 'portugal', 'romania', 'serbia', 'slovakia', 'slovenia', 'spain', 'sweden', 'switzerland', 'turkey',
+          'united kingdom', 'uk', 'england', 'scotland', 'wales'}
+DEM_NOTICE = {
+    'australia': '© Commonwealth of Australia (Geoscience Australia) 2017.',
+    'austria': '© offene Daten Österreichs – Digitales Geländemodell (DGM) Österreich.',
+    'canada': 'Contains information licensed under the Open Government Licence – Canada.',
+    'mexico': 'Source: INEGI, Continental relief, 2016.',
+    'new zealand': 'Copyright 2011 Crown copyright (c) Land Information New Zealand and the New Zealand Government.',
+    'norway': '© Kartverket.',
+    'united kingdom': '© Environment Agency copyright and/or database right 2015. All rights reserved.',
+}
+US = {'united states', 'united states of america', 'usa', 'us'}
+
+
+def render_sources(film: dict) -> dict:
+    """what the render actually used, from render.py's own log lines in out_dir: the imagery source and whether the
+    OpenStreetMap coastline went in. film.json's "imagery" / "coastal" override when there's no log."""
+    found = {'imagery': film.get('imagery'), 'osm': film.get('coastal')}
+    for log in sorted(Path(film['out_dir']).glob('*.log')):
+        txt = log.read_text(errors='ignore')
+        m = re.search(r'TERRAIN chunks .* imagery (\w+)', txt)
+        if m and found['imagery'] is None: found['imagery'] = m[1]
+        if found['osm'] is None and re.search(r'OSM coastline \d+ segments', txt): found['osm'] = True
+    return found
+
+
+def data_credits(rec: dict, film: dict) -> str:
+    src = render_sources(film); country = (rec.get('country') or '').strip().lower()
+    if src['imagery'] == 'esri':
+        sys.exit('this render used Esri World Imagery, whose terms do not allow publishing it: re-render with --imagery usgs or --style relief')
+    us = country in US or not country
+    terrain = 'Terrain: Mapzen Terrain Tiles (AWS Open Data); ' + ('3DEP and SRTM data courtesy of the U.S. Geological Survey.' if us
+               else 'SRTM and GMTED2010 data courtesy of the U.S. Geological Survey.')
+    notices = []
+    if country in EU_DEM: notices.append('Produced using Copernicus data and information funded by the European Union - EU-DEM layers.')
+    key = 'united kingdom' if country in ('uk', 'england', 'scotland', 'wales') else country
+    if key in DEM_NOTICE: notices.append(DEM_NOTICE[key])
+    lat = rec.get('start_lat') or rec.get('lat')
+    if lat is not None and float(lat) > 60:
+        notices.append('ArcticDEM: DEMs created from DigitalGlobe, Inc., imagery and funded under National Science Foundation '
+                       'awards 1043681, 1559691, and 1542736.')
+    parts = [terrain, *notices]
+    if src['imagery'] in (None, 'usgs'): parts.append('Imagery: USDA NAIP via USGS The National Map: Orthoimagery.')
+    if src['osm']: parts.append('Coastline: © OpenStreetMap contributors, openstreetmap.org/copyright')
+    parts.append('Rendered in Blender from the course GPX.')
+    return '\n'.join(parts)
+
+
 # ---------- description ----------
 def description(rec: dict, film: dict, marks: list[tuple[float, str]], total_s: float) -> str:
     name = race_name(rec); ev = rec.get('event') or {}
@@ -147,10 +203,7 @@ def description(rec: dict, film: dict, marks: list[tuple[float, str]], total_s: 
             music += f" Why this one: {m['reason']}"
         if m.get('credit'):
             music += f"\n{m['credit']}"
-    coastal = bool(film.get('coastal'))
-    credits = ("Terrain: AWS / Mapzen. Imagery: USDA, USGS The National Map: Orthoimagery."
-               + (" Coastline © OpenStreetMap contributors." if coastal else '')
-               + " Rendered in Blender from the course GPX.")
+    credits = data_credits(rec, film)
     chapters = '\n'.join(f'{mmss(t)} {lab}' for t, lab in marks)
     tag = re.sub(r'[^A-Za-z0-9]', '', name)
     return (f"{name} from the start line to the finish: {dist} and {gain} of climbing over the real terrain"
@@ -210,6 +263,7 @@ def main() -> int:
     ap.add_argument('film'); ap.add_argument('--skip-intro', action='store_true'); ap.add_argument('--skip-end', action='store_true')
     ap.add_argument('--skip-hud', action='store_true', help='the master already carries the readout')
     ap.add_argument('--upload', action='store_true', help='run yt_upload.py at the end')
+    ap.add_argument('--meta-only', action='store_true', help='keep the assembled video; redo the thumbnail, description and meta.json')
     a = ap.parse_args()
     film = json.loads(Path(a.film).read_text()); ff = ffmpeg()
     out_dir = Path(film['out_dir']); dest = Path(film['dest']); work = dest / 'work'; work.mkdir(parents=True, exist_ok=True)
@@ -268,9 +322,12 @@ def main() -> int:
         maps = ['-map', '[v]', '-map', '[a]', '-c:a', 'aac', '-b:a', '192k']
     else:
         maps = ['-map', '[v]', '-an']
-    sh(ff, '-y', '-loglevel', 'error', *inputs, '-filter_complex', ';'.join(fc), *maps,
-       '-c:v', 'libx264', '-preset', 'slow', '-crf', 16, '-pix_fmt', 'yuv420p', '-r', FPS,
-       '-color_primaries', 'bt709', '-color_trc', 'bt709', '-colorspace', 'bt709', '-movflags', '+faststart', '-t', f'{total_s:.3f}', final)
+    if a.meta_only and final.exists():
+        print('keeping', final)
+    else:
+        sh(ff, '-y', '-loglevel', 'error', *inputs, '-filter_complex', ';'.join(fc), *maps,
+           '-c:v', 'libx264', '-preset', 'slow', '-crf', 16, '-pix_fmt', 'yuv420p', '-r', FPS,
+           '-color_primaries', 'bt709', '-color_trc', 'bt709', '-colorspace', 'bt709', '-movflags', '+faststart', '-t', f'{total_s:.3f}', final)
     got = probe(ff, str(final)); print('final', got)
     if abs(got['seconds'] - total_s) > 0.6 or got['w'] != 1920:
         sys.exit(f'assembly came out wrong: {got} vs {total_s:.1f} s expected')
