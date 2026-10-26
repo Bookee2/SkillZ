@@ -231,9 +231,9 @@ def main() -> int:
     # 2. the end card, with the next film named
     parts = []
     intro = Path(film.get('intro') or '')
-    intro_s = 0.0
+    intro_s = 0.0; intro_sound = False
     if not a.skip_intro and intro.exists():
-        parts.append(intro); intro_s = probe(ff, str(intro))['seconds']
+        ip = probe(ff, str(intro)); parts.append(intro); intro_s = ip['seconds']; intro_sound = ip['audio']
     elif not a.skip_intro:
         print('no intro file yet; skipping the intro')
     parts.append(hud_mp4)
@@ -245,7 +245,8 @@ def main() -> int:
     card_s = probe(ff, str(card))['seconds'] if card.exists() and not a.skip_end else 0.0
     total_s = intro_s + film_s + card_s
 
-    # 3. assemble: concat the video at 24 fps 1920×1080, the music under all of it
+    # 3. assemble: concat the video at 24 fps 1920×1080. An intro with its own sound (the sonic logo) plays
+    #    as mastered and the music starts as it ends; a silent intro gets the music under it too.
     m = film.get('music') or {}
     inputs = []; fc = []
     for i, p in enumerate(parts):
@@ -253,12 +254,17 @@ def main() -> int:
         fc.append(f'[{i}:v]fps={FPS},scale=1920:1080:flags=lanczos,format=yuv420p,setsar=1[v{i}]')
     fc.append(''.join(f'[v{i}]' for i in range(len(parts))) + f'concat=n={len(parts)}:v=1:a=0[v]')
     final = dest / f'{slug}-youtube.mp4'
+    music_at = intro_s if intro_sound else 0.0
     if m.get('file'):
         inputs += ['-i', m['file']]; ai = len(parts); st = float(m.get('start') or 0)
-        fade_out = max(0.0, total_s - 3.0)
-        fc.append(f'[{ai}:a]atrim=start={st}:end={st+total_s},asetpts=PTS-STARTPTS,'
+        music_s = total_s - music_at; fade_out = max(0.0, music_s - 3.0)
+        fc.append(f'[{ai}:a]atrim=start={st}:end={st+music_s},asetpts=PTS-STARTPTS,'
                   f'afade=t=in:st=0:d=1.5,afade=t=out:st={fade_out:.2f}:d=3,'
-                  f'loudnorm=I=-14:TP=-1.5:LRA=11,aresample=48000[a]')
+                  f'loudnorm=I=-14:TP=-1.5:LRA=11,aresample=48000' + (f',adelay={int(music_at*1000)}:all=1[mus]' if intro_sound else '[a]'))
+    if intro_sound:
+        fc.append(f'[0:a]aresample=48000,apad=whole_dur={total_s:.3f}[sting]')
+        fc.append('[sting][mus]amix=inputs=2:duration=first:normalize=0[a]' if m.get('file') else '[sting]anull[a]')
+    if m.get('file') or intro_sound:
         maps = ['-map', '[v]', '-map', '[a]', '-c:a', 'aac', '-b:a', '192k']
     else:
         maps = ['-map', '[v]', '-an']
