@@ -36,7 +36,7 @@ Make `/Volumes/KB SS/TrailGoat-Studio/Films/<slug>/film.json`:
 
 - `out_dir` must hold `course-{id}.json`, `hud-frames.json` and `poster.webp` from the render. A master rendered before the readout existed only needs a `--dry` run of `render.py` to write `hud-frames.json`.
 - `shots` is the authored shot spec; its verified `aids` become the chapters. Without it the chapters come from the catalogue's aid list, which is unverified: say so in the report.
-- `music`: pick from the library by the race's character, never reuse a track across films, and copy the exact credit line from `LICENSES.md` when the licence needs one (CC-BY tracks do). `start` skips into a long piece; `reason` is the one-line joke that goes in the description.
+- `music`: pick from the library by the race's character, never reuse a track across films, and copy the exact credit line from `LICENSES.md` when the licence needs one (CC-BY tracks do). `start` skips into a long piece (to its famous theme, or so a finale lands on the film's last frames); `delay` holds the track back that many seconds after the intro (a piece shorter than the film can then end on the finish pull-back); a track that runs out before the video ends finishes on its own ending, not a forced fade. `reason` is the one-line joke that goes in the description.
 - `next`: the title of the film that follows in the playlist; it's typed into the end card and linked in Studio.
 
 ## Dress it

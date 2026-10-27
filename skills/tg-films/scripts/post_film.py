@@ -8,7 +8,7 @@ film.json:
   "out_dir": "…/out/yt1080/georgia-sky-to-summit-25k",      render.py's out dir: course-{id}.json, hud-frames.json, poster.webp
   "master":  "…/georgia-sky-to-summit-25k-1080p-master.mp4", the clean 1080p master (no readout)
   "shots":   "…/scripts/flythrough/shots/357.json",           optional: the verified aid pins (chapters come from these)
-  "music":   {"file": "…/Bach Cello Suite….mp3", "start": 0, "title": "Cello Suite No. 1, Prelude",
+  "music":   {"file": "…/Bach Cello Suite….mp3", "start": 0, "delay": 0, "title": "Cello Suite No. 1, Prelude",
               "artist": "Bach, played by Cooper Cannell", "reason": "…", "credit": ""},
   "next":    {"title": "Perpetua Coast: 30 miles on the Oregon coast in 3D"},
   "intro":   "…/Films/assets/intro-trailgoat-films-1080p24.mp4",
@@ -72,6 +72,15 @@ def mmss(t: float) -> str:
 
 
 # ---------- chapters ----------
+KEEP_CAPS = {'AS', 'AS1', 'AS2', 'AS3', 'AS4', 'AS5', 'AS6', 'AS7', 'AS8', 'AS9', 'TH', 'CP', 'FR', 'NF', 'US', 'SR', 'TR', 'II', 'III', 'IV', 'HQ', 'KOA'}
+def chapter_name(label: str) -> str:
+    """'ADOBE AS' → 'Adobe AS', 'HWY 189' → 'Hwy 189', 'MT. MITCHELL' → 'Mt. Mitchell': title case that keeps the
+    station abbreviations ('AS' is aid station, not 'As')"""
+    words = label.split()
+    return ' '.join(w if re.sub(r'[^A-Z0-9]', '', w) in KEEP_CAPS or re.fullmatch(r'AS-?\d+', w) else w.capitalize() if not w[:1].isdigit() else w.lower()
+                    for w in words)
+
+
 def chapter_marks(rec: dict, hud: dict, shots: dict | None, intro_s: float, card_s: float = 0.0) -> list[tuple[float, str]]:
     """(seconds in the final film, label): the start, each verified aid pin, the finish, the card."""
     dist = hud['dist_m']; fps = hud.get('fps', FPS); total = float(rec['distance_m'])
@@ -81,7 +90,7 @@ def chapter_marks(rec: dict, hud: dict, shots: dict | None, intro_s: float, card
         for mi, label in shots['aids']:
             name, _, tail = label.partition(' · ')
             miles = [float(x) for x in re.findall(r'\d+(?:\.\d+)?', tail)] or [float(mi)]
-            pins += [(name.title(), x*MI*k) for x in miles]
+            pins += [(chapter_name(name), x*MI*k) for x in miles]
     else:
         # the catalogue's names carry notes ('Bartram (cutoff only, no aid)'); keep the name, flag a cutoff
         aids = rec.get('aid_stations'); aids = json.loads(aids) if isinstance(aids, str) else (aids or [])
@@ -308,13 +317,20 @@ def main() -> int:
         fc.append(f'[{i}:v]fps={FPS},scale=1920:1080:flags=lanczos,format=yuv420p,setsar=1[v{i}]')
     fc.append(''.join(f'[v{i}]' for i in range(len(parts))) + f'concat=n={len(parts)}:v=1:a=0[v]')
     final = dest / f'{slug}-youtube.mp4'
-    music_at = intro_s if intro_sound else 0.0
+    # the track starts as the intro ends (plus music.delay, e.g. to let a short piece finish on the finish pull-back);
+    # a track that runs out before the video ends finishes on its own ending instead of a forced fade
+    music_at = (intro_s if intro_sound else 0.0) + float(m.get('delay') or 0)
     if m.get('file'):
         inputs += ['-i', m['file']]; ai = len(parts); st = float(m.get('start') or 0)
-        music_s = total_s - music_at; fade_out = max(0.0, music_s - 3.0)
-        fc.append(f'[{ai}:a]atrim=start={st}:end={st+music_s},asetpts=PTS-STARTPTS,'
-                  f'afade=t=in:st=0:d=1.5,afade=t=out:st={fade_out:.2f}:d=3,'
-                  f'loudnorm=I=-14:TP=-1.5:LRA=11,aresample=48000' + (f',adelay={int(music_at*1000)}:all=1[mus]' if intro_sound else '[a]'))
+        music_s = total_s - music_at; avail = max(0.0, probe(ff, m['file'])['seconds'] - st)
+        play_s, fade = (avail, f'afade=t=out:st={max(0.0, avail - 0.3):.2f}:d=0.3') if avail < music_s else \
+                       (music_s, f'afade=t=out:st={max(0.0, music_s - 3.0):.2f}:d=3')
+        if avail < music_s: print(f'the track ends on its own at {music_at + avail:.1f} s of {total_s:.1f} s')
+        delayed = intro_sound or music_at > 0
+        fc.append(f'[{ai}:a]atrim=start={st}:end={st+play_s},asetpts=PTS-STARTPTS,'
+                  f'afade=t=in:st=0:d=1.5,{fade},'
+                  f'loudnorm=I=-14:TP=-1.5:LRA=11,aresample=48000' + (f',adelay={int(music_at*1000)}:all=1[mus]' if delayed else '[a]'))
+        if delayed and not intro_sound: fc.append(f'[mus]apad=whole_dur={total_s:.3f}[a]')
     if intro_sound:
         fc.append(f'[0:a]aresample=48000,apad=whole_dur={total_s:.3f}[sting]')
         fc.append('[sting][mus]amix=inputs=2:duration=first:normalize=0[a]' if m.get('file') else '[sting]anull[a]')
