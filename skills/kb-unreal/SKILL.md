@@ -185,8 +185,9 @@ compacted and details vanish).
    checks you're on a branch, runs `./install.sh kb-unreal`, diffs the
    installed copy). Then commit the skill update on its branch, open a SkillZ PR
    and squash-merge it, and reinstall from main: Kris wants SkillZ updated after
-   every learning session (2026-10-26). This covers skill files only; project
-   code still waits for his go-ahead.
+   every learning session (2026-10-26). Finished, tested project PRs merge
+   without asking too: "You don't need my approval to merge finished work,
+   let's keep the ball rolling" (Kris, 2026-10-27).
 5. **Tell Kris** in the closing message, in two or three lines, what the skill
    learned this run.
 Never write secrets (API keys, tokens, the Google tiles key) into the skill.

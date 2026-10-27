@@ -37,7 +37,7 @@ Then read `CLAUDE.md` / `AGENTS.md` if present, plus `scripts/flythrough/README.
    - each end turns at most 40°;
    - the box takes in both wide footprints.
 
-   **Close enough to read.** Kris, 2026-10-27, on a batch flown 2–7 km out: "I can't read the billboard or aid station names on any of them … come closer in and follow closer to the runner." render.py sizes pins, labels and the sign with the course (label scale SZ: 0.35 up to 50 km, then distance/161 km up to 1.0), so readability is label size over camera distance. With trailgoat PR #753 (`close-follow-films`), `author_film.py` follows at 3,550 m × SZ of slant, about 15% closer than Wild Florida's approved 1.46 km:
+   **Close enough to read.** Kris, 2026-10-27, on a batch flown 2–7 km out: "I can't read the billboard or aid station names on any of them … come closer in and follow closer to the runner." render.py sizes pins, labels and the sign with the course (label scale SZ: 0.35 up to 50 km, then distance/161 km up to 1.0), so readability is label size over camera distance. Since trailgoat PR #753 (merged 2026-10-27), `author_film.py` follows at 3,550 m × SZ of slant, about 15% closer than Wild Florida's approved 1.46 km:
    - a 50K follows about 760 m out, a 50-miler 1.1 km, a 100 2.2 km;
    - the look-ahead is 0.15× the slant;
    - each leg lasts as long as its miles take at 18 °/s of ground flow, so films run about 2:50–3:20;
@@ -45,7 +45,7 @@ Then read `CLAUDE.md` / `AGENTS.md` if present, plus `scripts/flythrough/README.
 
    Kris signed this off on 2026-10-27, after all 11 redone review copies: "These all look good, I think we've got our process down to a nice science." It is the standard for every new course: close follow, fixers, a 720p review copy, his OK, then the 1080p master.
 
-   Before #753 merges, check any authored film against Wild Florida: about 900 m out, a 170–200 m look-ahead and 0.31 mi/s. Last night's batch had 2.3–6.5 km, 900 m and 0.6–0.7 mi/s, and every course was redone.
+   For a film authored by hand, check it against Wild Florida: about 900 m out, a 170–200 m look-ahead and 0.31 mi/s. The 2026-10-26 batch flew 2.3–6.5 km out with a 900 m look-ahead at 0.6–0.7 mi/s, and every course was redone.
 
    Then fix three things on the shots file with this skill's scripts (`~/.claude/skills/tg-render/scripts/`), in order:
    ```bash
