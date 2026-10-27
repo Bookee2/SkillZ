@@ -150,16 +150,28 @@ DEM_NOTICE = {
     'united kingdom': '© Environment Agency copyright and/or database right 2015. All rights reserved.',
 }
 US = {'united states', 'united states of america', 'usa', 'us'}
+# Imagery credits, by render.py's source names (its "IMAGERY used" log line). All are free to publish with these.
+IMAGERY_CREDIT = {
+    'usgs': 'Imagery: USDA NAIP via USGS The National Map: Orthoimagery.',
+    'ign': 'Aerial imagery: IGN BD ORTHO®, Licence Ouverte Etalab 2.0.',
+    'swisstopo': 'Aerial imagery: © swisstopo, SWISSIMAGE (free geodata of the Swiss Confederation).',
+    'pnoa': 'Aerial imagery: PNOA cedido por © Instituto Geográfico Nacional (CC BY 4.0).',
+    's2-2016': 'Satellite imagery: Sentinel-2 cloudless 2016 by EOX IT Services GmbH, https://s2maps.eu '
+               '(contains modified Copernicus Sentinel data 2016), CC BY 4.0.'}
+# the short on-screen form, for sources that ask to be named where their pictures are seen (PNOA's terms require it)
+IMAGERY_ONSCREEN = {'ign': 'IGN BD ORTHO', 'swisstopo': '© swisstopo', 'pnoa': 'PNOA cedido por © IGN', 's2-2016': 'Sentinel-2 cloudless 2016 by EOX'}
 
 
 def render_sources(film: dict) -> dict:
     """what the render actually used, from render.py's own log lines in out_dir: the imagery source and whether the
     OpenStreetMap coastline went in. film.json's "imagery" / "coastal" override when there's no log."""
-    found = {'imagery': film.get('imagery'), 'osm': film.get('coastal')}
+    found = {'imagery': film.get('imagery'), 'osm': film.get('coastal'), 'used': film.get('imagery_used')}
     for log in sorted(Path(film['out_dir']).glob('*.log')):
         txt = log.read_text(errors='ignore')
         m = re.search(r'TERRAIN chunks .* imagery (\w+)', txt)
         if m and found['imagery'] is None: found['imagery'] = m[1]
+        u = re.search(r'IMAGERY used (.+)', txt)                     # render.py since 2026-10-27: which sources filled tiles
+        if u and found['used'] is None: found['used'] = [kv.split(':')[0] for kv in u[1].split()]
         if found['osm'] is None and re.search(r'OSM coastline \d+ segments', txt): found['osm'] = True
     return found
 
@@ -180,7 +192,9 @@ def data_credits(rec: dict, film: dict) -> str:
         notices.append('ArcticDEM: DEMs created from DigitalGlobe, Inc., imagery and funded under National Science Foundation '
                        'awards 1043681, 1559691, and 1542736.')
     parts = [terrain, *notices]
-    if src['imagery'] in (None, 'usgs'): parts.append('Imagery: USDA NAIP via USGS The National Map: Orthoimagery.')
+    used = src['used'] or ([src['imagery']] if src['imagery'] not in (None, 'auto', 'none') else ['usgs'] if src['imagery'] is None else [])
+    if 'esri' in used: sys.exit('this render used Esri World Imagery, whose terms do not allow publishing it')
+    parts += [IMAGERY_CREDIT[k] for k in IMAGERY_CREDIT if k in used]
     if src['osm']: parts.append('Coastline: © OpenStreetMap contributors, openstreetmap.org/copyright')
     parts.append('Rendered in Blender from the course GPX.')
     return '\n'.join(parts)
@@ -297,6 +311,8 @@ def main() -> int:
         if '--mark-scale' in hud_py.read_text(): extra += ['--mark-scale', str(hcfg.get('mark_scale', 2.2))]
         # "hud": {"hide": "645-735"}: frames the card steps aside for (trailgoat #754), e.g. a sign passing under it
         if hcfg.get('hide') and '--hide' in hud_py.read_text(): extra += ['--hide', str(hcfg['hide'])]
+        onscreen = [IMAGERY_ONSCREEN[k] for k in IMAGERY_ONSCREEN if k in (render_sources(film)['used'] or [])]
+        if onscreen and '--credit' in hud_py.read_text(): extra += ['--credit', 'Imagery: ' + ' · '.join(onscreen)]
         sh(PY, hud_py, out_dir, '--src', master, '--dst', hud_mp4, *extra)
     film_s = probe(ff, str(hud_mp4))['seconds']
 
