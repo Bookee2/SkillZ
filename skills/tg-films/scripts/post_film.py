@@ -295,6 +295,8 @@ def main() -> int:
         hcfg = film.get('hud') or {}; hud_py = REPO / 'scripts/flythrough/hud.py'
         extra = ['--scale', str(hcfg.get('scale', 1.7))]
         if '--mark-scale' in hud_py.read_text(): extra += ['--mark-scale', str(hcfg.get('mark_scale', 2.2))]
+        # "hud": {"hide": "645-735"}: frames the card steps aside for (trailgoat #754), e.g. a sign passing under it
+        if hcfg.get('hide') and '--hide' in hud_py.read_text(): extra += ['--hide', str(hcfg['hide'])]
         sh(PY, hud_py, out_dir, '--src', master, '--dst', hud_mp4, *extra)
     film_s = probe(ff, str(hud_mp4))['seconds']
 
