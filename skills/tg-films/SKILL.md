@@ -25,7 +25,7 @@ Make `/Volumes/KB SS/TrailGoat-Studio/Films/<slug>/film.json`:
   "out_dir": "/Volumes/KB SS/TrailGoat-Studio/Renders/flyovers/youtube-1080/<slug>",
   "master":  "/Volumes/KB SS/TrailGoat-Studio/Renders/flyovers/youtube-1080/<slug>/<slug>-1080p-master.mp4",
   "slug": "<slug>",
-  "shots": "<repo>/scripts/flythrough/shots/<id>.json",
+  "shots": "/Volumes/KB SS/TrailGoat-Studio/Films/<slug>/<id>.json",
   "music": {"file": "…/audio-library/<track>.mp3", "start": 0, "title": "…", "artist": "…", "reason": "…", "credit": ""},
   "next": {"title": "<the next film's title>"},
   "intro": "/Volumes/KB SS/TrailGoat-Studio/Films/assets/intro-trailgoat-films-1080p24.mp4",
@@ -35,7 +35,7 @@ Make `/Volumes/KB SS/TrailGoat-Studio/Films/<slug>/film.json`:
 ```
 
 - `out_dir` must hold `course-{id}.json`, `hud-frames.json` and `poster.webp` from the render. A master rendered before the readout existed only needs a `--dry` run of `render.py` to write `hud-frames.json`.
-- `shots` is the authored shot spec; its verified `aids` become the chapters. Without it the chapters come from the catalogue's aid list, which is unverified: say so in the report.
+- `shots` is the authored shot spec; its verified `aids` become the chapters. Copy it into the film's own folder and point there, never at a worktree: a removed worktree silently drops a re-dress to the catalogue's chapters (Cocodona, 2026-10-26). Without a shots file the chapters come from the catalogue's aid list, which is unverified: say so in the report.
 - `music`: pick from the library by the race's character, never reuse a track across films, and copy the exact credit line from `LICENSES.md` when the licence needs one (CC-BY tracks do). `start` skips into a long piece (to its famous theme, or so a finale lands on the film's last frames); `delay` holds the track back that many seconds after the intro (a piece shorter than the film can then end on the finish pull-back); a track that runs out before the video ends finishes on its own ending, not a forced fade. `reason` is the one-line joke that goes in the description.
 - `next`: the title of the film that follows in the playlist; it's typed into the end card and linked in Studio.
 
