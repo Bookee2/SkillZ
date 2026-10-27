@@ -288,7 +288,12 @@ def main() -> int:
     if a.skip_hud:
         hud_mp4 = master
     elif not hud_mp4.exists():
-        sh(PY, REPO / 'scripts/flythrough/hud.py', out_dir, '--src', master, '--dst', hud_mp4)
+        # phone sizes: the CSS-sized card (values 17.6 px, labels 10.6 px at 1080p) and the 17 px corner mark can't be read on a
+        # phone (Kris, 2026-10-26, 17 Pro Max); 1.7x puts the values at 30 px, 2.2x the mark at 37 px. film.json "hud" overrides.
+        hcfg = film.get('hud') or {}; hud_py = REPO / 'scripts/flythrough/hud.py'
+        extra = ['--scale', str(hcfg.get('scale', 1.7))]
+        if '--mark-scale' in hud_py.read_text(): extra += ['--mark-scale', str(hcfg.get('mark_scale', 2.2))]
+        sh(PY, hud_py, out_dir, '--src', master, '--dst', hud_mp4, *extra)
     film_s = probe(ff, str(hud_mp4))['seconds']
 
     # 2. the end card, with the next film named
