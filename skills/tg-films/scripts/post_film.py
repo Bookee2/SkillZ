@@ -39,7 +39,7 @@ if os.path.exists(PY) and os.path.realpath(sys.executable) != os.path.realpath(P
     os.execv(PY, [PY, __file__, *sys.argv[1:]])
 UPLOADER_PY = os.environ.get('TG_UPLOADER_PY', str(Path.home() / '.config/trailgoat-youtube/venv/bin/python'))
 MI, FT, FPS = 1609.344, 3.28084, 24
-INTRO_S, CARD_S = 4.0, 15.0
+INTRO_S, CARD_S = 5.0, 15.0        # the Unreal ident and the end card (the real lengths are probed)
 
 
 def sh(*cmd, **kw):
