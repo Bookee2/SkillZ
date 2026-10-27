@@ -7,7 +7,7 @@ film.json:
 {
   "out_dir": "…/out/yt1080/georgia-sky-to-summit-25k",      render.py's out dir: course-{id}.json, hud-frames.json, poster.webp
   "master":  "…/georgia-sky-to-summit-25k-1080p-master.mp4", the clean 1080p master (no readout)
-  "shots":   "…/scripts/flythrough/shots/357.json",           optional: the verified aid pins (chapters come from these)
+  "shots":   "…/Films/<slug>/357.json",                       optional: the verified aid pins (chapters come from these)
   "music":   {"file": "…/Bach Cello Suite….mp3", "start": 0, "delay": 0, "title": "Cello Suite No. 1, Prelude",
               "artist": "Bach, played by Cooper Cannell", "reason": "…", "credit": ""},
   "next":    {"title": "Perpetua Coast: 30 miles on the Oregon coast in 3D"},
@@ -280,7 +280,9 @@ def main() -> int:
     slug = film.get('slug') or (rec.get('page_url') or '').rsplit('/', 1)[-1] or f"course-{rec['id']}"
     film['slug'] = slug
     hud = json.loads((out_dir / 'hud-frames.json').read_text())
-    shots = json.loads(Path(film['shots']).read_text()) if film.get('shots') and Path(film['shots']).exists() else None
+    if film.get('shots') and not Path(film['shots']).exists():          # a removed worktree would quietly swap in the catalogue's chapters
+        sys.exit(f"shots file not found: {film['shots']} (copy it into {dest} and point film.json there)")
+    shots = json.loads(Path(film['shots']).read_text()) if film.get('shots') else None
     master = Path(film['master'])
 
     # 1. the readout and corner mark (hud.py, from the TrailGoat checkout)

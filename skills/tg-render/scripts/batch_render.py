@@ -4,14 +4,18 @@
 import argparse
 import json
 from pathlib import Path
+import re
 import subprocess
 import sys
+import time
 from datetime import datetime, timezone
 
 OUTPUTS = ("hero.mp4", "hero.webm", "hero-phone.mp4", "poster.webp", "contact-sheet.png")
 FPS = 24
 # kb/s ceilings: Perpetua Coast (the reference film) plus 15 % headroom
 BUDGET_KBPS = {"hero-phone.mp4": 770, "hero.webm": 1240, "hero.mp4": 1875}
+NET_RETRIES = 3
+NET_ERROR = re.compile(r"URLError|Connection reset|timed out|RemoteDisconnected")
 
 
 def now():
@@ -89,6 +93,9 @@ def main():
         parser.error(f"TrailGoat renderer not found: {run}")
     if not (repo / ".venv/bin/python").is_file():
         parser.error(f"TrailGoat encoder environment missing: {repo / '.venv/bin/python'}")
+    tiles = repo / "scripts/flythrough/.tiles"
+    if not tiles.is_dir() or not any(tiles.iterdir()):
+        print(f"note: {tiles} is empty, so every tile comes over the network; in a worktree, symlink the main checkout's .tiles", flush=True)
     queue = load_queue(args.manifest.resolve(), repo)
     for cid, name, out in queue:
         print(f"{cid}: {name} -> {out}", flush=True)
@@ -120,10 +127,17 @@ def main():
             cmd = [str(run), str(cid), str(out)]
         atomic_json(status_path, status)
         print(f"START {cid}: {name}", flush=True)
-        with log_path.open("a") as log:
-            log.write(f"\n=== {now()} course {cid}: {name} ===\n")
-            log.flush()
-            result = subprocess.run(cmd, cwd=repo, stdout=log, stderr=subprocess.STDOUT, check=False)
+        for attempt in range(NET_RETRIES + 1):
+            with log_path.open("a") as log:
+                log.write(f"\n=== {now()} course {cid}: {name} ===\n")
+                log.flush()
+                start = log.tell()
+                result = subprocess.run(cmd, cwd=repo, stdout=log, stderr=subprocess.STDOUT, check=False)
+            # terrain and imagery tiles come over the network: a dropped fetch resumes from the frames already rendered
+            if result.returncode == 0 or attempt == NET_RETRIES or not NET_ERROR.search(log_path.read_text(errors="replace")[start:]):
+                break
+            print(f"RETRY {cid}: network error, again in {60 * (attempt + 1)} s", flush=True)
+            time.sleep(60 * (attempt + 1))
         status["finished_at"] = now()
         status["exit_code"] = result.returncode
         status["state"] = "complete" if result.returncode == 0 and complete(out) else "failed"
