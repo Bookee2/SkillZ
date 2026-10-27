@@ -385,7 +385,10 @@ def main() -> int:
     (dest / 'description.txt').write_text(desc)
     name = race_name(rec); metric = rec.get('units') == 'metric'
     dist = f"{rec['distance_m']/1000:.0f} km" if metric else f"{rec['distance_m']/MI:.0f}-mile"
-    title = film.get('title') or f"{name}: the whole {dist} course in 3D, every aid station | TrailGoat"
+    # a name that already carries its distance (Javelina Jundred 100 Miler, Bigfoot 200) keeps it: the GPX runs short of
+    # the official distance on long courses (98.9 mi, 184 mi), and "the whole 99-mile course" reads wrong under it
+    whole = 'the whole course' if re.search(r'\d', name) else f'the whole {dist} course'
+    title = film.get('title') or f"{name}: {whole} in 3D, every aid station | TrailGoat"
     if len(title) > 100:
         title = f"{name} in 3D: every aid station | TrailGoat"
     tags = ['trail running', 'ultramarathon', 'race flyover', '3D course map', name, 'aid stations', 'race planning', 'TrailGoat']
