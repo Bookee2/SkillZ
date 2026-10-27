@@ -37,6 +37,22 @@ Then read `CLAUDE.md` / `AGENTS.md` if present, plus `scripts/flythrough/README.
    - each end turns at most 40°;
    - the box takes in both wide footprints.
 
+   **Close enough to read.** Kris, 2026-10-27, on a batch flown 2–7 km out: "I can't read the billboard or aid station names on any of them … come closer in and follow closer to the runner." render.py sizes pins, labels and the sign with the course (label scale SZ: 0.35 up to 50 km, then distance/161 km up to 1.0), so readability is label size over camera distance. With trailgoat PR #753 (`close-follow-films`), `author_film.py` follows at 3,550 m × SZ of slant, about 15% closer than Wild Florida's approved 1.46 km:
+   - a 50K follows about 760 m out, a 50-miler 1.1 km, a 100 2.2 km;
+   - the look-ahead is 0.15× the slant;
+   - each leg lasts as long as its miles take at 18 °/s of ground flow, so films run about 2:50–3:20;
+   - THE START drifts in from 1.05× to 0.78× the slant.
+
+   Before #753 merges, check any authored film against Wild Florida: about 900 m out, a 170–200 m look-ahead and 0.31 mi/s. Last night's batch had 2.3–6.5 km, 900 m and 0.6–0.7 mi/s, and every course was redone.
+
+   Then fix three things on the shots file with this skill's scripts (`~/.claude/skills/tg-render/scripts/`), in order:
+   ```bash
+   python3 fix_stems.py <course.json> <shots.json>    # aid pins on the start, finish or HIGH POINT stack instead of overprinting
+   python3 fix_sign.py  <course.json> <shots.json>    # the race sign faces THE START, sized and turned for the finish
+   ```
+   - `fix_stems.py`: a loop's HQ aid stands on the start at a mid-race mile, so render.py doesn't lift either pin. It stacks the aid under the start or finish pin (stem 0.2, never up into the sign) and lifts a pin on the high point to 2.6.
+   - `fix_sign.py`: the sign stands 0.3× the follow slant behind the start, facing THE START's camera (not the whole-course opener's). Its letters scale with SZ, capped so the name fits the frame. On a loop it turns toward the finish cameras only as far as its row's near end stays 150 m behind the start pin. A long name on a loop still shows side-on where the camera comes back past it; ask Kris whether the sign stays all film.
+
    Appalachian 200's `shots/69.json` is the reference; Wild Florida's `shots/96.json` is the close-follow example. Keep the full route covered, and use `--dry` to check the camera lints and map. The limits are:
    - ground flow ≤ 8 °/s (18 on follow legs);
    - yaw ≤ 7 °/s;
@@ -45,7 +61,11 @@ Then read `CLAUDE.md` / `AGENTS.md` if present, plus `scripts/flythrough/README.
    `flow_const` moves count only sideways motion. A course whose aids can't be verified renders from a copy of its record with `aid_stations` cleared, so it gets no pins.
    Copy the finished shots file into the film's output folder too. Later steps, like tg-films chapters and re-dresses, then never depend on a worktree that may be gone.
 3. Keep catalogue aid stations when present. If they're absent, research the organizer's current course and aid information. Record the source and edition, reconcile station miles with the actual GPX, and add verified `[mile, label]` entries to the shot spec. One physical station visited twice may be one labeled pin. Never invent pins. If aid data can't be verified, say so and render without guessed stations.
-4. For a new course Kris hasn't seen, a 360p preview comes first: `render.py … --shots <shots.json> --preview --every 4` (640×360, every 4th frame, about 3–4 min on the Mac mini once the tiles are cached). Encode it at `-framerate 6 -r 24` so the timing is the film's, and copy it to iCloud `TrailGoat Videos/review/<date>/` for his phone. The full render waits for his OK.
+4. For a new course Kris hasn't seen, a review copy comes first: `render.py … --shots <shots.json> --res 1280x720 --samples 8 --every 2`. That's about 0.3 s a frame, about 13 min a course. Encode it at `-framerate 12 -r 24` so the timing is the film's, and copy it to iCloud `TrailGoat Videos/review/<date>/` for his phone. The full render waits for his OK.
+   - **Never 360p.** At 640×360 the sign and aid labels are a few pixels tall, so he can't judge what matters (2026-10-27).
+   - **Never every 4th frame.** Shown at 6 fps, mountain parallax jumps and reads as a shaky camera. Quest's render jolts 4 times in 85 s at 24 fps and 37 times at every 4th frame.
+   - **Motion needs every frame.** For a mountain course, also make one copy at the full 24 fps (no `--every`, about 25 min) and point him to it.
+   - **Measuring motion:** `shake.py <cam.json>` (from `render.py --dry --export-cam cam.json`) measures the camera path. `picture_jitter.py <video> <t0> <t1> <step>` measures the rendered picture. Check the picture: a steady camera path can still look shaky, and the reverse.
 5. Render full-resolution stills (`--stills`) at the opening, the billboard exit, representative follow legs, each aid pin, and the finish. Read the images yourself, checking label readability and frame edges, and fix bad framing before the expensive pass. A clean lint is necessary, but it doesn't replace looking.
 
 ## Render and batch
