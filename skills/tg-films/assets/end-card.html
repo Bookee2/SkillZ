@@ -1,0 +1,73 @@
+<title>End card · Plan this race free</title>
+<!--
+  TrailGoat YouTube end card (1920×1080, 15.0 s, 24 fps, silent).
+  Placeholders: {{RACE}} (this film's race) and {{NEXT}} (the next film's title).
+  scripts/render_end_card.py substitutes them and renders with the kb-ytvideo engine.
+
+  Layout (card state, cam 1.0 → world px = screen px, card centred on 960,540):
+    card 1560×860 r44           screen x 180–1740, y 110–970
+    left column x −700…+120     avatar 150, display 76 px, mono 46 px, muted 28 px (≤ 2 lines)
+    NEXT zone  480×270 r12      world +220…+700 × −297…−27  → screen x 1180–1660, y 243–513
+    SUB zone   circle 200       world +360…+560 × +95…+295  → screen x 1320–1520, y 635–835
+  Both zones sit in YouTube's end-screen-safe region (x 96–1824, y 108–972) on the right half.
+  Captions live outside the zones: "NEXT FLYOVER" above the rectangle, {{NEXT}} below it,
+  "SUBSCRIBE" below the circle. Nothing moves after 2.4 s.
+-->
+<style>
+  .cap{font-family:var(--f-mono);font-size:22px;line-height:26px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);text-align:center}
+  .zone{box-sizing:border-box;border:2px solid var(--muted)}
+  #Lcard .a{position:absolute}
+</style>
+<div data-slot="shape">
+  <div class="L" id="Lpill"><div class="row" style="transform:translate(-50%,-50%);gap:16px;color:var(--bright);font-size:40px;font-weight:700"><img src="brand:avatar" style="width:58px;height:58px;border-radius:29px">TrailGoat</div></div>
+  <div class="L" id="Lcard">
+    <!-- left column -->
+    <img class="a" src="brand:avatar" style="left:-700px;top:-208px;width:150px;height:150px;border-radius:75px">
+    <div class="a display" id="headline" style="left:-704px;top:-30px;font-size:76px;line-height:1;color:var(--bright);white-space:nowrap">Plan this race free.</div>
+    <div class="a mono" style="left:-700px;top:68px;font-size:46px;line-height:1;color:var(--accent);white-space:nowrap">trailgoat.run</div>
+    <div class="a" id="race" style="left:-700px;top:136px;width:820px;font-size:28px;line-height:1.3;color:var(--muted)">{{RACE}}: every aid station, cutoffs, pacing, fuel, weather</div>
+
+    <!-- reserved zone 1: YouTube's video element (16:9) -->
+    <div class="a" id="zoneNext" style="left:200px;top:-335px;width:520px;height:394px">
+      <div class="a cap" style="left:0;top:0;width:520px">Next flyover</div>
+      <div class="a zone" style="left:20px;top:38px;width:480px;height:270px;border-radius:12px">
+        <svg class="a" style="left:206px;top:101px" width="64" height="64" viewBox="0 0 64 64"><path d="M16 9 L55 32 L16 55 Z" fill="var(--muted)" fill-opacity=".26" stroke="var(--muted)" stroke-opacity=".26" stroke-width="6" stroke-linejoin="round"/></svg>
+      </div>
+      <div class="a" id="next" style="left:0;top:324px;width:520px;font-size:28px;line-height:1.25;font-weight:600;color:var(--ink);text-align:center">{{NEXT}}</div>
+    </div>
+
+    <!-- reserved zone 2: YouTube's subscribe element (circle) -->
+    <div class="a" id="zoneSub" style="left:360px;top:95px;width:200px;height:240px">
+      <div class="a zone" style="left:0;top:0;width:200px;height:200px;border-radius:50%">
+        <img class="a" src="brand:avatar" style="left:38px;top:38px;width:120px;height:120px;border-radius:60px">
+      </div>
+      <div class="a cap" style="left:-40px;top:214px;width:280px">Subscribe</div>
+    </div>
+  </div>
+</div><!--/shape-->
+<script>
+// Shrink a wrapped line until it fits in `maxLines` (runs once, when the card is first visible and fonts are loaded).
+let fitted=false;
+const fit=()=>{
+  if(fitted||document.fonts.status!=='loaded') return;
+  for(const [id,maxLines] of [['next',2],['race',2]]){
+    const el=document.getElementById(id); let fs=parseFloat(el.style.fontSize); const lh=parseFloat(el.style.lineHeight);
+    while(fs>18 && el.offsetHeight>maxLines*fs*lh+1){fs-=1; el.style.fontSize=fs+'px';}
+  }
+  fitted=true;
+};
+const zones=['zoneNext','zoneSub'].map(id=>document.getElementById(id));
+M.scene({
+  W:1920,H:1080,T:15,intro:0.1,
+  bg:BRAND.canvas+' url(brand:topo-16x9) center/cover',
+  SH:{pill:{w:330,h:100,r:50,bg:BRAND.panel,cam:1.5}, card:{w:1560,h:860,r:44,bg:BRAND.panel,cam:1.0}},
+  start:'pill', SEQ:[[0.8,'card']],
+  camSpring:M.MORPH,   // camera in lockstep with the shape, so the growing card never spills past the frame
+  layers:[
+    {el:'Lpill',tin:0.1,tout:0.8},
+    {el:'Lcard',tin:0.9,tout:null,o:{din:0.06,lin:0.3},update:fit},
+  ],
+  // the two reserved zones fade and scale in, each around its own centre, from 1.6 to 2.4 s
+  extra:(t,g)=>{const v=M.vis(t,1.6,null,{din:0,lin:0.8,blur:10}); for(const z of zones) M.apply(z,v);},
+});
+</script>
