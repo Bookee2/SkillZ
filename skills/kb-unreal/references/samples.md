@@ -152,3 +152,16 @@ outside Unreal). Don't flag the "NoAI" tag.
   panic) — Windows or tiled only.
 - Fab samples listed for an older engine: tick "Show all projects" in Add to
   Project and pick the older content version (how the Niagara pack went in).
+
+## Sample audio worth exporting (2026-10-26)
+- Electric Dreams `Content/Audio`: Soundscape palettes (close crickets, forest
+  leaves, foliage rustle, birds, frogs, monkeys, insects, water), 10 boulder
+  impacts, twig snaps, the intro drone and a PCG camera music cue.
+- Game Animation Sample `Content/Audio/Foley`: 253 sneaker footsteps (concrete
+  only: walk, run, jump, land, scuffs, slides), hand plants, body tumbles, and
+  starter wind/birds loops.
+- City Sample (the Amandine project): ~1,600 sounds, city footsteps on cement and
+  puddles, vehicle impacts.
+- Project Titan: adaptive orchestral stems (timpani, brass, strings), but its
+  project doesn't enable the Python plugin, so the headless export didn't run.
+Export with `TrailGoat/studio/particle-engine/scripts/export_sounds.py`.

@@ -85,6 +85,9 @@ anything the sample re-applies on load (switchers) in the clone.
   "-ini:Engine:[…PythonScriptPluginSettings]:bRemoteExecution=False" > log &`
   → poll for the last real frame (detect early death) → sleep 20–45 s →
   `kill -9` the render → `pkill -9 -x CrashReportClient` → trim extras.
+- Sharing the Mac with a Blender batch: `render_films.sh` freezes it with
+  `kill -STOP` for the length of the Unreal render and resumes it with
+  `kill -CONT` from a trap (it carries on exactly where it was).
 - Close the project's editor first; pause other heavy editors
   (`kill -STOP <pid>`, resume with `kill -CONT`).
 - Nightly/unattended: `TrailGoat-Studio/render_night.sh` (queue list,
@@ -103,6 +106,7 @@ anything the sample re-applies on load (switchers) in the clone.
 | Canyon run | 720p / 1080p | ~1 / 3–15 s per frame; 4K ~4 h |
 | ParticleLab | 960×540 1 sample / 1080p 8 | ~3 min / 5–8 min per film |
 | Blender flyovers | 720p Eevee | 0.6–0.9 s/frame |
+| Films ident (ParticleLab, 150k ×2 + fog) | checks every 6th frame, 2 samples / 720p 4 samples | ~9 min / 11.6 min (121 frames; ~5 min is startup and shaders) |
 | Editor open | big sample first open | minutes to an hour (Nanite + shaders) |
 
 ## Encode and post (ffmpeg)

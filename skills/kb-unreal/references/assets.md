@@ -22,6 +22,10 @@
   Jump_Run, Jump_Over_Obstacle_2, Handstand_Flip, Victory_Cheer, Idle_15,
   All_Night_Dance, Big_Wave_Hello, slide_light, climbing_up_wall…; avoid
   Stand_and_Drink). Copies in `ParticleLab/data/goat_src/`. Faces −X.
+  Bakes in `ParticleLab/data/`: run03 (20 frames), flip (81), dance (90),
+  leap = Jump_Over_Obstacle_2 (21 frames, real airborne leap with 2.15 m of
+  travel; Jump_Run is an in-place crouch), each with `head_track.json`
+  (forehead lamp + beam) where tracked. FILMS letters: `data/text3d_films/`.
 - **Meshy props/islands**: bottle, orange (Citrus Glow), shoe; islands
   (Floating Alpine Citadel, Sky to Summit 25K, Summit Market Isle, Whispering
   Pine Falls, Winding Alpine Ascent) in `TrailGoat/assets/3D Models/`.
@@ -62,6 +66,13 @@
 - Kris's music: `KB SS/TrailGoat-Studio/Renders/blocks/Trail Goat
   {Breakbeat,Tech House} {20s,Opener}.wav`; `Intro_motion/Scripts/
   songs_all.txt` lists in-points. Synth cues: `particle-engine/post/synth.py`.
+
+- Epic sample recordings exported to WAV: `KB SS/TrailGoat-Studio/Music/
+  sfx-epic/` — `electric-dreams/` (crickets, forest leaves, foliage rustle,
+  boulder impacts ×10, twig snaps, the intro drone) and
+  `game-animation-sample/` (sneaker run ×29, jump ×17, land ×20 on concrete;
+  starter wind ×2). Epic content: inside Unreal-made video only, never handed
+  out. Project Titan's orchestral stems didn't export (no python headless).
 
 ## Data
 - Course data: trailgoat.run API `/api/fuel/courses/{id}` (GPX, aid stations,

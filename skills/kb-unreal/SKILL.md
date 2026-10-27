@@ -183,7 +183,10 @@ compacted and details vanish).
    notes → fixes, outcome, what the skill learned.
 4. **Install and verify**: `scripts/selfupdate.sh` (finds the SkillZ repo,
    checks you're on a branch, runs `./install.sh kb-unreal`, diffs the
-   installed copy). Don't push or open a PR unless Kris asks.
+   installed copy). Then commit the skill update on its branch, open a SkillZ PR
+   and squash-merge it, and reinstall from main: Kris wants SkillZ updated after
+   every learning session (2026-10-26). This covers skill files only; project
+   code still waits for his go-ahead.
 5. **Tell Kris** in the closing message, in two or three lines, what the skill
    learned this run.
 Never write secrets (API keys, tokens, the Google tiles key) into the skill.

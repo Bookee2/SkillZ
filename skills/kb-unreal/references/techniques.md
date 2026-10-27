@@ -240,6 +240,39 @@ Facing a sunlit planet head-on gives a flat cream wall; frame the limb.
 - Catalogue without rendering: Epic stores a preview JPEG/PNG inside each
   .uasset — `assets/extract_uasset_thumbs.py` cuts them out (65 of 67).
 
+## A light the character carries (Films ident headlamp)
+- Track a mesh vertex, not a bone: `blender_head_track.py` picks the forehead
+  vertex on the midline at frame 0 (near the Head bone, above it, furthest
+  along Head → `headfront`), evaluates it every frame, and writes it in the
+  point bake's space with the beam direction (head forward tipped by
+  `--pitch`). The prep transforms it exactly like the shader transforms the
+  goat (heading, travel, leap arc) into one per-frame lamp table.
+- That table drives three things identically: MPC `LampP/LampD/Lamp` (the
+  particle shader's cone: `smoothstep(cos 16.6°, cos 8.9°)`, falloff
+  `1/(1+(d/7500)²)`), a real SpotLight's transform and intensity (CONSTANT
+  keys: a switch, not a fade), and a small additive core sphere attached to
+  the spot (emission ∝ Lamp², bright at the click, a glint in the hold).
+- Fog only where the light is: ExponentialHeightFog with black inscattering,
+  volumetric fog on, the spot's volumetric scattering 26 at 15,000 cd (floor
+  pool readable, shaft visible). Extra beam pitch in the opening so it pools
+  on the floor; tipped up in the hold so it doesn't.
+- Dust that becomes the character: goat particles start in a shell 12–42 m
+  round him (reflected off the camera's side), spiral in
+  (`G + RotZ(dust - G, 1.2 sin(πu))(1 - ease(u))`), and stay dark until the
+  last 40 % of their flight, so he condenses out of the dark; dust-only motes
+  (21 %) stay lit by the cone wherever it points.
+- Frame it offline: import the prep, project lamp, beam point, floor pool and
+  the character's extent through candidate camera keys (pinhole, 36 × 20.25 mm
+  filmback) and pick the keys before rendering anything.
+
+## Floor reflections of additive particles
+Lumen and SSR don't reflect translucent particles. A second ISM with the same
+instances and a `MIRRORF` flag reflects each particle's z about the floor and
+draws with `disable_depth_test` (it sits under the opaque floor), at 0.11×
+fading with depth below the floor (`exp(-d/1100)`), quads 1.6× softer; it
+keeps the particle letters through the hold so the solid lockup has a
+reflection too. Lit as the particle it mirrors (`wp.z = 2·ZF − WP.z`).
+
 ## Reveal materials (World Wakes)
 `mask = clamp((Time*270 − (WP.x + 365))/95)` lerps dark → bright and drives
 emissive; foliage bands grow by keying Scale.Z 0 → 1 staggered. Good for "a
@@ -263,5 +296,15 @@ ProRes 4444 overlays (`-itsoffset`, `overlay=eof_action=pass`).
   (bed −13 dB from −0.15 s, recovering over 1.8 s), layered hits (774 +
   2902 or 3057 + 1143) and a synthesised sub boom (80 → 28 Hz with a noise
   crack), debris whooshes (3003, 169).
+- Sound from the world, not from a stock catalogue (Films ident v2): night
+  crickets and foliage (Electric Dreams), sneaker footfalls placed on the
+  run bake's real foot strikes (toe minima → bake frames 2 and 12 of 20, so
+  every step lands on a contact), a reversed wind gust drawn into the lamp, a
+  reversed gust rushing into the leap and cut dead on the hit, two boulder
+  impacts + a sub as the one hit, the bed ducked to 8 % under the hit. Export
+  Epic sample SoundWaves with `scripts/export_sounds.py` (headless
+  `-run=pythonscript -nullrhi`; the .app binary for projects with a C++
+  module). Concrete foley reads as trail with a cosine low-pass at 2.6 kHz and
+  one twig snap.
 - Never reverse a click; reverse only power-ups. Cut risers just before the
   hit. Kris's own music goes on with `mux_music.sh` (loudnorm −14 LUFS).
