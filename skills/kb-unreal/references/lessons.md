@@ -70,6 +70,16 @@ Each line: what went wrong → the fix. Grouped by where it bites.
   spheres → hide them; never set CameraProxyMesh to None (crash).
 - MRQ alpha drops additive particles once opaque geometry exists → composite
   RGB only.
+- **WPO particle ISMs vanish whenever the world origin is off screen** (TrailGoat
+  Films ident, 2026-10-26: no particles for the first 2.2 s, then all of them as
+  the camera swung round to face the origin). UE5 culls every ISM instance on the
+  GPU by its own bounds, and instances parked at the origin at scale 0.0001 have
+  bounds there no matter where the WPO moves them; `max_world_position_offset_
+  displacement` and far-off dummy instances don't help. Fix: a copy of the quad
+  mesh with `positive/negative_bounds_extension` of ±60,000 cm, instances at
+  scale 1, and the WPO returning `o - WorldPosition` (the target minus the
+  vertex's own position). Earlier openers got away with it because their camera
+  always faced the origin.
 - The Path Tracer at 960×540 64 spp untiled **kernel-panicked the Mac** →
   never run it untiled; low spp, unattended only.
 - Claude Code background tasks die after ~30 min → for long jobs use
@@ -189,6 +199,7 @@ Each line: what went wrong → the fix. Grouped by where it bites.
 - Export `DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer` for
   scripts that need the Metal toolchain.
 - macOS has no `timeout`/`setsid` → loops with sleep, `nohup`.
+- `bash scripts/preflight.sh` fails on every line (`print: command not found`): it's a zsh script → run it as `zsh scripts/preflight.sh` or directly by path.
 
 ## Cesium
 - Default georeference is Denver → set and read back. Synchronous capture
@@ -214,3 +225,11 @@ Each line: what went wrong → the fix. Grouped by where it bites.
 - zsh doesn't word-split `$var` → `${=var}` (a download loop silently failed).
 - Mixkit full files: the download page links `…/sfx/<id>/<id>.mp3` or `.wav`;
   the asset host wants `Referer: https://mixkit.co/`.
+- **A per-particle random that ranks one thing must not drive another** (TrailGoat Films
+  ident v1, 2026-10-26: "the wordmark tilts down to the right"). R.y was sorted to match
+  each particle with its letter in reading order (corr 0.999), then reused for the drain's
+  fall speed, so the right half fell twice as far and the word tipped. Give each job its
+  own hash (`frac(R.x*7.31 + R.z*3.17)`), and check correlations offline before a render.
+- `-run=pythonscript` does nothing in a project without PythonScriptPlugin enabled, even
+  with `-EnablePlugins=` on the command line (Project Titan). Export what you need from a
+  project that has it, or enable the plugin in a clone.

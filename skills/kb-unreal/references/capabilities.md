@@ -108,6 +108,27 @@ to Summit 25K (one Meshy island with the route painted on).
   `notes/LESSONS.md`, `notes/RUNBOOK-space.md`, `notes/UVFX_TECHNIQUES.md`.
 - Cost: 576-frame 960×540 preview ~3 min; 1080p 8-sample final ~5–8 min.
 
+### TrailGoat Films ident ("Headlamp") · **Signed off (v2, 720p); 1080p final**
+A headlamp clicks on in the dark over a glossy trail floor; dust hangs in its
+beam; the dust pours back into the lamp and the particle goat condenses around
+it (it was his headlamp); he runs at the camera and leaps; at the apex he
+bursts in brand colour and the burst streams into TRAILGOAT (navbar colours) /
+gradient rule / FILMS (tracked caps), which turn solid and reflect in the
+floor; the lamp settles behind the rule; the letters drain and it clicks off.
+5.0 s at 24 fps; opens every TrailGoat YouTube flyover (`/tg-films` intro slot).
+- Technique: the 150k engine with run + leap bakes and a forehead track, a
+  mirrored second ISM for floor reflections, a shader cone plus a real
+  SpotLight in volumetric fog for the beam, per-frame lamp/glow tables.
+- Project: ParticleLab `/Game/Films/Main`; repo `studio/particle-engine/`
+  (`prep_films.py`, `build_films.py`, `blender_head_track.py`,
+  `blender_exr_npy.py`, `export_sounds.py`, `post/sound_films.py`,
+  `post/encode_films.py`, `render_films.sh`; `blender_text3d.py --text`).
+- Sound: "Night trail" from Epic sample recordings (crickets, footfalls, wind,
+  boulder hit) + a real switch click; the drone cut is the signed-off one.
+- Cost: check 9 min, 720p 11.6 min.
+- Output: `KB SS/TrailGoat-Studio/Renders/films-ident/`; installed as
+  `Films/assets/intro-trailgoat-films-1080p24.mp4`.
+
 ### TrailGoat Western States flyover, commercial, sting, outro · **Delivered (1080p); not used on the site**
 Blender camera → Unreal on Cesium Google Photorealistic 3D Tiles (and a DEM
 fallback): 44 s commercial (16:9 and 9:16), 6 s channel sting with an alpha
@@ -187,6 +208,8 @@ WebP sprite, 150-shard rigid-body break played in reverse.
 | Real terrain: Blender DEM + imagery | flyovers | the quality bar |
 | Runtime GPU PCG world (Cassini rings) | space | renders only in a game world |
 | Day→night keyed light states | flyovers, WSER | per-frame light table |
+| Character-carried light (beam + dust + real spot in fog) | Films ident | head track from Blender, one lamp table for shader and light |
+| Particle reflections on a glossy floor (mirror ISM) | Films ident | `disable_depth_test`, dimmed by depth below the floor |
 | Captions/URL/end-screen overlays (Pillow) | TG openers, canyon, end screen | wording changes need no re-render |
 | HTML overlays (ProRes 4444) | canyon popups | kb-ytvideo render.js |
 | Sound: Mixkit library mixes placed by hit point | Capra ident, end screen, space | `capra_sfx_library.py` |

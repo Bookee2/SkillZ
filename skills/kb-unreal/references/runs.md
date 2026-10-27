@@ -3,6 +3,44 @@
 One entry per piece or session: date, piece, versions, Kris's notes → fixes,
 outcome, and what the skill learned. Add the entry at close-out (step 9).
 
+## 2026-10-26 · TrailGoat Films ident ("Headlamp") · v1 → v2 · Signed off (v2, drone cut)
+- Kris: "The trailgoat films intro needs to be 3d partical from unreal. I'm not
+  half assing this." It replaces a 4 s canvas stand-in in the `/tg-films` intro
+  slot before every YouTube course flyover. Interview: Headlamp concept (beat
+  over Course Rises, Ridgeline, Projector), 5 s + a 1 s sting, real-sound
+  click + bloom, cut to the film on the beat, FILMS under TRAILGOAT, the goat
+  becomes the words, a dark glossy trail floor, pause Blender for drafts.
+- Built in ParticleLab `/Game/Films`: the headlamp clicks on in the dark, dust
+  hangs in its beam, the dust pours back into the lamp and the goat condenses
+  around it (it's his headlamp), he runs at the camera, leaps
+  (Jump_Over_Obstacle_2), bursts at the apex in brand colour, and the burst
+  streams into TRAILGOAT / rule / FILMS, which turn solid; the lamp settles
+  behind the rule; the letters drain and the lamp clicks off.
+- Four check passes before v1: (1) every particle culled while the origin was
+  off screen, a blue floor column from the glow light, a white burst, streaky
+  letters → (2) bounds fix, opening reframed offline; blown floor pool,
+  frame-filling convergence storm, burst a soft orb → (3) floor raised under
+  FILMS so the lockup's reflection is in frame; storm still there → (4) goat
+  dust in a shell off the camera's side, dark in flight: clean.
+- v1 notes, word for word: "The sounds are terrible, and at the very end the
+  wordmark tilts down to the right, why?" Tilt: the drain's fall speed reused
+  the random that ranks reading order (right half fell 2× as far). Sound: v1
+  was stock Mixkit sci-fi/magic (tube buzz, fairy shimmer, futuristic swoosh,
+  trailer hit) — "cheesy". Kris asked for the libraries we own → exported 132
+  real recordings from Electric Dreams and the Game Animation Sample; "Night
+  trail" sting: crickets, the switch click, wind drawn in, his footfalls on the
+  bake's real foot strikes, push-off, air rush, one hit (two boulder impacts +
+  sub), crickets back under the lockup, click off. Two cuts, one with Electric
+  Dreams' intro drone under the lockup.
+- v2: "I like the second cut, let's keep building baby" (the drone cut).
+- Timings: check stills (21 frames, every 6th, 2 samples) ~9 min, mostly
+  startup and shaders; 720p full (121 frames, 4 samples) 11.6 min.
+- Learned: ISM per-instance culling with WPO particles; one random per job;
+  frame the opening offline by projecting lamp/beam/pool through the camera
+  keys; one per-frame lamp table drives the shader cone and the real light;
+  volumetric fog history glows ~2 frames after a light goes off (fade the
+  encode); Project Titan's python won't run headless.
+
 ## 2026-10-08 · Niagara Examples Pack · analysis (report, note, reel)
 - Kris added the pack (listed for 5.7) to a 5.8 First Person project,
   `NiagraExamples`. Analysed it: offline fingerprints of every system

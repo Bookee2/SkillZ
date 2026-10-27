@@ -26,7 +26,9 @@ render; the quote or incident is kept so you know how hard the rule is.
   Unreal isn't AI training). Flag only unusual terms (non-commercial,
   editorial-only, attribution). Don't hand raw sample assets to clients
   outside Unreal.
-- Don't push or open PRs unless asked. Commit only when asked.
+- Don't push or open PRs unless asked. Commit only when asked. The exception
+  is SkillZ itself: "I want to update our skillz after every learning session"
+  (2026-10-26), so skill updates are committed, PR'd and merged at close-out.
 
 ## What he loved
 
@@ -47,6 +49,12 @@ render; the quote or incident is kept so you know how hard the rule is.
   ("the sphere spinning loses the branding").
 - Centred, eye-level end frames that keep creeping in so they breathe.
 
+- The TrailGoat Films ident: "I'm not half assing this" (asked for 3D particles
+  from Unreal over a 2D cut); on v2 with the drone under the lockup: "I like the
+  second cut, let's keep building baby".
+- Sound made of the world in the picture: night crickets, his footfalls, wind,
+  a rock-impact hit (Films ident v2).
+
 ## What he rejected (never pitch again without a new answer)
 
 - **The chalk wall ("Lights off" v1–v3)**: "this sucks", "first day in film
@@ -61,6 +69,11 @@ render; the quote or incident is kept so you know how hard the rule is.
 - An explosion that "doesn't look like it's actually exploding" (a slow peel
   in reading order). Explosions need a burst, a flash and camera recoil.
 - A weak explosion sound → sub boom, suck-in, ducking.
+- Stock sci-fi/magic sound effects for a TrailGoat piece: "The sounds are
+  terrible" (Films ident v1: tube buzz, fairy shimmer, futuristic swoosh,
+  trailer hit; Kris: cheesy). Use recordings of the world on screen.
+- Anything that tips at the end: "the wordmark tilts down to the right" — a
+  drain or exit must keep the lockup level.
 - White-hot fragments that "turn into the colours" later → burst in colour.
 - A platform that "appears out of nowhere" at the end of a dive → keep the
   set always loaded and give the last decade of the approach real time.

@@ -57,4 +57,7 @@ changing the plan. Typical rounds:
 - "Does the opening need to establish the place (e.g. the whole planet)?"
 - "Bigger wordmark, smaller tagline? Stacked or one line?" (Capra lockup)
 - "Is there a sound library you'd rather use than synthesis?"
+- "What should the sound be made of: the world in the picture (footsteps, wind,
+  night) or designed hits? Any genre to avoid?" (Films ident v1's stock
+  sci-fi/magic effects were "terrible")
 - "What should the end screen keep clear for YouTube elements?"
