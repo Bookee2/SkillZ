@@ -43,6 +43,8 @@ Then read `CLAUDE.md` / `AGENTS.md` if present, plus `scripts/flythrough/README.
    - each leg lasts as long as its miles take at 18 °/s of ground flow, so films run about 2:50–3:20;
    - THE START drifts in from 1.05× to 0.78× the slant.
 
+   Kris signed this off on 2026-10-27, after all 11 redone review copies: "These all look good, I think we've got our process down to a nice science." It is the standard for every new course: close follow, fixers, a 720p review copy, his OK, then the 1080p master.
+
    Before #753 merges, check any authored film against Wild Florida: about 900 m out, a 170–200 m look-ahead and 0.31 mi/s. Last night's batch had 2.3–6.5 km, 900 m and 0.6–0.7 mi/s, and every course was redone.
 
    Then fix three things on the shots file with this skill's scripts (`~/.claude/skills/tg-render/scripts/`), in order:
@@ -51,7 +53,7 @@ Then read `CLAUDE.md` / `AGENTS.md` if present, plus `scripts/flythrough/README.
    python3 fix_sign.py  <course.json> <shots.json>    # the race sign faces THE START, sized and turned for the finish
    ```
    - `fix_stems.py`: a loop's HQ aid stands on the start at a mid-race mile, so render.py doesn't lift either pin. It stacks the aid under the start or finish pin (stem 0.2, never up into the sign) and lifts a pin on the high point to 2.6.
-   - `fix_sign.py`: the sign stands 0.3× the follow slant behind the start, facing THE START's camera (not the whole-course opener's). Its letters scale with SZ, capped so the name fits the frame. On a loop it turns toward the finish cameras only as far as its row's near end stays 150 m behind the start pin. A long name on a loop still shows side-on where the camera comes back past it; ask Kris whether the sign stays all film.
+   - `fix_sign.py`: the sign stands 0.3× the follow slant behind the start, facing THE START's camera (not the whole-course opener's). Its letters scale with SZ, capped so the name fits the frame. On a loop it turns toward the finish cameras only as far as its row's near end stays 150 m behind the start pin. A long name on a loop still shows side-on where the camera comes back past it. That's fine: the sign stays up all film. Kris, 2026-10-27: "It kind of nice as just a fixture in the film." Don't make it leave after the opener.
 
    Appalachian 200's `shots/69.json` is the reference; Wild Florida's `shots/96.json` is the close-follow example. Keep the full route covered, and use `--dry` to check the camera lints and map. The limits are:
    - ground flow ≤ 8 °/s (18 on follow legs);
