@@ -108,6 +108,7 @@ anything the sample re-applies on load (switchers) in the clone.
 | Blender flyovers | 720p Eevee | 0.6–0.9 s/frame |
 | Films ident (ParticleLab, 150k ×2 + fog) | checks every 6th frame, 2 samples / 720p 4 samples | ~9 min / 11.6 min (121 frames; ~5 min is startup and shaders) |
 | Editor open | big sample first open | minutes to an hour (Nanite + shaders) |
+| Petit Ridge land flyover (4 km Nanite terrain, 292k Nanite trees, Lumen HWRT) | 720p, 4 samples / checks every 48th | 0.86 s/frame (1,921 in 27.5 min) / ~7 min |
 
 ## Encode and post (ffmpeg)
 - Master from frames: `ffmpeg -framerate 30 -i f_%04d.png -frames:v N

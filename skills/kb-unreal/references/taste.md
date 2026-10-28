@@ -113,6 +113,12 @@ render; the quote or incident is kept so you know how hard the rule is.
   thud) where they fit; Kris adds music himself on many pieces — deliver
   silent masters plus SFX mixes.
 
+## Capra land films (Petit Ridge, 2026-10-28)
+- Kris picked: spec demo to pitch realtors/land brokers; all four cuts (film, 9:16, stills, sizzle); "The View
+  Sells It" + "Read the Land" + "Leaf-Off" (not the block-swarm cabin); peak fall golden → blue hour; world sound
+  with his music later; road but no neighbours; World Wakes reveal; **Capra-forward** branding; the lockup with
+  "Your land, before it's built." He declined computer-use control of the Unreal window: script everything.
+
 ## Capra Studios brand
 
 - Palette (docs/BRAND.md): Chalk #f3f1ea, Ink #15141c, **Ribbon blue #7aa2f7

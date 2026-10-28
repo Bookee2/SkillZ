@@ -3,6 +3,27 @@
 One entry per piece or session: date, piece, versions, Kris's notes → fixes,
 outcome, and what the skill learned. Add the entry at close-out (step 9).
 
+## 2026-10-28 · Capra land flyover "Petit Ridge" (spec for realtors) · v1 720p sent · awaiting notes
+- Kris: "Get started, this work is for Capra Studios and I want to sell to realtors or land brokers." Inputs: a
+  USGS lidar kit (1 m hero heightmap, lot outline, lake outline, Sentinel-2) and a Sketchfab stone cabin (CC BY).
+- Research: drone lot videos sell for $175–500 (+$10 lot lines); 3D aerial renders $600–2,500 a view; only CGI
+  shops (ArchiCGI) do land flyovers. Compliance: label concept homes, "boundaries approximate", unbranded MLS cut,
+  no price/CTA on a spec piece, the listing firm's written OK before naming the address publicly.
+- Interview: spec demo; all four cuts; concepts 1 + 2 + 4 merged; peak fall golden → blue hour; world sound;
+  OSM roads, no neighbours; World Wakes reveal; Capra-forward; lockup + "Your land, before it's built."
+- Build (all scripted, `Caprastudios/unreal/petit_ridge/`): Nanite terrain tiles from the heightmap (Kris declined
+  computer-use control of Unreal, and Landscapes can't be made from Python), pad and lakebed carved in numpy,
+  OSM road ribbons, lot line + curtain, 292k-tree Megascans forest placed from data, honest viewshed, PCHIP
+  camera traced offline, MPC + material tracks, a reveal composited from two renders, Pillow cards, world mix.
+- Failures and fixes, in order: Sketchfab glTF in inches (39× too big) → scaled root; editor crashed ×3 on
+  Megascans foliage (blendable GBuffer) → Electric Dreams' renderer block; RT needs skin cache; Custom node
+  can't take virtual textures; leaf tint ignored (Split Albedo Controls off) → Albedo Tint; MPC/material keys in
+  display frames (land at tick 0) → ×1000; Tileable leaf cards are the canopy; viewshed 82 % bare earth → 32 %
+  with canopy; camera through crowns → 45 m clearing and a steeper drop; look-at interpolation swung 160°/s →
+  interpolate the view direction; lake mesh vs carved bed mismatch → one 1 m mask for both; frame 0 brown water.
+- Timings: 4 look stills 65–75 s; 41 check stills ~7 min; 720p 1,921 frames 27.5 min (0.86 s/frame).
+- Learned: everything above is in lessons.md and techniques.md ("Real land from lidar").
+
 ## 2026-10-26 · TrailGoat Films ident ("Headlamp") · v1 → v2 · Signed off (v2, drone cut)
 - Kris: "The trailgoat films intro needs to be 3d partical from unreal. I'm not
   half assing this." It replaces a 4 s canvas stand-in in the `/tg-films` intro

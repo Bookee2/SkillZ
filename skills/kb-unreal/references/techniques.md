@@ -218,6 +218,36 @@ two constants (`DROP, BAR = 3.35, 2.41`).
   against the window's aspect); assemble with `assemble_google.py --shots`;
   never two renders on one cache (sqlite "database is locked").
 
+## Real land from lidar (Petit Ridge land flyover, 2026-10-28)
+Code: `Caprastudios/unreal/petit_ridge/` (README in each docstring). Everything is computed offline in numpy,
+then written as glTF or float32 records the editor reads, so it is exact and re-runs cleanly.
+- **Terrain without Landscape mode** (`terrain_tiles.py`): the 16-bit heightmap → 8×8 glTF tiles of 505²
+  vertices at 1 m (shared edges, normals from the gradient, UV0 across the whole area for the satellite colour),
+  imported as Nanite static meshes and spawned at their NW corners; a decimated 8 km ring 3 m lower for the far
+  ridges. Cut-and-fill pads are written into the heights before tiling (rotated rectangle + 8 m smoothstep
+  banks); the as-built heights are saved (`hero_heights_m.npy`) for everything that drapes or places on them.
+- **Site meshes** (`site_meshes.py`): OpenStreetMap roads as 5.5 m flat ribbons on a median-smoothed centre line
+  12 cm above the lidar road bench; the parcel line as a ribbon whose UV.x is the fraction of the perimeter (an
+  MPC `LotDraw` draws it on with a hot head) plus a 7 m additive light curtain; the lake as a 2 m grid only
+  inside the lidar water outline grown 6 m (a plain plane showed water below the dam).
+- **Forest from data** (`forest_points.py` → `pr_forest.py`): a jittered 7 m grid (≈290k canopy trees over
+  16 km²), thinned by slope, kept off water, roads, a 38 m building clearing and the view corridor; one ISM per
+  (mesh, colour group) on a StaticMeshActor via SubobjectDataSubsystem (40 components), WPO off beyond 250 m.
+  Fall colour = per-group MIs of the Megascans leaf materials (TwoSided **and Tileable** — the Tileable leaf
+  cards are most of the canopy from the air): `Albedo Controls Leaves` saturation 0, then `Albedo Tint Leaves`
+  ×(2.7, 0.33, 0.15) scarlet, (3.4, 1.9, 0.25) gold, (1.7, 0.72, 0.26) russet. Megascans Hornbeam has Winter
+  albedo/mask textures for leaf-off.
+- **Honest view numbers** (`viewshed.py`): line of sight from deck eye height to every lake pixel over the as-built
+  ground **plus a 20 m canopy** outside the cleared corridor; bake the visible mask as a texture the water
+  material lights up (`ViewPaint`). Bare earth said 82 %, with trees 32 %; the film quotes "about a third".
+- **Camera traced offline first** (`film_path.py`): keys of (position, look-at, fov); positions and the view
+  *direction* (yaw unwrapped, pitch) as PCHIP — interpolating the look-at point swung the camera 40–160°/s
+  whenever the target was close. The trace prints speed, turn rate and clearance over ground + canopy per second.
+- **Reveal without touching imported materials**: render the reveal beat twice (with and without the object,
+  `LS_Film_NoCabin` + a custom-range queue) and wipe between them in post; the seam glows only where the two
+  frames differ, i.e. on the object (`post_film.py world_wakes`).
+- **Look stills**: a 1-frame-per-shot LS_Look rendered by MRQ (4 stills in ~65 s) beats editor screenshots.
+
 ## Runtime GPU PCG worlds (Cassini)
 The rings and asteroids are "generate at runtime" GPU graphs: they appear only
 in Simulate or a game world, so render with `-game` and ~90 engine warm-up
