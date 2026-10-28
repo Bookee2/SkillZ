@@ -129,8 +129,8 @@ anything the sample re-applies on load (switchers) in the clone.
   `KB SS/TrailGoat-Studio/Renders/…`); delete frame folders once the MP4 is
   checked. Deliverable names: `NN_What_length_shape_vN`.
 - SendUserFile for drafts (~15 MB limit; 15 s 720p ≈ 19 MB went through);
-  iCloud `~/Library/Mobile Documents/com~apple~CloudDocs/TrailGoat Videos` for
-  big files and phone review; `Caprastudios/scripts/unreal-preview.mjs` serves
+  iCloud for big files and phone review — by brand: `…/CloudDocs/Capra Studios/Videos` for Capra,
+  `…/CloudDocs/TrailGoat Videos` for TrailGoat; `Caprastudios/scripts/unreal-preview.mjs` serves
   `output/unreal/` with byte ranges on the LAN.
 - Final for YouTube: upload 4K (better encoding ladder even when watched at
   1080p).
