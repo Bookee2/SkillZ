@@ -291,6 +291,7 @@ def main() -> int:
     film = json.loads(Path(a.film).read_text()); ff = ffmpeg()
     out_dir = Path(film['out_dir']); dest = Path(film['dest']); work = dest / 'work'; work.mkdir(parents=True, exist_ok=True)
     rec = json.loads(next(out_dir.glob('course-*.json')).read_text())
+    if film.get('gain_m'): rec['official_gain_m'] = float(film['gain_m'])   # a sourced climb beats the catalogue's terrain estimate
     slug = film.get('slug') or (rec.get('page_url') or '').rsplit('/', 1)[-1] or f"course-{rec['id']}"
     film['slug'] = slug
     hud = json.loads((out_dir / 'hud-frames.json').read_text())
