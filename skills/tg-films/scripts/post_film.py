@@ -13,7 +13,8 @@ film.json:
   "next":    {"title": "Perpetua Coast: 30 miles on the Oregon coast in 3D"},
   "intro":   "…/Films/assets/intro-trailgoat-films-1080p24.mp4",
   "dest":    "…/Films/georgia-sky-to-summit-25k",
-  "playlist": "Race Flyovers", "privacy": "public"
+  "playlist": "Race Flyovers", "privacy": "public",
+  "thumb_at": 95.0                                           optional: seconds into the master for the thumbnail, instead of poster.webp
 }
 
 Writes to dest: {slug}-youtube.mp4, {slug}-thumb.png, description.txt, meta.json (for yt_upload.py), work/.
@@ -353,6 +354,9 @@ def main() -> int:
         play_s, fade = (avail, f'afade=t=out:st={max(0.0, avail - 0.3):.2f}:d=0.3') if avail < music_s else \
                        (music_s, f'afade=t=out:st={max(0.0, music_s - 3.0):.2f}:d=3')
         if avail < music_s: print(f'the track ends on its own at {music_at + avail:.1f} s of {total_s:.1f} s')
+        # a short track's last note can land on the runner's finish or on the film's end: print both to aim music.delay
+        d = hud['dist_m']; fin = next((i for i, x in enumerate(d) if x >= max(d) - 1), len(d) - 1) / hud.get('fps', FPS)
+        print(f'the runner finishes at {intro_s + fin:.1f} s; the film ends at {intro_s + film_s:.1f} s')
         delayed = intro_sound or music_at > 0
         fc.append(f'[{ai}:a]atrim=start={st}:end={st+play_s},asetpts=PTS-STARTPTS,'
                   f'afade=t=in:st=0:d=1.5,{fade},'
@@ -375,9 +379,13 @@ def main() -> int:
     if abs(got['seconds'] - total_s) > 0.6 or got['w'] != 1920:
         sys.exit(f'assembly came out wrong: {got} vs {total_s:.1f} s expected')
 
-    # 4. the thumbnail, from the poster frame
+    # 4. the thumbnail, from the poster frame, or from film.json "thumb_at" (seconds into the clean master) when the poster
+    #    puts the wordmark on a map label or sits in shadow (Keweenaw 173.5, Grayson Highlands 50K 95, 2026-10-28)
     poster = out_dir / 'poster.webp'
-    if not poster.exists():
+    if film.get('thumb_at') is not None:
+        poster = work / 'poster-thumb-at.png'
+        sh(ff, '-y', '-loglevel', 'error', '-ss', f"{float(film['thumb_at']):.2f}", '-i', master, '-frames:v', '1', poster)
+    elif not poster.exists():
         poster = work / 'poster.png'
         sh(ff, '-y', '-loglevel', 'error', '-ss', f'{intro_s + 0.4*film_s:.2f}', '-i', final, '-frames:v', '1', poster)
     thumb = dest / f'{slug}-thumb.png'; thumbnail(rec, poster, thumb)
