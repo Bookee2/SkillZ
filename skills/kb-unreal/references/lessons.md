@@ -40,6 +40,18 @@ Each line: what went wrong → the fix. Grouped by where it bites.
 - Run the `level` and `sequence` build stages together (level destroys the
   camera); `queue` only with `sequence`.
 
+- **MPC and material-parameter section keys take TICK frames, not display frames** (Petit Ridge, 2026-10-28):
+  `MovieSceneMaterialParameterCollectionTrack` / `MovieSceneComponentMaterialTrack` sections'
+  `add_scalar_parameter_key(name_or_MaterialParameterInfo, FrameNumber, value[, layer, asset])` have no time-unit
+  argument, so `FrameNumber(f)` at 24 fps lands at f/24000 s — every key in the first 0.08 s and the render holds
+  the end values (no lot-line glow, no data layer, no leaf-off). → `FrameNumber(f * tick_per_frame)` (×1000 at
+  24 fps / 24000 tick; WSER's build_scene.py already did ×1000). Transform/float channels take
+  `MovieSceneTimeUnit.DISPLAY_RATE` and are fine. Read keys back and check their times, not just their values.
+- Component material tracks in 5.8: `track.set_material_info(ComponentMaterialInfo(material_slot_index=…))`, and the
+  section's key wants `unreal.MaterialParameterInfo(name, MaterialParameterAssociation.GLOBAL_PARAMETER, -1)`.
+- Megascans foliage master: `Albedo Tint Leaves`/`Albedo Controls Leaves` only apply with the static switch
+  `Split Albedo Controls` on (it's off in the Hornbeam MIs) → set the plain `Albedo Tint` / `Albedo Controls`.
+
 ## Rendering (Movie Render Queue)
 - In-editor MRQ (PIE executor) crashed at Finalize → always render out of
   process: `UnrealEditor-Cmd <proj> <map> -game -MoviePipelineConfig=<queue
@@ -88,7 +100,18 @@ Each line: what went wrong → the fix. Grouped by where it bites.
 - Check renders: render every 15th/30th frame first (`output_frame_step`) and
   read them; motion problems need the camera numbers traced offline.
 
+- `MoviePipelineOutputSetting.use_custom_playback_range` + `custom_start_frame`/`custom_end_frame` set from
+  Python on a saved queue did NOT restrict the render (Petit Ridge reveal pass rendered from frame 0) → give the
+  pass its own sequence whose playback range is the beat (`set_playback_start/end`), or let the render script stop
+  at the last frame you need. Frame 0 of an out-of-process render can come out with unwarmed reflections (brown
+  water) even with 96 warm-up frames → replace it with frame 1 or start the cut a few frames in.
+- Speed reference: 4 km Nanite terrain + 292k Nanite Hornbeam instances + Lumen HWRT at 720p, 4 temporal samples:
+  **0.86 s/frame** on the M5 Pro (1,921 frames in 27.5 min), much faster than the forest's size suggested.
+
 ## Editor, levels, World Partition
+- `AutomationLibrary.take_high_res_screenshot` from a background editor never wrote its file (Petit Ridge,
+  2026-10-28) → for look stills build a tiny LS_Look (one 1-frame camera-cut shot per viewpoint) and render it
+  with MRQ out of process: four 720p stills in 65 s including startup.
 - Never `load_level` a map duplicated/created in the same session (fatal "Old
   world not cleaned up") → duplicate, save, quit, relaunch with the map.
 - Passing a map on the editor command line sometimes fails with "filename ''
@@ -137,6 +160,12 @@ Each line: what went wrong → the fix. Grouped by where it bites.
   scan of the render (single-frame spikes while the camera is slow = steps).
 
 ## Materials and textures
+- **`r.Substrate.ProjectGBufferFormat=0` (blendable GBuffer) breaks Megascans foliage on Metal** (Petit Ridge,
+  2026-10-28: three crashes, editor and MRQ, `Assertion failed: ShaderMapId.ContainsShaderType ... M_Foliage ...
+  missing expected shader type FAnisotropyPS`, first blamed on a Python edit of the master). → for a new project
+  that will use Megascans/Epic sample content, copy the source project's whole `[/Script/Engine.RendererSettings]`
+  block (Electric Dreams: Substrate on, BytesPerPixel 170, adaptive GBuffer). With `r.RayTracing=True` the editor
+  also refuses to start unless `r.SkinCache.CompileShaders=True`.
 - Never recreate MPC parameters (orphans every material) → append missing.
 - Texture re-imports keep power-of-two padding → delete first, NONE, assert.
 - TextureObjectParameter sampler type must match the texture (LINEAR_COLOR for
@@ -178,6 +207,21 @@ Each line: what went wrong → the fix. Grouped by where it bites.
   hold CONSTANT up to the event frame.
 
 ## Import and Blender
+
+- **Sketchfab glTF from SketchUp/Collada is often in inches** (Stone Cabin, 2026-10-28: 873 × 302 × 547 "metres";
+  a 57 × 32 TV = 65-inch TV, a 23.5 oven = 60 cm). Interchange reads glTF as metres, so it would come in 39× too big
+  → check the bounds against a known object before import; scale the root node by 0.0254 (and re-centre it) in the
+  .gltf JSON rather than fiddling with import scale.
+- Interchange glTF → Unreal axes: glTF (x, y-up, z) → Unreal (x, z, y). Verified with a terrain tile whose glTF
+  +z ran south: Unreal bounds came out Y 0..+50,400. A glTF model's +Z side faces Unreal +Y at yaw 0.
+- `InterchangeGenericMeshPipeline.combine_static_meshes` is deprecated in 5.8 (raises) →
+  `combine_static_meshes_behavior = unreal.InterchangeCombineStaticMeshesBehavior.ALL`. Import from Python with
+  `InterchangeManager.get_interchange_manager_scripted().import_asset(dest, create_source_data(path), params)` and
+  a pipeline object in `params.override_pipelines`.
+- **There is no Python call that creates a Landscape from a heightmap** (only `landscape_import_heightmap_from_
+  render_target` into an existing one). When the editor UI can't be driven (Kris declined computer-use control of
+  Unreal), build the terrain as Nanite static-mesh tiles written straight from the heightmap as glTF
+  (`petit_ridge/terrain_tiles.py`: 8×8 tiles of 505² vertices at 1 m, ~32 M triangles, 65 imports ≈ 11 min).
 - glTF imports in quaternion mode → `rotation_mode='XYZ'` before rotating.
 - Blender → FBX/glTF → Unreal maps (x, −y, z)·100; don't add a normal flip
   after mirroring (inside-out text). Blender north = Unreal −Y. FBX-embedded
@@ -210,6 +254,9 @@ Each line: what went wrong → the fix. Grouped by where it bites.
   sensitive.
 
 ## Process
+- **A bare-earth viewshed oversells a view** (Petit Ridge: 82% of the lake visible on lidar ground, 25–32% with a
+  20 m canopy and a cleared view corridor). Lidar DEMs are bare earth: model the canopy before putting a view
+  number on screen, and say which one it is.
 - Look at the frames yourself (crop, zoom, contact sheets); a clean log isn't
   proof. Trace camera numbers offline (replicate the curve in plain Python).
 - Delete frame folders once the MP4 is encoded and checked (245 GB freed once).

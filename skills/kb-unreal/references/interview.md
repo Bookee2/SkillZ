@@ -50,6 +50,15 @@ changing the plan. Typical rounds:
   buttons, a Remote Control panel)?
 - Will this become a making-of video (capture prompts, keep a version log)?
 
+## Real estate / land pieces (Petit Ridge, 2026-10-28)
+- Spec demo, a client's listing, or a repeatable template? (spec: no price or CTA; get the firm's OK before
+  naming a listed address publicly)
+- Which cuts: 60–90 s listing film, 9:16 social, stills, studio sizzle; is an unbranded MLS version needed?
+- Show context honestly: roads (OSM), neighbouring houses (massing) or pure forest?
+- Which way does the lot face, and what time of day lights it? (a south-east lot is in shade at evening golden
+  hour — ask before promising "golden hour on the deck")
+- Which facts go on screen, and say up front that view numbers include the tree canopy.
+
 ## Questions learned from past misses (ask these early)
 - "Should the camera end dead centre at eye level?" (letters ended tilted)
 - "How much glow — should the colours read clearly?" (glow 2.3 too bright)
