@@ -118,6 +118,11 @@ render; the quote or incident is kept so you know how hard the rule is.
   Sells It" + "Read the Land" + "Leaf-Off" (not the block-swarm cabin); peak fall golden → blue hour; world sound
   with his music later; road but no neighbours; World Wakes reveal; **Capra-forward** branding; the lockup with
   "Your land, before it's built." He declined computer-use control of the Unreal window: script everything.
+- v1 note, word for word: "The video is killer, the sounds are terrible." The v1 bed was game-sample loops
+  (Electric Dreams' tropical canopy and crickets, a riverbed for a still lake, Game Animation Sample wind, the
+  ED drone, a boulder "knock", a reversed gust). → Real places need real recordings of that place and season;
+  no sample-project ambience, no designed hits or drones. He asked "What can we do with REAL sounds."
+- Deliverables: Capra videos go to iCloud `Capra Studios/Videos`, never `TrailGoat Videos`.
 
 ## Capra Studios brand
 

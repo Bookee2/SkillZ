@@ -254,6 +254,17 @@ Each line: what went wrong → the fix. Grouped by where it bites.
   sensitive.
 
 ## Process
+- **Real places need real recordings** (Petit Ridge v1, Kris: "the sounds are terrible"): sample-project ambience
+  (Electric Dreams' tropical canopy and crickets, a riverbed for a still lake, a sci-fi drone, a designed knock) reads
+  fake on a real place → field recordings of the right habitat and season, a few long beds that follow the camera.
+- Sonniss GDC bundles: the official mirror has per-library folders of single files
+  (`https://ftpmirror.your.org/pub/misc/sonniss20XX/individual/<Vendor - Library>/`; track lists are public Google
+  Sheets, `…/export?format=csv`), so one 30–90 MB recording instead of 3 GB zip parts. Licence: media production, no
+  attribution, no AI/ML training, no redistribution. Python's urllib failed SSL on this Mac → curl.
+- Pixabay audio sits behind a Cloudflare bot check: scripted downloads are blocked (and the safety classifier refuses
+  fetching past it) → Kris saves the files by hand, or use Sonniss/Freesound with his own account.
+- Level-matching beds: measure the same band you'll play. Measuring only above 100 Hz, then boosting the full-band
+  file, made the night bed's gust rumble boom 15 dB over the rest → high-pass beds first (~100 Hz), then match.
 - **A bare-earth viewshed oversells a view** (Petit Ridge: 82% of the lake visible on lidar ground, 25–32% with a
   20 m canopy and a cleared view corridor). Lidar DEMs are bare earth: model the canopy before putting a view
   number on screen, and say which one it is.

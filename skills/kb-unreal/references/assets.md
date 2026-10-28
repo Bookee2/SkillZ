@@ -74,6 +74,10 @@
   starter wind ×2). Epic content: inside Unreal-made video only, never handed
   out. Project Titan's orchestral stems didn't export (no python headless).
 
+- **Capra field-recording library** `KB SS/Capra Studios/Sound/library/` (README with sources and licences): Sonniss
+  S1 lake waves (96k), S2 wind in a treeline (96k), S3 night crickets + gusts on a lookout; Pixabay list P1–P9 (crows,
+  woodpecker, blue jay in October wind, dry oak leaves, lake lapping, a November cricket) to save by hand.
+
 ## Data
 - Course data: trailgoat.run API `/api/fuel/courses/{id}` (GPX, aid stations,
   elevation profile); `particle-engine/data/{wser,leadville}.json`.
