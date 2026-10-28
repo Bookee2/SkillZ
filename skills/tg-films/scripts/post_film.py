@@ -74,12 +74,20 @@ def mmss(t: float) -> str:
 
 # ---------- chapters ----------
 KEEP_CAPS = {'AS', 'AS1', 'AS2', 'AS3', 'AS4', 'AS5', 'AS6', 'AS7', 'AS8', 'AS9', 'TH', 'CP', 'FR', 'NF', 'US', 'SR', 'TR', 'II', 'III', 'IV', 'HQ', 'KOA'}
+PARTICLES = {'de', 'la', 'le', 'les', 'du', 'des', 'di', 'del', 'della', 'da', 'dei', 'y', 'van', 'von'}   # mid-name, races abroad
 def chapter_name(label: str) -> str:
     """'ADOBE AS' → 'Adobe AS', 'HWY 189' → 'Hwy 189', 'MT. MITCHELL' → 'Mt. Mitchell': title case that keeps the
-    station abbreviations ('AS' is aid station, not 'As')"""
-    words = label.split()
-    return ' '.join(w if re.sub(r'[^A-Z0-9]', '', w) in KEEP_CAPS or re.fullmatch(r'AS-?\d+', w) else w.capitalize() if not w[:1].isdigit() else w.lower()
-                    for w in words)
+    station abbreviations ('AS' is aid station, not 'As'); 'SAINT-GERVAIS' → 'Saint-Gervais', 'COL DE LA SEIGNE' →
+    'Col de la Seigne'"""
+    def word(i: int, w: str) -> str:
+        if re.sub(r'[^A-Z0-9]', '', w) in KEEP_CAPS or re.fullmatch(r'AS-?\d+', w):
+            return w
+        if w[:1].isdigit():
+            return w.lower()
+        if i and w.lower() in PARTICLES:
+            return w.lower()
+        return '-'.join(p.capitalize() for p in w.split('-'))
+    return ' '.join(word(i, w) for i, w in enumerate(label.split()))
 
 
 def chapter_marks(rec: dict, hud: dict, shots: dict | None, intro_s: float, card_s: float = 0.0) -> list[tuple[float, str]]:
@@ -90,8 +98,9 @@ def chapter_marks(rec: dict, hud: dict, shots: dict | None, intro_s: float, card
     if shots and shots.get('aids'):
         for mi, label in shots['aids']:
             name, _, tail = label.partition(' · ')
-            miles = [float(x) for x in re.findall(r'\d+(?:\.\d+)?', tail)] or [float(mi)]
-            pins += [(chapter_name(name), x*MI*k) for x in miles]
+            unit = 1000.0 if re.search(r'\bKM\b', tail, re.I) else MI         # races abroad label pins 'KM 9.1'
+            at = [float(x)*unit for x in re.findall(r'\d+(?:\.\d+)?', tail)] or [float(mi)*MI]
+            pins += [(chapter_name(name), x*k) for x in at]
     else:
         # the catalogue's names carry notes ('Bartram (cutoff only, no aid)'); keep the name, flag a cutoff
         aids = rec.get('aid_stations'); aids = json.loads(aids) if isinstance(aids, str) else (aids or [])
