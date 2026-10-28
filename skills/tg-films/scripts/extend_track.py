@@ -14,7 +14,7 @@ splice writes out.wav = track[0 : B] + track[A : end], cut 25 ms before the onse
 crossfade, and checks the join: the notes either side, the gaps between them, high-frequency (click) energy
 at the join against the median, and the largest sample step. Für Elise for Grayson Highlands 50K
 (2026-10-28): --at 25.525 --again 40.991 added 15.47 s, with no click and gaps within the pianist's own
-rubato. Listen to the join before it goes up, or send Kris a clip of it.
+rubato; Kris passed the join. Listen to the join before it goes up, or send Kris a clip of it.
 
 Needs numpy and imageio-ffmpeg (the TrailGoat venv).
 """
