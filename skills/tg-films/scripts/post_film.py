@@ -29,6 +29,7 @@ import os
 import re
 import subprocess
 import sys
+import unicodedata
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
@@ -243,7 +244,7 @@ def description(rec: dict, film: dict, marks: list[tuple[float, str]], total_s: 
             music += f"\n{m['credit']}"
     credits = data_credits(rec, film)
     chapters = '\n'.join(f'{mmss(t)} {lab}' for t, lab in marks)
-    tag = re.sub(r'[^A-Za-z0-9]', '', name)
+    tag = re.sub(r'[^A-Za-z0-9]', '', unicodedata.normalize('NFKD', name))  # Géants -> Geants, not Gants
     return (f"{name} from the start line to the finish: {dist} and {gain} of climbing over the real terrain"
             f"{(' of ' + where) if where else ''}, with every aid station pinned where it stands.{org}{date}\n\n"
             f"Plan this race free on TrailGoat: the elevation profile, every aid station and cutoff, a pacing and "
