@@ -126,16 +126,21 @@ def chapter_marks(rec: dict, hud: dict, shots: dict | None, intro_s: float, card
             marks.append((t_at(m), f'{name} · {unit}'))
     fin_t = intro_s + len(dist)/fps
     shots_idx = hud.get('shot') or []
-    if shots_idx:                                                       # the finish settle is the film's last shot
-        last = max(shots_idx); first = shots_idx.index(last)
-        marks.append((intro_s + first/fps, 'The finish'))
+    if shots_idx:                                                       # the shot named THE FINISH; films from 2026-10-26 back out
+        names = [str(s.get('name', '')).upper() for s in (shots or {}).get('shots', [])]   # to the whole course after it, so
+        fin = names.index('THE FINISH') if 'THE FINISH' in names else max(shots_idx)       # the last shot is no longer the finish
+        if fin in shots_idx:
+            marks.append((intro_s + shots_idx.index(fin)/fps, 'The finish'))
     if card_s > 0:
         marks.append((fin_t, 'Plan this race on TrailGoat'))
-    # YouTube wants chapters ≥ 10 s apart and increasing: drop a pin that crowds the previous one
+    # YouTube wants chapters ≥ 10 s apart and increasing: drop a pin that crowds the previous one; the finish
+    # moves to 10 s after a last aid just before it instead (Hardrock's Putnam is 2 miles out)
     out = []
     for t, lab in sorted(marks, key=lambda x: x[0]):
         if out and t - out[-1][0] < 10:
-            continue
+            if lab != 'The finish':
+                continue
+            t = out[-1][0] + 10
         out.append((t, lab))
     return out
 
