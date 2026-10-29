@@ -67,7 +67,15 @@ Each line: what went wrong → the fix. Grouped by where it bites.
   to 27 s/frame) → `pkill -9 -x CrashReportClient` after each render.
 - **Don't time a final from stepped check frames**: every 192nd frame at 4K took ~30 s each (the camera jumps
   seconds, so virtual shadow maps, Lumen and TSR history rebuild every frame); the same scene rendered
-  continuously ran 4.4 s/frame (Petit Ridge, 508k Nanite trees, 8 samples). Time a short continuous run.
+  continuously ran 4.4 s/frame (Petit Ridge, 508k Nanite trees, 8 samples), 5.1 s/frame over the whole film
+  (1,921 frames in 2 h 44 min). Time a short continuous run and add ~15 %.
+- **QA a final against the approved draft, frame for frame**: run the same scan (frame-to-frame difference, magenta,
+  pure black, blown white) on both and compare by frame number. Petit Ridge 4K flagged a fast orbit, a hard cut and
+  2–4 % pure-black shadow at 52 s; all three matched the 720p Kris approved, so none was a render fault. Only a
+  difference from the draft is a new problem (`scan_frames.py`, 1,921 4K frames in ~3 min on 8 processes).
+- Pillow card post at 4K, one frame at a time with default PNG compression, would have taken ~1½ h for 80 s → a
+  `multiprocessing.Pool` over frames (8 workers) and staging PNGs at `compress_level=1`: composite + crf 14 encode
+  in 4.4 min (Petit Ridge `post_film.py --workers`). Module-level `sys.argv` parsing still works in spawned workers.
 - A queue's custom playback range was ignored (v1 rendered the no-cabin pass from frame 0) → trim the duplicated
   sequence's own `set_playback_start/end`; frames keep their absolute numbers.
 - **A two-render reveal doesn't need two full renders**: hide the object in the main pass until just before the

@@ -28,13 +28,16 @@ lines; a 45 m building clearing and a selectively cleared view corridor (120 m d
   we need to do to make it better and then run it at 720p for me."
 - v2 (720p): real lidar trees (91.6k + infill), far-ring trees (279k), NAIP far ground, 76k ground pieces, shore
   shrubs, the view card corrected to "a fifth". Kris: "Let's do it in 4k now."
-- 4K final: the cabin hidden in the main pass until 46 s, the no-cabin pass only over the seam (frames 1100–1240).
+- 4K final (2026-10-29): the cabin hidden in the main pass until 46 s, the no-cabin pass only over the seam (frames
+  1100–1240). The 4K check stills had no cabin at all (visibility key given in ticks; channel `add_key` takes display
+  frames), fixed before the final. Film 2 h 44 min, reveal 9.4 min, post 5 min; QA against the 720p found nothing new.
+  Delivered `01_PetitRidge_film_80s_16x9_v2_4K.mp4` (715 MB), a 1080p preview and a 720p-vs-4K detail crop.
 
 ## Numbers worth reusing
 Lidar 4.9 pts/m²; tree tops 67/ha, median 24 m, p90 32 m; 15.5 % evergreen; canopy cover 84 %. Render: 720p
-0.82 s/frame; 4K continuous ~4.4 s/frame near the cabin (8 samples). Check the camera against placed crowns:
+0.82 s/frame; 4K 5.1 s/frame over the film (8 samples), 10 MB per 4K PNG. Check the camera against placed crowns:
 nearest crown 6.9 m on the drop into the clearing.
 
-## Still open after v2
+## Still open after the v2 4K final
 Fall colour of the 3D canopy is subdued (dark green with gold); the Read the Land orbit is fast at 34–35 s; pines are
 tinted hardwoods (a real white pine asset would need a Fab download); the 9:16 cut, stills and sizzle aren't made.

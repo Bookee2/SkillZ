@@ -3,6 +3,18 @@
 One entry per piece or session: date, piece, versions, Kris's notes → fixes,
 outcome, and what the skill learned. Add the entry at close-out (step 9).
 
+## 2026-10-29 · Petit Ridge v2 · 4K final delivered
+- Kris: "Let's do it in 4k now" (and "Also let's call this skill /capra-realtorfilm" → the realtor pipeline became
+  its own skill).
+- Plan that saved ~1,100 4K frames: hide the cabin in the main pass until 1 s before the seam, render the no-cabin
+  pass only over the seam (141 frames, 9.4 min). Film 1,921 frames in 2 h 44 min (5.1 s/frame), Blender frozen.
+- Failures: the 4K check stills had no cabin (visibility key in ticks; channel `add_key` takes display frames) →
+  fixed and checked the keys before the final. Timing from stepped check frames (~30 s each) would have predicted 16 h.
+- QA: frame scan of the 4K compared with the approved 720p: every flag (fast orbit, the cut, deep shadow) was in both.
+- Post made parallel (4.4 min at 4K). Delivered: 715 MB master + 1080p preview to iCloud, a 10.5 MB review copy and a
+  720p-vs-4K detail crop by SendUserFile.
+- Learned: lessons.md (final QA against the draft, parallel 4K post, continuous 4K = 5.1 s/frame), pipeline.md timing.
+
 ## 2026-10-28 (evening) · Petit Ridge v2 · real ground and real trees · 720p sent
 - Kris on v1 + real sound: "Okay the video is awesome, how much more detail would we get if we did this in 4k?" →
   answered with cm per pixel per shot (720p 2–74 cm, 4K a third) and what the data limits (10 m satellite colour, 1 m

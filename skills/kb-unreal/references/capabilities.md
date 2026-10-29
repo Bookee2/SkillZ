@@ -189,7 +189,7 @@ WebP sprite, 150-shard rigid-body break played in reverse.
   motion matching; Blueprint graphs authored as DSL by agent; Mac
   performance tuning (minimised editor, 75% screen percentage, hair cards).
 
-### Capra land flyover — Petit Ridge (spec for realtors) · **Draft v2 (720p): real trees and ground**
+### Capra land flyover — Petit Ridge (spec for realtors) · **v2 final delivered in 4K (2026-10-29)**
 Low over Lake Petit, up the valley to a real 4.9-acre lot in Big Canoe GA; the lot line draws itself in ribbon
 blue; "Read the Land" turns the forest into glowing contours and paints the visible part of the lake; a concept
 stone cabin resolves behind a glowing seam (World Wakes) on its cut-and-fill pad; the turn to the lake view,
@@ -204,7 +204,10 @@ leaves fall; blue-hour hold on the lit cabin; Capra lockup. 80 s at 24 fps.
   site_meshes, forest_points, viewshed, film_path, pr_build/scene/forest/seq/film, pr_render.sh,
   post_film, mix_film; VERSIONS.md).
 - Cost: 720p 0.86 s/frame (1,921 frames 27.5 min); check stills (every 48th) ~7 min. v2 with 508k trees and
-  76k ground pieces: 0.82 s/frame (26.4 min), reveal pass 17 min, check stills 2 min 45 s.
+  76k ground pieces: 0.82 s/frame (26.4 min), reveal pass 17 min, check stills 2 min 45 s. 4K final (8 samples):
+  5.1 s/frame (2 h 44 min), the reveal pass only over the seam (141 frames, 9.4 min), post 5 min; 715 MB master.
+- Still open: the 9:16 cut, 6 stills and the 15 s sizzle (4K frames kept on KB SS for them); subdued canopy fall
+  colour, a fast orbit at 34–35 s, pines tinted as hardwoods.
 - For clients: any parcel with public lidar (USGS 3DEP) + county GIS + OSM; the honest-view study and the
   approximate-boundary and concept-home labels are part of the product.
 

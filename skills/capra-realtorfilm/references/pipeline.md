@@ -52,9 +52,12 @@ whole path fit inside it.
 8. **Render** (`pr_render.sh <Queue> <dir> <last frame> [keep]`: out of process, freezes the Blender batch):
    check stills every 48th frame (2 samples, ~3 min), then `draft720.sh`, later `final4k.sh`. Close the editor first
    (`run.sh quit.py`); never send remote Python during a render.
-9. **Post** (`post_film.py <frames> <out> --reveal <no-cabin frames> [--unbranded]`): frame 0 → frame 1 (brown
-   water until reflections warm up), the World Wakes seam, cards and credits scaled from 720p, the end card.
-   Then `mix_film_v2.py` (real field-recording beds) and mux at −20 LUFS; review copy ~1 Mbps for SendUserFile.
+9. **Post** (`post_film.py <frames> <out> --reveal <no-cabin frames> [--unbranded] [--workers 8]`): frame 0 →
+   frame 1 (brown water until reflections warm up), the World Wakes seam, cards and credits scaled from 720p, the end
+   card; frames composite in parallel. Then `mix_film_v2.py` (real field-recording beds) and mux at −20 LUFS; review
+   copy ~1 Mbps for SendUserFile. A final also gets a 1080p preview and a 720p-vs-4K detail crop for the client.
+10. **QA the final against the approved draft** (`scan_frames.py` on both frame folders, compare by frame number): only
+   differences from the draft are faults.
 
 ## Timings (M5 Pro, Petit Ridge v2: 508k Nanite trees, 12k understory, 76k ground pieces, Lumen HWRT)
 | Step | Time |
@@ -66,5 +69,10 @@ whole path fit inside it.
 | 720p film, 1,921 frames, 4 samples | 26.4 min (0.82 s/frame) |
 | 720p no-cabin pass | 17 min from frame 0 (before trimming), ~3 min trimmed |
 | 4K test frames (every 192nd, 8 samples) | ~30 s each: jumps rebuild every cache, so continuous runs are faster |
+| 4K film, 1,921 frames, 8 samples | 2 h 44 min (5.1 s/frame); 19 GB of PNGs |
+| 4K no-cabin pass, 141 frames (1100–1240) | 9.4 min |
+| Glitch scan of the 4K (`scan_frames.py`, 8 processes) | ~3 min |
 | Post at 720p (composite + cards) | 3 min |
+| Post at 4K (composite + crf 14 encode, 8 workers) / mux + 1080p preview + review copy | 4.4 min / 44 s |
+Total for a 4K final once the 720p is signed off: about 3 h, nearly all of it the film render.
 Instance count barely matters on Nanite: 508k trees rendered no slower than 292k.
