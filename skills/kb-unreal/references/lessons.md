@@ -47,6 +47,9 @@ Each line: what went wrong → the fix. Grouped by where it bites.
   the end values (no lot-line glow, no data layer, no leaf-off). → `FrameNumber(f * tick_per_frame)` (×1000 at
   24 fps / 24000 tick; WSER's build_scene.py already did ×1000). Transform/float channels take
   `MovieSceneTimeUnit.DISPLAY_RATE` and are fine. Read keys back and check their times, not just their values.
+  **The reverse bites too**: channel `add_key` (bool visibility, float, transform) defaults to display frames, so
+  carrying the ×1000 over put the cabin's "show" key at frame 1,105,000 and it never appeared (caught on 4K test
+  frames, Petit Ridge final). Sections' `add_*_parameter_key` → ticks; channels' `add_key` → display frames.
 - Component material tracks in 5.8: `track.set_material_info(ComponentMaterialInfo(material_slot_index=…))`, and the
   section's key wants `unreal.MaterialParameterInfo(name, MaterialParameterAssociation.GLOBAL_PARAMETER, -1)`.
 - Megascans foliage master: `Albedo Tint Leaves`/`Albedo Controls Leaves` only apply with the static switch
@@ -62,6 +65,22 @@ Each line: what went wrong → the fix. Grouped by where it bites.
   by one spare frame, wait for the last real PNG, `kill -9`, trim extras.
 - Every crashed render leaves a CrashReportClient at 99% CPU (4K slowed from 17
   to 27 s/frame) → `pkill -9 -x CrashReportClient` after each render.
+- **Don't time a final from stepped check frames**: every 192nd frame at 4K took ~30 s each (the camera jumps
+  seconds, so virtual shadow maps, Lumen and TSR history rebuild every frame); the same scene rendered
+  continuously ran 4.4 s/frame (Petit Ridge, 508k Nanite trees, 8 samples), 5.1 s/frame over the whole film
+  (1,921 frames in 2 h 44 min). Time a short continuous run and add ~15 %.
+- **QA a final against the approved draft, frame for frame**: run the same scan (frame-to-frame difference, magenta,
+  pure black, blown white) on both and compare by frame number. Petit Ridge 4K flagged a fast orbit, a hard cut and
+  2–4 % pure-black shadow at 52 s; all three matched the 720p Kris approved, so none was a render fault. Only a
+  difference from the draft is a new problem (`scan_frames.py`, 1,921 4K frames in ~3 min on 8 processes).
+- Pillow card post at 4K, one frame at a time with default PNG compression, would have taken ~1½ h for 80 s → a
+  `multiprocessing.Pool` over frames (8 workers) and staging PNGs at `compress_level=1`: composite + crf 14 encode
+  in 4.4 min (Petit Ridge `post_film.py --workers`). Module-level `sys.argv` parsing still works in spawned workers.
+- A queue's custom playback range was ignored (v1 rendered the no-cabin pass from frame 0) → trim the duplicated
+  sequence's own `set_playback_start/end`; frames keep their absolute numbers.
+- **A two-render reveal doesn't need two full renders**: hide the object in the main pass until just before the
+  reveal (a visibility key ~1 s ahead, while post still shows the other pass, so Lumen settles on it) and render the
+  object-free pass only over the seam. Petit Ridge 4K: 141 frames instead of ~1,240.
 - The render process answers Python remote execution (a quit killed a render)
   → launch renders with `-ini:Engine:[/Script/PythonScriptPlugin.
   PythonScriptPluginSettings]:bRemoteExecution=False`; never send remote
@@ -266,8 +285,13 @@ Each line: what went wrong → the fix. Grouped by where it bites.
 - Level-matching beds: measure the same band you'll play. Measuring only above 100 Hz, then boosting the full-band
   file, made the night bed's gust rumble boom 15 dB over the rest → high-pass beds first (~100 Hz), then match.
 - **A bare-earth viewshed oversells a view** (Petit Ridge: 82% of the lake visible on lidar ground, 25–32% with a
-  20 m canopy and a cleared view corridor). Lidar DEMs are bare earth: model the canopy before putting a view
-  number on screen, and say which one it is.
+  20 m canopy and a cleared view corridor, **20 % with the real lidar canopy**: the trees there are 24 m, not 20).
+  Lidar DEMs are bare earth: use the point cloud's canopy height model before putting a view number on screen, and
+  say which one it is.
+- Leaf-off lidar leaves holes in a 1 m canopy model (bare hardwood crowns return only ground hits), and roofs, wires
+  and towers make 60 m "trees" → vegetation classes only, a 3×3 max search, close pits; fill trees where the
+  surrounding canopy says forest.
+- `rr.sh` already calls `run.sh`: `run.sh x.py | rr.sh` runs a second, empty command (AssertionError on a directory).
 - Look at the frames yourself (crop, zoom, contact sheets); a clean log isn't
   proof. Trace camera numbers offline (replicate the curve in plain Python).
 - Delete frame folders once the MP4 is encoded and checked (245 GB freed once).

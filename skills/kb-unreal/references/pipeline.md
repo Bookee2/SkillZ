@@ -109,6 +109,8 @@ anything the sample re-applies on load (switchers) in the clone.
 | Films ident (ParticleLab, 150k ×2 + fog) | checks every 6th frame, 2 samples / 720p 4 samples | ~9 min / 11.6 min (121 frames; ~5 min is startup and shaders) |
 | Editor open | big sample first open | minutes to an hour (Nanite + shaders) |
 | Petit Ridge land flyover (4 km Nanite terrain, 292k Nanite trees, Lumen HWRT) | 720p, 4 samples / checks every 48th | 0.86 s/frame (1,921 in 27.5 min) / ~7 min |
+| Petit Ridge v2 (8 km of Nanite forest: 508k trees, 12k understory, 76k ground pieces, 2 × 8K ground photos) | 720p, 4 samples / checks every 48th | 0.82 s/frame (26.4 min) / 2 min 45 s: instance count barely matters on Nanite |
+| Petit Ridge v2 final | 4K, 8 samples, continuous | 5.1 s/frame (1,921 in 2 h 44 min, Blender batch frozen); 141-frame reveal pass 9.4 min; 10 MB/frame (19 GB) |
 
 ## Encode and post (ffmpeg)
 - Master from frames: `ffmpeg -framerate 30 -i f_%04d.png -frames:v N

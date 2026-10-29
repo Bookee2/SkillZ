@@ -248,6 +248,44 @@ then written as glTF or float32 records the editor reads, so it is exact and re-
   frames differ, i.e. on the object (`post_film.py world_wakes`).
 - **Look stills**: a 1-frame-per-shot LS_Look rendered by MRQ (4 stills in ~65 s) beats editor screenshots.
 
+### Real ground and real trees (Petit Ridge v2, 2026-10-28)
+Kris asked how to get better ground resolution. The answer splits three ways: **colour from above** (aerial photos),
+**shape** (no public data beats the 3DEP 1 m DEM under forest), and **close-up detail** (no aerial source gets near
+2 cm/px: scatter 3D ground cover).
+- **NAIP colour** (`naip_textures.py`, 2 min): USDA NAIP 60 cm 4-band COGs from Microsoft Planetary Computer (STAC
+  search + anonymous SAS token, ~510 MB a tile), same NAD83/UTM as 3DEP → `rasterio.warp.reproject` straight onto the
+  hero UV grid (8192² over the tile UV span; 8192 imports as an ordinary texture, not VT). Registered against the lidar
+  lake (photo water = NDVI < 0 and NIR < 80): within 1 m. Neighbours' houses out: compact low-NDVI blobs away from
+  water/roads plus lidar class-6 cells, filled from a shifted copy of the photo (**all four bands**, so the fill grades
+  like the forest). Graded from early October to peak fall: crown light/shade kept (L / blurred L), colour from the
+  leaf groups on a two-scale species field (9 m stands, 3 m crowns), 30 % of the photo, already-red crowns → scarlet.
+  The first grade (saturated, crown-sized noise) read as an orange filter.
+- **Distance blend in the terrain material**: `smoothstep(NearM 250, FarM 700, |WP − CameraPositionWS| m)` from the
+  litter look to `Naip × FarGain × FarTint` (instance parameters; the far ring's MI swaps in the wide photo).
+- **Trees from the point cloud** (`ept_fetch.py`, `lidar_trees.py`, 2 min for 79 M points): the USGS EPT copy on AWS
+  (`usgs-lidar-public/<project>/ept.json`, Web Mercator; walk `ept-hierarchy/` for the bbox, curl the `ept-data`
+  nodes 8 at a time: 2,145 nodes, 694 MB in ~6 min). Leaf-off → use vegetation classes 3–5 only, highest return in a
+  3×3 search, close pits, blur 0.9 m → CHM; tops = local maxima with a window growing with height (5/7/9 px for
+  8–16/16–26/26+ m). Petit Ridge: 4.9 pts/m², 92k tops (67/ha), median 24 m, p90 32 m, canopy cover 84 %.
+  **Evergreens** = share of a crown's returns classed high vegetation > 0.6 (a pine stops leaf-off pulses; a bare
+  hardwood doesn't) → 15.5 %. **Infill** where the canopy around is > 10 m tall but no top within 5.5 m (leaf-off
+  crowns return few pulses; one flight strip was thin): 143k fill trees sized 0.85 × local max CHM. Mesh scale =
+  height / the mesh's own bbox height (`pr_forest.py meshinfo` writes them).
+- **Ground cover** (`groundcover_points.py` → `pr_forest.py ground`, 76k Nanite instances): litter patches, single
+  leaves, ground cover, ferns, stones, twigs, branches, rocks, stumps, logs in the clearing, the woods to 110 m and the
+  shores the camera skims; tilted to the terrain normal by an align factor (`MathLibrary.make_rot_from_zx`), kept off
+  trunks (KD-tree), culled past 300 m (600 m for rocks, stumps and logs). **Check mesh sizes first**: Megascans
+  DeadLeaves 01/12–14 are 0.8–1.7 m patches but 02–11 are single 5 cm leaves.
+- **Re-run the view number on the real canopy**: lidar CHM in `viewshed.py` gave 20 % of the lake (21 of 105 acres)
+  against 32 % with the flat 20 m canopy → the card now says "about a fifth".
+- **A photo on bare hills still reads as suede**: with the canopy photo on it, the far ring (no 3D trees) stayed a
+  smooth tan hill under a low sun. Trees fixed it: an 11 m grid wherever the photo shows forest (NDVI > 0.3, a 4 m mask
+  saved by `naip_textures.py`), heights from the far ring's own 8 m mesh minus its 3 m offset: 279k more Nanite trees,
+  no slower to render. Fill neighbours' house lots with trees too, or removing the houses leaves bald patches.
+- **Bare floor under shore trees reads as beach** (bright tan, trunks like poles): a shrub layer (Hornbeam saplings
+  scaled 2–6 m and the two small Forest meshes, 3.5 m grid at 60 %) on land 3–30 m from the water near the camera's
+  path, and a darker floor albedo (Sentinel × 1.55, not 2.2).
+
 ## Runtime GPU PCG worlds (Cassini)
 The rings and asteroids are "generate at runtime" GPU graphs: they appear only
 in Simulate or a game world, so render with `-game` and ~90 engine warm-up
