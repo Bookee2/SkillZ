@@ -101,6 +101,7 @@ def course_page(rec: dict) -> str:
 # ---------- chapters ----------
 KEEP_CAPS = {'AS', 'AS1', 'AS2', 'AS3', 'AS4', 'AS5', 'AS6', 'AS7', 'AS8', 'AS9', 'TH', 'CP', 'FR', 'NF', 'US', 'SR', 'TR', 'II', 'III', 'IV', 'HQ', 'KOA'}
 PARTICLES = {'de', 'la', 'le', 'les', 'du', 'des', 'di', 'del', 'della', 'da', 'dei', 'y', 'van', 'von'}   # mid-name, races abroad
+PARTICLES |= {'of', 'the', 'and', 'at'}   # and English's: 'CHAIN OF LAKES' → 'Chain of Lakes', not 'Chain Of Lakes' (Bigfoot, 2026-10-29)
 def chapter_name(label: str) -> str:
     """'ADOBE AS' → 'Adobe AS', 'HWY 189' → 'Hwy 189', 'MT. MITCHELL' → 'Mt. Mitchell': title case that keeps the
     station abbreviations ('AS' is aid station, not 'As'); 'SAINT-GERVAIS' → 'Saint-Gervais', 'COL DE LA SEIGNE' →
