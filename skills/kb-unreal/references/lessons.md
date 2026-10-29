@@ -47,6 +47,9 @@ Each line: what went wrong → the fix. Grouped by where it bites.
   the end values (no lot-line glow, no data layer, no leaf-off). → `FrameNumber(f * tick_per_frame)` (×1000 at
   24 fps / 24000 tick; WSER's build_scene.py already did ×1000). Transform/float channels take
   `MovieSceneTimeUnit.DISPLAY_RATE` and are fine. Read keys back and check their times, not just their values.
+  **The reverse bites too**: channel `add_key` (bool visibility, float, transform) defaults to display frames, so
+  carrying the ×1000 over put the cabin's "show" key at frame 1,105,000 and it never appeared (caught on 4K test
+  frames, Petit Ridge final). Sections' `add_*_parameter_key` → ticks; channels' `add_key` → display frames.
 - Component material tracks in 5.8: `track.set_material_info(ComponentMaterialInfo(material_slot_index=…))`, and the
   section's key wants `unreal.MaterialParameterInfo(name, MaterialParameterAssociation.GLOBAL_PARAMETER, -1)`.
 - Megascans foliage master: `Albedo Tint Leaves`/`Albedo Controls Leaves` only apply with the static switch
@@ -62,6 +65,14 @@ Each line: what went wrong → the fix. Grouped by where it bites.
   by one spare frame, wait for the last real PNG, `kill -9`, trim extras.
 - Every crashed render leaves a CrashReportClient at 99% CPU (4K slowed from 17
   to 27 s/frame) → `pkill -9 -x CrashReportClient` after each render.
+- **Don't time a final from stepped check frames**: every 192nd frame at 4K took ~30 s each (the camera jumps
+  seconds, so virtual shadow maps, Lumen and TSR history rebuild every frame); the same scene rendered
+  continuously ran 4.4 s/frame (Petit Ridge, 508k Nanite trees, 8 samples). Time a short continuous run.
+- A queue's custom playback range was ignored (v1 rendered the no-cabin pass from frame 0) → trim the duplicated
+  sequence's own `set_playback_start/end`; frames keep their absolute numbers.
+- **A two-render reveal doesn't need two full renders**: hide the object in the main pass until just before the
+  reveal (a visibility key ~1 s ahead, while post still shows the other pass, so Lumen settles on it) and render the
+  object-free pass only over the seam. Petit Ridge 4K: 141 frames instead of ~1,240.
 - The render process answers Python remote execution (a quit killed a render)
   → launch renders with `-ini:Engine:[/Script/PythonScriptPlugin.
   PythonScriptPluginSettings]:bRemoteExecution=False`; never send remote

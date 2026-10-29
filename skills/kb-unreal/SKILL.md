@@ -32,6 +32,10 @@ Pull out, from the arguments and the conversation:
 If the brand or the kind of piece is missing entirely, ask one short question
 first. Otherwise research first and save questions for the interview.
 
+A film of a real lot or listing for a realtor or land broker has its own skill:
+switch to `/capra-realtorfilm`, which runs this pipeline with the parcel data,
+compliance rules and deliverables already worked out.
+
 ## 1. Load the capability map (every run, before anything else)
 
 Read these in full — they are the condensed memory of every Unreal, Blender

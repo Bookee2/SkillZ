@@ -63,6 +63,17 @@ improving itself: lessons, techniques, taste notes and a run log go back into
 its `references/` here, and `scripts/selfupdate.sh` reinstalls it. Install
 just this one with `./install.sh kb-unreal`.
 
+`/capra-realtorfilm` is Capra Studios' land film for realtors and land brokers,
+the product version of the Petit Ridge spec film. Type
+`/capra-realtorfilm <address or county + parcel ID> [for <agent or brokerage>]`
+and it assembles a parcel kit from public data (county parcel lines, USGS 3DEP
+lidar for the ground and the real trees, USDA NAIP aerial photos,
+OpenStreetMap roads), interviews you, and builds the film in Unreal on
+kb-unreal's pipeline: the lot line drawn on the real ground, Read the Land
+contours, an honest view study from the real canopy, an optional labelled
+concept home, 720p drafts, then 4K finals, a 9:16 cut, stills and an unbranded
+MLS cut. It needs kb-unreal installed too: `./install.sh capra-realtorfilm kb-unreal`.
+
 The first four are **the loop** — a spec-to-merge pipeline that runs across
 Linear and GitHub. One human decision gates it; the rest is agents doing one
 small, verifiable unit of work per pass. `/kb-design` is a different animal: it
@@ -220,6 +231,7 @@ skills/
   tg-ingest/SKILL.md   # one ingest pass; runs from the TrailGoat checkout
   kb-unreal/           # SKILL.md, references/ (taste, capabilities, techniques, lessons, pipeline, samples, assets, interview, research, runs), assets/ (runner, camera paths, render wrapper), scripts/ (preflight, selfupdate)
   kb-design/           # SKILL.md, references/design-system.md, assets/ (tokyo.css, shell, icons, starter)
+  capra-realtorfilm/   # SKILL.md, references/ (product, pipeline, data, petit-ridge); builds on kb-unreal
 kb-loop/
   resolve-target.md    # shared target resolution, referenced by the four loop skills
 install.sh
