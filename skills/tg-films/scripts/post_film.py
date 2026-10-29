@@ -356,6 +356,7 @@ def main() -> int:
         # "hud": {"hide": "645-735"}: frames the card steps aside for (trailgoat #754), e.g. a sign passing under it
         if hcfg.get('hide') and '--hide' in hud_py.read_text(): extra += ['--hide', str(hcfg['hide'])]
         if film.get('shots') and '--shots' in hud_py.read_text(): extra += ['--shots', str(film['shots'])]   # NEXT AID from the verified pins
+        if film.get('gain_m') and '--gain-m' in hud_py.read_text(): extra += ['--gain-m', str(film['gain_m'])]   # ELEVATION GAIN ends on the race's climb
         onscreen = [IMAGERY_ONSCREEN[k] for k in IMAGERY_ONSCREEN if k in (render_sources(film)['used'] or [])]
         if onscreen and '--credit' in hud_py.read_text(): extra += ['--credit', 'Imagery: ' + ' · '.join(onscreen)]
         sh(PY, hud_py, out_dir, '--src', master, '--dst', hud_mp4, *extra)
