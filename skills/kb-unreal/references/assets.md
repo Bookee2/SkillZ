@@ -83,6 +83,13 @@
   elevation profile); `particle-engine/data/{wser,leadville}.json`.
 - Terrain: Terrarium DEM tiles cached in `TrailGoat/scripts/flythrough/.tiles`;
   Cesium Google tiles via a key file (secret — never copy it anywhere).
+- US aerial photos: USDA NAIP (60 cm, 4-band, public domain, USDA asks for a credit) from Planetary Computer
+  (`/api/stac/v1/search` collection `naip`, token `/api/sas/v1/token/naip`, no account). Georgia 2023 tiles for Big
+  Canoe in `KB SS/Capra Studios/Unreal/PetitRidge/Data/source/naip2023/` (4 × 510 MB).
+- US lidar point clouds: USGS 3DEP EPT on AWS (`s3-us-west-2.amazonaws.com/usgs-lidar-public/<project>/ept.json`,
+  public, fast); rockyweb LAZ tiles throttle to ~100 KB/s with HTTP 429. Petit Ridge nodes in
+  `…/PetitRidge/Data/source/ept_ga2018/` (694 MB). County aerials (Dawson 2024, ~15 cm) are leaf-off and carry no
+  licence: ask the county first.
 
 ## Deliverables already made (for reuse and reference)
 - Capra: `Caprastudios/output/unreal/` (intro 4K R3, end screen 4K, space

@@ -189,19 +189,22 @@ WebP sprite, 150-shard rigid-body break played in reverse.
   motion matching; Blueprint graphs authored as DSL by agent; Mac
   performance tuning (minimised editor, 75% screen percentage, hair cards).
 
-### Capra land flyover — Petit Ridge (spec for realtors) · **Draft v1 (720p)**
+### Capra land flyover — Petit Ridge (spec for realtors) · **Draft v2 (720p): real trees and ground**
 Low over Lake Petit, up the valley to a real 4.9-acre lot in Big Canoe GA; the lot line draws itself in ribbon
 blue; "Read the Land" turns the forest into glowing contours and paints the visible part of the lake; a concept
 stone cabin resolves behind a glowing seam (World Wakes) on its cut-and-fill pad; the turn to the lake view,
 leaves fall; blue-hour hold on the lit cabin; Capra lockup. 80 s at 24 fps.
 - Technique: USGS lidar → Nanite glTF terrain tiles, OSM roads, data-placed Megascans forest with fall tints,
   canopy-aware viewshed, PCHIP camera traced offline, MPC + per-component material tracks (tick-resolution
-  keys), two-render reveal composite, Pillow cards (unbranded/agent cuts need no re-render).
+  keys), two-render reveal composite, Pillow cards (unbranded/agent cuts need no re-render). v2: forest from
+  the real lidar trees (+ infill, + a far ring planted from the NAIP photo), NAIP 60 cm ground colour at distance,
+  76k Megascans ground-cover pieces where the camera gets close (techniques.md "Real ground and real trees").
 - Project: `KB SS/Capra Studios/Unreal/PetitRidge` (Megascans + MSPresets APFS-cloned from Electric Dreams);
   map `/Game/PetitRidge/Maps/PetitRidge`; scripts `Caprastudios/unreal/petit_ridge/` (terrain_tiles,
   site_meshes, forest_points, viewshed, film_path, pr_build/scene/forest/seq/film, pr_render.sh,
   post_film, mix_film; VERSIONS.md).
-- Cost: 720p 0.86 s/frame (1,921 frames 27.5 min); check stills (every 48th) ~7 min.
+- Cost: 720p 0.86 s/frame (1,921 frames 27.5 min); check stills (every 48th) ~7 min. v2 with 508k trees and
+  76k ground pieces: 0.82 s/frame (26.4 min), reveal pass 17 min, check stills 2 min 45 s.
 - For clients: any parcel with public lidar (USGS 3DEP) + county GIS + OSM; the honest-view study and the
   approximate-boundary and concept-home labels are part of the product.
 

@@ -266,8 +266,13 @@ Each line: what went wrong → the fix. Grouped by where it bites.
 - Level-matching beds: measure the same band you'll play. Measuring only above 100 Hz, then boosting the full-band
   file, made the night bed's gust rumble boom 15 dB over the rest → high-pass beds first (~100 Hz), then match.
 - **A bare-earth viewshed oversells a view** (Petit Ridge: 82% of the lake visible on lidar ground, 25–32% with a
-  20 m canopy and a cleared view corridor). Lidar DEMs are bare earth: model the canopy before putting a view
-  number on screen, and say which one it is.
+  20 m canopy and a cleared view corridor, **20 % with the real lidar canopy**: the trees there are 24 m, not 20).
+  Lidar DEMs are bare earth: use the point cloud's canopy height model before putting a view number on screen, and
+  say which one it is.
+- Leaf-off lidar leaves holes in a 1 m canopy model (bare hardwood crowns return only ground hits), and roofs, wires
+  and towers make 60 m "trees" → vegetation classes only, a 3×3 max search, close pits; fill trees where the
+  surrounding canopy says forest.
+- `rr.sh` already calls `run.sh`: `run.sh x.py | rr.sh` runs a second, empty command (AssertionError on a directory).
 - Look at the frames yourself (crop, zoom, contact sheets); a clean log isn't
   proof. Trace camera numbers offline (replicate the curve in plain Python).
 - Delete frame folders once the MP4 is encoded and checked (245 GB freed once).

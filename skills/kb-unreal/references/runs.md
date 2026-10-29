@@ -3,6 +3,21 @@
 One entry per piece or session: date, piece, versions, Kris's notes → fixes,
 outcome, and what the skill learned. Add the entry at close-out (step 9).
 
+## 2026-10-28 (evening) · Petit Ridge v2 · real ground and real trees · 720p sent
+- Kris on v1 + real sound: "Okay the video is awesome, how much more detail would we get if we did this in 4k?" →
+  answered with cm per pixel per shot (720p 2–74 cm, 4K a third) and what the data limits (10 m satellite colour, 1 m
+  lidar). "Is there a way to get better ground resolution" → options: NAIP 60 cm photos, the lidar point cloud's trees,
+  3D ground cover; county 15 cm aerials are leaf-off and unlicensed; Google 3D tiles need on-screen credits. "Yes
+  whatever we need to do to make it better and then run it at 720p for me."
+- Built: NAIP far ground (fall-graded, houses removed), forest from 91.6k lidar trees + infill + 279k far-ring trees,
+  76k ground pieces, 5.4k shore shrubs, honest view re-run (20 %, card changed from "a third" to "a fifth"), lot glow
+  softened. Check stills twice (first pass found tan suede far hills and a beach-like shore floor → far-ring trees,
+  darker floor, shore shrubs). 720p film 26.4 min + reveal 17 min.
+- Failures: USGS rockyweb throttled LAZ (429, 100 KB/s) → AWS EPT; first CHM full of leaf-off holes and 60 m roof/wire
+  "trees" → vegetation classes, 3×3 max, closing; single-leaf Megascans meshes placed at litter density → size check;
+  inpainted roofs stayed grey (NIR not filled); one-frame magenta bloom in a check pass that didn't reproduce.
+- Learned: techniques.md "Real ground and real trees", assets.md (NAIP, EPT), lessons.md (viewshed, leaf-off CHM).
+
 ## 2026-10-28 · Capra land flyover "Petit Ridge" (spec for realtors) · v1 720p sent · awaiting notes
 - Kris: "Get started, this work is for Capra Studios and I want to sell to realtors or land brokers." Inputs: a
   USGS lidar kit (1 m hero heightmap, lot outline, lake outline, Sentinel-2) and a Sketchfab stone cabin (CC BY).
