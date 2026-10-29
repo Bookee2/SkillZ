@@ -30,6 +30,8 @@ import re
 import subprocess
 import sys
 import unicodedata
+import urllib.error
+import urllib.request
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
@@ -71,6 +73,29 @@ def race_name(rec: dict) -> str:
 
 def mmss(t: float) -> str:
     t = int(round(t)); return f'{t//60}:{t%60:02d}'
+
+
+SITE = 'https://trailgoat.run'
+def live_get(url: str):
+    req = urllib.request.Request(url, headers={'User-Agent': 'TrailGoat-films/1 (+https://trailgoat.run)'})
+    return urllib.request.urlopen(req, timeout=30)
+
+
+def course_page(rec: dict) -> str:
+    """The course page the description links to, checked live. A course snapshot taken before the course had its
+    SEO slug carries no page_url, and the old fallback /course/<film slug> 404s (Spine, Badwater, Diagonale and
+    Transgrancanaria, 2026-10-29), so ask the site for the course's page now and refuse to dress without one."""
+    path = rec.get('page_url')
+    if not path:
+        with live_get(f"{SITE}/api/fuel/courses/{rec['id']}") as r:
+            path = json.loads(r.read()).get('page_url')
+    if not path:
+        sys.exit(f"course {rec['id']} has no page on {SITE}: nothing for the description to link to")
+    try:
+        live_get(SITE + path).close()
+    except urllib.error.HTTPError as e:
+        sys.exit(f"{SITE}{path} answers {e.code}: fix the course page before dressing")
+    return path
 
 
 # ---------- chapters ----------
@@ -308,6 +333,7 @@ def main() -> int:
     out_dir = Path(film['out_dir']); dest = Path(film['dest']); work = dest / 'work'; work.mkdir(parents=True, exist_ok=True)
     rec = json.loads(next(out_dir.glob('course-*.json')).read_text())
     if film.get('gain_m'): rec['official_gain_m'] = float(film['gain_m'])   # a sourced climb beats the catalogue's terrain estimate
+    rec['page_url'] = course_page(rec)
     slug = film.get('slug') or (rec.get('page_url') or '').rsplit('/', 1)[-1] or f"course-{rec['id']}"
     film['slug'] = slug
     hud = json.loads((out_dir / 'hud-frames.json').read_text())
