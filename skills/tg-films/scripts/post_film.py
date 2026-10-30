@@ -114,7 +114,8 @@ def chapter_name(label: str) -> str:
             return w.lower()
         if i and w.lower() in PARTICLES:
             return w.lower()
-        return '-'.join(p.capitalize() for p in w.split('-'))
+        # each run of letters, as hud.py's aid_name does: '(BLUE' read '(blue' with str.capitalize() (Tarawera, 2026-10-30)
+        return re.sub(r"[^\W\d_](?:[^\W\d_]|['’])*", lambda m: m.group(0)[0].upper() + m.group(0)[1:].lower(), w)
     return ' '.join(word(i, w) for i, w in enumerate(label.split()))
 
 
