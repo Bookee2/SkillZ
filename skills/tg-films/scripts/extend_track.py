@@ -73,7 +73,7 @@ def rms(x: np.ndarray, a: float, b: float) -> float:
 
 
 def onsets(x: np.ndarray, t0: float, t1: float, hop: int = 128, n: int = 1024) -> list[float]:
-    a = int(t0 * SR); seg = x[a:int(t1*SR)]; w = np.hanning(n)
+    a = int(max(0.0, t0) * SR); seg = x[a:int(t1*SR)]; w = np.hanning(n)  # a window that starts before 0 s
     F = np.array([np.abs(np.fft.rfft(w * seg[i:i+n])) for i in range(0, len(seg) - n, hop)])
     fl = np.maximum(np.log1p(100*F[1:]) - np.log1p(100*F[:-1]), 0).sum(1)
     t = a/SR + (np.arange(len(fl)) + 1)*hop/SR + n/2/SR; thr = 0.35 * fl.max(); out: list[float] = []
@@ -87,7 +87,8 @@ def note(x: np.ndarray, t: float, N: int = 8192) -> str:
     """The note that starts at t: the strongest new partial between 400 and 1400 Hz (the melody's register)."""
     f = np.fft.rfftfreq(N, 1 / SR)
     S = np.abs(np.fft.rfft(x[int((t+0.01)*SR):int((t+0.01)*SR)+N] * np.hanning(N)))
-    pre = np.abs(np.fft.rfft(x[int((t-0.12)*SR):int((t-0.12)*SR)+N] * np.hanning(N)))
+    p = int(max(0.0, t - 0.12) * SR)
+    pre = np.abs(np.fft.rfft(x[p:p+N] * np.hanning(N)))
     k = int(np.argmax(np.maximum(S - 0.8*pre, 0) * ((f > 400) & (f < 1400))))
     mi = int(round(69 + 12 * np.log2(f[k] / 440)))
     return f'{NAMES[mi % 12]}{mi // 12 - 1}'
