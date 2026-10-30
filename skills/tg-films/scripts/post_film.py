@@ -203,10 +203,11 @@ IMAGERY_CREDIT = {
     'gsi': 'Aerial imagery: 地理院タイル (GSI Tiles, Geospatial Information Authority of Japan), '
            'https://maps.gsi.go.jp/development/ichiran.html, processed by TrailGoat; '
            'includes GRUS imagery (© Axelspace) and Landsat-8 imagery (NASA/USGS).',
+    'linz': 'Aerial imagery: LINZ Basemaps, sourced from Toitū Te Whenua Land Information New Zealand, CC BY 4.0.',
     's2-2016': 'Satellite imagery: Sentinel-2 cloudless 2016 by EOX IT Services GmbH, https://s2maps.eu '
                '(contains modified Copernicus Sentinel data 2016), CC BY 4.0.'}
 # the short on-screen form, for sources that ask to be named where their pictures are seen (PNOA's terms require it)
-IMAGERY_ONSCREEN = {'ign': 'IGN BD ORTHO', 'swisstopo': '© swisstopo', 'pnoa': 'PNOA cedido por © IGN', 'gsi': 'GSI Tiles',
+IMAGERY_ONSCREEN = {'ign': 'IGN BD ORTHO', 'swisstopo': '© swisstopo', 'pnoa': 'PNOA cedido por © IGN', 'gsi': 'GSI Tiles', 'linz': '© CC BY 4.0 LINZ',
                     's2-2016': 'Sentinel-2 cloudless 2016 by EOX'}
 
 
