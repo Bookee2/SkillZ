@@ -198,10 +198,16 @@ IMAGERY_CREDIT = {
     'ign': 'Aerial imagery: IGN BD ORTHO®, Licence Ouverte Etalab 2.0.',
     'swisstopo': 'Aerial imagery: © swisstopo, SWISSIMAGE (free geodata of the Swiss Confederation).',
     'pnoa': 'Aerial imagery: PNOA cedido por © Instituto Geográfico Nacional (CC BY 4.0).',
+    # GSI's terms: name the source (国土地理院 / 地理院タイル) with the tile list's link, say it was processed, and name
+    # GRUS (© Axelspace) where its tiles use it; seamlessphoto mixes in GRUS and Landsat-8 in places, so both always
+    'gsi': 'Aerial imagery: 地理院タイル (GSI Tiles, Geospatial Information Authority of Japan), '
+           'https://maps.gsi.go.jp/development/ichiran.html, processed by TrailGoat; '
+           'includes GRUS imagery (© Axelspace) and Landsat-8 imagery (NASA/USGS).',
     's2-2016': 'Satellite imagery: Sentinel-2 cloudless 2016 by EOX IT Services GmbH, https://s2maps.eu '
                '(contains modified Copernicus Sentinel data 2016), CC BY 4.0.'}
 # the short on-screen form, for sources that ask to be named where their pictures are seen (PNOA's terms require it)
-IMAGERY_ONSCREEN = {'ign': 'IGN BD ORTHO', 'swisstopo': '© swisstopo', 'pnoa': 'PNOA cedido por © IGN', 's2-2016': 'Sentinel-2 cloudless 2016 by EOX'}
+IMAGERY_ONSCREEN = {'ign': 'IGN BD ORTHO', 'swisstopo': '© swisstopo', 'pnoa': 'PNOA cedido por © IGN', 'gsi': 'GSI Tiles',
+                    's2-2016': 'Sentinel-2 cloudless 2016 by EOX'}
 
 
 def render_sources(film: dict) -> dict:
