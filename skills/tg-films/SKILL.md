@@ -42,6 +42,7 @@ Make `/Volumes/KB SS/TrailGoat-Studio/Films/<slug>/film.json`:
   - **Licence wording comes from `LICENSES.md`, not the performer.** The U.S. Army and Marine Band recordings there are listed under the YouTube Audio Library License, so don't call them "public domain".
 - `next`: the title of the film that follows in the playlist; it's typed into the end card and linked in Studio.
 - `gain_m` (optional): the climb in metres for the description and thumbnail, when the catalogue's figure is wrong. The catalogue's `official_gain_m` wins over its own `gain_m` (a terrain estimate), and this beats both. Check the climb against the race's published figure before every dress: Georgia Death Race's catalogue said 10,581 ft where published listings say about 14,000 ft and the z13 terrain at a 10 m noise filter says 14,556 ft (2026-10-27, `gain_m` 4267.2). Use the race's own figure when it publishes one, else the most-cited listing figure that agrees with the terrain, and tell Kris which.
+- `distance_m` (optional): the race's own distance in metres, where its course line runs short of it. Tahoe 200's line is the organiser's map at 187.4 mi for 200.4 (2026-10-30). The readout's distances, the thumbnail and the description then read the race's figure (trailgoat hud.py `--distance-m`); the terrain is still read along the line. Chapters and the NEXT AID countdown sit where each pin stands on the line (its shots-file mile), and name it with the label's official figure, so a short line no longer puts them late.
 
 ## Dress it
 

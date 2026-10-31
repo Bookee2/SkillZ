@@ -122,14 +122,19 @@ def chapter_name(label: str) -> str:
 def chapter_marks(rec: dict, hud: dict, shots: dict | None, intro_s: float, card_s: float = 0.0) -> list[tuple[float, str]]:
     """(seconds in the final film, label): the start, each verified aid pin, the finish, the card."""
     dist = hud['dist_m']; fps = hud.get('fps', FPS); total = float(rec['distance_m'])
-    k = total / float(hud.get('route_m') or total)                     # GPX miles → catalogue metres, as hud.py does
-    pins: list[tuple[str, float]] = []
+    route = float(hud.get('route_m') or total); k = total / route      # GPX metres (hud-frames' dist_m) → catalogue metres
+    # (name, where it stands in GPX metres, the figure its chapter names): the pin stands at its own mile, where render.py
+    # draws it and hud.py counts down to it; the label's figures are the organiser's and name it. Tahoe 200's line runs
+    # 6.5 % short, so Spooner Summit is line mile 169.3 and its chapter 'mi 182.3' (2026-10-30). A later visit keeps
+    # its spacing from the first on the same ratio.
+    pins: list[tuple[str, float, float]] = []
     if shots and shots.get('aids'):
         for mi, label in shots['aids']:
             name, _, tail = label.partition(' · ')
             unit = 1000.0 if re.search(r'\bKM\b', tail, re.I) else MI         # races abroad label pins 'KM 9.1'
-            at = [float(x)*unit for x in re.findall(r'\d+(?:\.\d+)?', tail)] or [float(mi)*MI]
-            pins += [(chapter_name(name), x*k) for x in at]
+            named = [float(x)*unit for x in re.findall(r'\d+(?:\.\d+)?', tail)]
+            r = float(mi)*MI/named[0] if named and named[0] > 0 else 1.0
+            pins += [(chapter_name(name), x*r, x) for x in named] or [(chapter_name(name), float(mi)*MI, float(mi)*MI*k)]
     else:
         # the catalogue's names carry notes ('Bartram (cutoff only, no aid)'); keep the name, flag a cutoff
         aids = rec.get('aid_stations'); aids = json.loads(aids) if isinstance(aids, str) else (aids or [])
@@ -139,7 +144,7 @@ def chapter_marks(rec: dict, hud: dict, shots: dict | None, intro_s: float, card
             name = re.sub(r'\s*\(.*?\)', '', a['name']).strip()
             if 'cutoff' in a['name'].lower() and 'no aid' in a['name'].lower():
                 name += ' (cutoff)'
-            pins.append((name, float(a.get('distM') or 0)))
+            pins.append((name, float(a.get('distM') or 0)/k, float(a.get('distM') or 0)))
     pins.sort(key=lambda p: p[1])
 
     def t_at(m: float) -> float:
@@ -149,9 +154,9 @@ def chapter_marks(rec: dict, hud: dict, shots: dict | None, intro_s: float, card
         return intro_s + len(dist)/fps
 
     marks = [(0.0, f'Start: {race_name(rec)}')]                          # the 4 s intro rides inside the first chapter
-    for name, m in pins:
-        if 0 < m < total - 400:
-            unit = f'km {m/1000:.1f}' if (rec.get('units') == 'metric') else f'mi {m/MI:.1f}'
+    for name, m, named in pins:
+        if 0 < m < route - 400:
+            unit = f'km {named/1000:.1f}' if (rec.get('units') == 'metric') else f'mi {named/MI:.1f}'
             marks.append((t_at(m), f'{name} · {unit}'))
     fin_t = intro_s + len(dist)/fps
     shots_idx = hud.get('shot') or []
@@ -255,7 +260,8 @@ def data_credits(rec: dict, film: dict) -> str:
 def description(rec: dict, film: dict, marks: list[tuple[float, str]], total_s: float) -> str:
     name = race_name(rec); ev = rec.get('event') or {}
     metric = rec.get('units') == 'metric'
-    dist = f"{rec['distance_m']/1000:.0f} km" if metric else f"{rec['distance_m']/MI:.0f} miles"
+    shown = float(rec.get('shown_m') or rec['distance_m'])
+    dist = f"{shown/1000:.0f} km" if metric else f"{shown/MI:.0f} miles"
     gain_m = float(rec.get('official_gain_m') or rec.get('gain_m') or 0)
     gain = f"{gain_m:,.0f} m" if metric else f"{gain_m*FT:,.0f} ft"
     where = ', '.join(x for x in (rec.get('region'), rec.get('country')) if x)
@@ -305,8 +311,9 @@ def thumbnail(rec: dict, poster: Path, out: Path):
         return f
     name = race_name(rec).upper(); metric = rec.get('units') == 'metric'
     gain_m = float(rec.get('official_gain_m') or rec.get('gain_m') or 0)
-    sub = (f"{rec['distance_m']/1000:.0f} KM · {gain_m:,.0f} M UP" if metric
-           else f"{rec['distance_m']/MI:.0f} MI · {gain_m*FT:,.0f} FT UP") + "  ·  3D COURSE FLYOVER"
+    shown = float(rec.get('shown_m') or rec['distance_m'])
+    sub = (f"{shown/1000:.0f} KM · {gain_m:,.0f} M UP" if metric
+           else f"{shown/MI:.0f} MI · {gain_m*FT:,.0f} FT UP") + "  ·  3D COURSE FLYOVER"
     dr = ImageDraw.Draw(im)
     size = 104
     while size > 56 and dr.textlength(name, font=sora(size, 800)) > 1180:
@@ -343,6 +350,7 @@ def main() -> int:
     out_dir = Path(film['out_dir']); dest = Path(film['dest']); work = dest / 'work'; work.mkdir(parents=True, exist_ok=True)
     rec = json.loads(next(out_dir.glob('course-*.json')).read_text())
     if film.get('gain_m'): rec['official_gain_m'] = float(film['gain_m'])   # a sourced climb beats the catalogue's terrain estimate
+    if film.get('distance_m'): rec['shown_m'] = float(film['distance_m'])   # the race's own distance where its line runs short (Tahoe 200)
     rec['page_url'] = course_page(rec)
     slug = film.get('slug') or (rec.get('page_url') or '').rsplit('/', 1)[-1] or f"course-{rec['id']}"
     film['slug'] = slug
@@ -366,6 +374,7 @@ def main() -> int:
         if hcfg.get('hide') and '--hide' in hud_py.read_text(): extra += ['--hide', str(hcfg['hide'])]
         if film.get('shots') and '--shots' in hud_py.read_text(): extra += ['--shots', str(film['shots'])]   # NEXT AID from the verified pins
         if film.get('gain_m') and '--gain-m' in hud_py.read_text(): extra += ['--gain-m', str(film['gain_m'])]   # ELEVATION GAIN ends on the race's climb
+        if film.get('distance_m') and '--distance-m' in hud_py.read_text(): extra += ['--distance-m', str(film['distance_m'])]   # the readout reads it
         onscreen = [IMAGERY_ONSCREEN[k] for k in IMAGERY_ONSCREEN if k in (render_sources(film)['used'] or [])]
         if onscreen and '--credit' in hud_py.read_text(): extra += ['--credit', 'Imagery: ' + ' · '.join(onscreen)]
         sh(PY, hud_py, out_dir, '--src', master, '--dst', hud_mp4, *extra)
@@ -446,7 +455,8 @@ def main() -> int:
     marks = chapter_marks(rec, hud, shots, intro_s, card_s); desc = description(rec, film, marks, total_s)
     (dest / 'description.txt').write_text(desc)
     name = race_name(rec); metric = rec.get('units') == 'metric'
-    dist = f"{rec['distance_m']/1000:.0f} km" if metric else f"{rec['distance_m']/MI:.0f}-mile"
+    shown = float(rec.get('shown_m') or rec['distance_m'])
+    dist = f"{shown/1000:.0f} km" if metric else f"{shown/MI:.0f}-mile"
     # a name that already carries its distance (Javelina Jundred 100 Miler, Bigfoot 200) keeps it: the GPX runs short of
     # the official distance on long courses (98.9 mi, 184 mi), and "the whole 99-mile course" reads wrong under it
     whole = 'the whole course' if re.search(r'\d', name) else f'the whole {dist} course'
