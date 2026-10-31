@@ -115,7 +115,11 @@ def chapter_name(label: str) -> str:
         if i and w.lower() in PARTICLES:
             return w.lower()
         # each run of letters, as hud.py's aid_name does: '(BLUE' read '(blue' with str.capitalize() (Tarawera, 2026-10-30)
-        return re.sub(r"[^\W\d_](?:[^\W\d_]|['’])*", lambda m: m.group(0)[0].upper() + m.group(0)[1:].lower(), w)
+        w = re.sub(r"[^\W\d_](?:[^\W\d_]|['’])*", lambda m: m.group(0)[0].upper() + m.group(0)[1:].lower(), w)
+        # an elided article stays lower case and the next word is capitalised, as hud.py's aid_name does: 'NIU DE
+        # L'ÀLIGA' → 'Niu de l'Àliga' (Ultra Pirineu, 2026-10-31); first in a name 'L'Arpette'; an Irish O' 'O'Neill'
+        return re.sub(r"\b(L|D|Qu|Dell|Nell|Sull|Dall|O)(['’])([^\W\d_])",
+                      lambda m: (m.group(1).lower() if (i or m.start()) and m.group(1) != 'O' else m.group(1)) + m.group(2) + m.group(3).upper(), w)
     return ' '.join(word(i, w) for i, w in enumerate(label.split()))
 
 
