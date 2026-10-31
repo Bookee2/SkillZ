@@ -179,6 +179,11 @@ Each line: what went wrong → the fix. Grouped by where it bites.
   scan of the render (single-frame spikes while the camera is slow = steps).
 
 ## Materials and textures
+- **A material that fails to compile renders as the Default Material in `-game`, with no other sign** (landfilm
+  batch: a Linear Grayscale sampler on an ordinary BC texture). The ground went flat grey-brown and every MPC effect
+  on it (Read the Land) vanished, and the stills almost passed as an improvement. After any material change, grep
+  the render log for `Failed to compile Material` before reading the stills; samplers: Linear Color for non-sRGB
+  masks unless the texture's compression is Grayscale.
 - **`r.Substrate.ProjectGBufferFormat=0` (blendable GBuffer) breaks Megascans foliage on Metal** (Petit Ridge,
   2026-10-28: three crashes, editor and MRQ, `Assertion failed: ShaderMapId.ContainsShaderType ... M_Foliage ...
   missing expected shader type FAnisotropyPS`, first blamed on a Python edit of the master). → for a new project
@@ -273,6 +278,17 @@ Each line: what went wrong → the fix. Grouped by where it bites.
   sensitive.
 
 ## Process
+- **Template code carries the template's numbers in strings too**: Petit Ridge's terrain material had its Z0 (698.89)
+  and elevation range (456–942 m) inside the HLSL of the Read the Land block, so every new lot's contours sat at the
+  wrong heights. When a script becomes a template, grep the shader strings and docstrings as well as the constants.
+- **Open ground isn't forest floor** (landfilm batch, Big Knoll): with the litter material everywhere near the camera,
+  lawns, pasture and cleared lots read as a sand beach. Mask open ground from the lidar canopy (< 2.5 m) and give it
+  the photo's own colour blurred to ~10 m (house-free); the sharp photo up close would show neighbours' roofs.
+  Cap the tint's luminance (forest floor ≤ 0.21, open ground ≤ 0.19) and desaturate it: a sunlit ridge-top
+  clearing (Timber Cliff, golden hour, exposure opened for the home's shaded faces) read lemon-yellow and a
+  September photo's lawn read lime; Petit Ridge's clearing was in shade, so its numbers never hit the limit.
+- **zsh in batch scripts**: `${@:-a b c}` stays one word (loop ran once with "a b c" and matched nothing), and an
+  unmatched glob in `rm -f dir/[0-9]*.laz` is an error that fails the step. Set arrays explicitly; use `find -delete`.
 - **Real places need real recordings** (Petit Ridge v1, Kris: "the sounds are terrible"): sample-project ambience
   (Electric Dreams' tropical canopy and crickets, a riverbed for a still lake, a sci-fi drone, a designed knock) reads
   fake on a real place → field recordings of the right habitat and season, a few long beds that follow the camera.
