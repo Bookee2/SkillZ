@@ -251,6 +251,8 @@ def data_credits(rec: dict, film: dict) -> str:
     used = src['used'] or ([src['imagery']] if src['imagery'] not in (None, 'auto', 'none') else ['usgs'] if src['imagery'] is None else [])
     if 'esri' in used: sys.exit('this render used Esri World Imagery, whose terms do not allow publishing it')
     parts += [IMAGERY_CREDIT[k] for k in IMAGERY_CREDIT if k in used]
+    # render.py's NAIP years from Microsoft's Planetary Computer ('naip-2018-ut': a summer flight where USGS's newest is winter)
+    parts += [f"Imagery: USDA NAIP {k.split('-')[1]} aerial photography (public domain), via Microsoft Planetary Computer." for k in used if k.startswith('naip-')]
     if src['osm']: parts.append('Coastline: © OpenStreetMap contributors, openstreetmap.org/copyright')
     parts.append('Rendered in Blender from the course GPX.')
     return '\n'.join(parts)
