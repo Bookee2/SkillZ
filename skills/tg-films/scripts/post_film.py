@@ -115,7 +115,11 @@ def chapter_name(label: str) -> str:
         if i and w.lower() in PARTICLES:
             return w.lower()
         # each run of letters, as hud.py's aid_name does: '(BLUE' read '(blue' with str.capitalize() (Tarawera, 2026-10-30)
-        w = re.sub(r"[^\W\d_](?:[^\W\d_]|['’])*", lambda m: m.group(0)[0].upper() + m.group(0)[1:].lower(), w)
+        # a small word between hyphens stays lower case, as hud.py's aid_name does: 'SAINT-CHRISTO-EN-JAREZ' →
+        # 'Saint-Christo-en-Jarez' (SaintéLyon, 2026-10-31), 'SAINT-GERVAIS-LES-BAINS' → 'Saint-Gervais-les-Bains'
+        small = PARTICLES | {'en', 'sur', 'sous', 'lès', 'lez', 'aux', 'au', 'et', 'sul', 'sulla', 'in', 'e'}
+        w = re.sub(r"[^\W\d_](?:[^\W\d_]|['’])*", lambda m: m.group(0).lower() if m.start() > 0 and w[m.start()-1] == '-' and m.end() < len(w)
+                   and m.group(0).lower() in small else m.group(0)[0].upper() + m.group(0)[1:].lower(), w)
         # an elided article stays lower case and the next word is capitalised, as hud.py's aid_name does: 'NIU DE
         # L'ÀLIGA' → 'Niu de l'Àliga' (Ultra Pirineu, 2026-10-31); first in a name 'L'Arpette'; an Irish O' 'O'Neill'
         return re.sub(r"\b(L|D|Qu|Dell|Nell|Sull|Dall|O)(['’])([^\W\d_])",
