@@ -272,6 +272,23 @@ def data_credits(rec: dict, film: dict) -> str:
 
 
 # ---------- description ----------
+def same_name(org: str, name: str) -> bool:
+    """True when the organizer's name is the race's own ('Jungfrau-Marathon' runs the Jungfrau-Marathon)."""
+    k = lambda x: re.sub(r'[^a-z0-9]', '', unicodedata.normalize('NFKD', x).lower())
+    return k(org) == k(name) or k(org) in k(name)
+
+
+def race_kind(rec: dict) -> tuple[str, str]:
+    """(tag, hashtag) for the race's length: an ultra past the marathon, else a trail race or a mountain marathon.
+    Jungfrau, Pikes Peak, Mont-Blanc 42K and Broken Arrow 23K were tagged ultramarathon (2026-11-01)."""
+    km = float(rec.get('shown_m') or rec.get('distance_m') or 0) / 1000
+    if km > 45:                                        # a marathon course line can run long (Mont-Blanc 42K: 43.7 km)
+        return 'ultramarathon', 'Ultramarathon'
+    if km > 40:
+        return 'mountain marathon', 'MountainMarathon'
+    return 'trail race', 'TrailRace'
+
+
 def description(rec: dict, film: dict, marks: list[tuple[float, str]], total_s: float) -> str:
     name = race_name(rec); ev = rec.get('event') or {}
     metric = rec.get('units') == 'metric'
@@ -281,7 +298,8 @@ def description(rec: dict, film: dict, marks: list[tuple[float, str]], total_s: 
     gain = f"{gain_m:,.0f} m" if metric else f"{gain_m*FT:,.0f} ft"
     where = ', '.join(x for x in (rec.get('region'), rec.get('country')) if x)
     # an organizer ending in a period ('Pikes Peak Marathon, Inc.') read 'Inc.. Race day' (2026-11-01)
-    org = f" Organized by {ev['organizer'].rstrip('.')}." if ev.get('organizer') else ''
+    # an organizer with the race's own name says nothing ('Organized by Jungfrau-Marathon.', 2026-11-01)
+    org = f" Organized by {ev['organizer'].rstrip('.')}." if ev.get('organizer') and same_name(ev['organizer'], name) is False else ''
     date = ''
     try:                                                                # a race still ahead gets its date; a past one doesn't
         import datetime as dt
@@ -307,7 +325,7 @@ def description(rec: dict, film: dict, marks: list[tuple[float, str]], total_s: 
             f"Plan this race free on TrailGoat: the elevation profile, every aid station and cutoff, a pacing and "
             f"fuel plan, race-week weather, and a live crew sheet.\n▶ {url}\n\n"
             f"Chapters\n{chapters}\n{music}\n\n{credits}\n\n"
-            f"More flyovers: https://www.youtube.com/@trailgoatrun\n\n#TrailRunning #Ultramarathon #{tag}")
+            f"More flyovers: https://www.youtube.com/@trailgoatrun\n\n#TrailRunning #{race_kind(rec)[1]} #{tag}")
 
 
 # ---------- thumbnail ----------
@@ -479,8 +497,8 @@ def main() -> int:
     title = film.get('title') or f"{name}: {whole} in 3D, every aid station | TrailGoat"
     if len(title) > 100:
         title = f"{name} in 3D: every aid station | TrailGoat"
-    tags = ['trail running', 'ultramarathon', 'race flyover', '3D course map', name, 'aid stations', 'race planning', 'TrailGoat']
-    if (rec.get('event') or {}).get('organizer'):
+    tags = ['trail running', race_kind(rec)[0], 'race flyover', '3D course map', name, 'aid stations', 'race planning', 'TrailGoat']
+    if (rec.get('event') or {}).get('organizer') and same_name(rec['event']['organizer'], name) is False:
         # YouTube splits a tag at a comma: 'Pikes Peak Marathon, Inc.' kept only 'Inc.' (2026-11-01)
         tags.append(re.sub(r'\s*,\s*', ' ', rec['event']['organizer']).strip())
     meta = dict(title=title, description=desc, tags=tags[:15], privacy=film.get('privacy', 'public'),
