@@ -144,6 +144,16 @@ because two catalog events fit them equally well — nothing was filed for
 them; name them in the digest for Kris (they are usually a duplicate pair
 already in the catalog).
 
+Then skim the `NEW` lines for things that are not one runner on one course:
+`grep -E "NEW" <log> | grep -iE "swim|cycl|bike|fondo|obstacle|triathlon|
+relay|team|challenge|virtual|loppet"`. Race Roster is the noisy source (the
+first pass, 2026-11-01, filed rides, triathlons, team relays, a ski loppet,
+virtual totals dated 2033 and "500m" read as 500 miles; PR #835). When one
+gets through, fix the rule in `app/race_sources` with a test, then remove
+only the editions and events that run filed (none with a course or a
+reference), and set their `source_seen` note to `out_of_scope`. Never
+hand-edit one row and leave the rule as it was.
+
 ### 3. Scripted hunt
 
 ```bash
