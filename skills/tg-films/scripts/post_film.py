@@ -275,7 +275,8 @@ def description(rec: dict, film: dict, marks: list[tuple[float, str]], total_s: 
     gain_m = float(rec.get('official_gain_m') or rec.get('gain_m') or 0)
     gain = f"{gain_m:,.0f} m" if metric else f"{gain_m*FT:,.0f} ft"
     where = ', '.join(x for x in (rec.get('region'), rec.get('country')) if x)
-    org = f" Organized by {ev['organizer']}." if ev.get('organizer') else ''
+    # an organizer ending in a period ('Pikes Peak Marathon, Inc.') read 'Inc.. Race day' (2026-11-01)
+    org = f" Organized by {ev['organizer'].rstrip('.')}." if ev.get('organizer') else ''
     date = ''
     try:                                                                # a race still ahead gets its date; a past one doesn't
         import datetime as dt
@@ -475,7 +476,8 @@ def main() -> int:
         title = f"{name} in 3D: every aid station | TrailGoat"
     tags = ['trail running', 'ultramarathon', 'race flyover', '3D course map', name, 'aid stations', 'race planning', 'TrailGoat']
     if (rec.get('event') or {}).get('organizer'):
-        tags.append(rec['event']['organizer'])
+        # YouTube splits a tag at a comma: 'Pikes Peak Marathon, Inc.' kept only 'Inc.' (2026-11-01)
+        tags.append(re.sub(r'\s*,\s*', ' ', rec['event']['organizer']).strip())
     meta = dict(title=title, description=desc, tags=tags[:15], privacy=film.get('privacy', 'public'),
                 thumbnail=str(thumb), playlist=film.get('playlist', 'Race Flyovers'))
     (dest / 'meta.json').write_text(json.dumps(meta, indent=2))
