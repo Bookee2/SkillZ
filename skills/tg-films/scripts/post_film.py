@@ -249,13 +249,16 @@ def data_credits(rec: dict, film: dict) -> str:
     src = render_sources(film); country = (rec.get('country') or '').strip().lower()
     if src['imagery'] == 'esri':
         sys.exit('this render used Esri World Imagery, whose terms do not allow publishing it: re-render with --imagery usgs or --style relief')
-    us = country in US or not country
+    # a course across a border names both ('Germany and Austria': Zugspitz runs into Tyrol, 2026-11-01); each one's notices
+    countries = [c.strip() for c in re.split(r',|\band\b', country) if c.strip()] or ['']
+    us = any(c in US or not c for c in countries)
     terrain = 'Terrain: Mapzen Terrain Tiles (AWS Open Data); ' + ('3DEP and SRTM data courtesy of the U.S. Geological Survey.' if us
                else 'SRTM and GMTED2010 data courtesy of the U.S. Geological Survey.')
     notices = []
-    if country in EU_DEM: notices.append('Produced using Copernicus data and information funded by the European Union - EU-DEM layers.')
-    key = 'united kingdom' if country in ('uk', 'england', 'scotland', 'wales') else country
-    if key in DEM_NOTICE: notices.append(DEM_NOTICE[key])
+    if any(c in EU_DEM for c in countries): notices.append('Produced using Copernicus data and information funded by the European Union - EU-DEM layers.')
+    for c in countries:
+        key = 'united kingdom' if c in ('uk', 'england', 'scotland', 'wales') else c
+        if key in DEM_NOTICE and DEM_NOTICE[key] not in notices: notices.append(DEM_NOTICE[key])
     lat = rec.get('start_lat') or rec.get('lat')
     if lat is not None and float(lat) > 60:
         notices.append('ArcticDEM: DEMs created from DigitalGlobe, Inc., imagery and funded under National Science Foundation '
