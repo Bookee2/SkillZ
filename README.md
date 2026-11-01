@@ -45,8 +45,9 @@ Built on motion-broll by Bart (MIT, `LICENSE-upstream`). Install just this one
 with `./install.sh kb-ytvideo`.
 
 `/tg-ingest` runs one crawl-and-ingest pass for the TrailGoat race catalog:
-the UltraSignup sweep (once a day), the GPX hunt, import, enrichment and audit,
-then a digest. It writes to the production database and runs from the
+the UltraSignup sweep and the other race sources (UTMB, RunSignup, Race Roster
+and DUV, each once a day), the GPX hunt, import, enrichment and audit, then a
+digest. It writes to the production database and runs from the
 TrailGoat checkout (it changes there when started elsewhere). Use it with
 `/loop 3h /tg-ingest`. Install just this one with `./install.sh tg-ingest`.
 

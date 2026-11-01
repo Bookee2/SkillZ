@@ -115,6 +115,35 @@ This step only fills blanks. It never replaces a hand-curated or previously
 captured website. A 403/429 is the same hard stop as the sweep: end the pass and
 do not retry around it.
 
+### 2c. Races beyond UltraSignup, each source once a day
+
+```bash
+.venv/bin/python discover.py --quiet
+```
+
+Finds races UltraSignup does not list, in the US and abroad, and files them
+in the same tables the sweep does (2026-10-31). Four sources run in order:
+**UTMB** (its race search, with each race's official course file), **RunSignup**
+(open API), **Race Roster** (its search JSON) and **DUV**'s trail ultra calendar
+(HTML at its robots.txt crawl delay of 20 s, so it fetches at most `--details`
+organizer sites a run, 40 by default). The scope is trail races from 15 km and
+every ultra. Each source is gated to once a day on its own and claims the day
+only when it finishes. A race the catalog already holds — from UltraSignup or
+another source, under another spelling — is matched rather than filed again
+(app/race_sources/stage.py says how); a new one lands approved, with the
+organizer site for step 3 to crawl, and a UTMB race arrives with its course
+file already recorded, so step 6 imports it this pass.
+
+Note each `DISCOVER` line: `new_events`, `matched_events`, `new_editions`,
+`gpx`. A `stopped` that begins `HARD STOP` is one source answering 403/429:
+that source is done for the day — **do not retry or work around it** — and the
+other sources and the rest of the pass carry on. `stopped: "max-new 300"` only
+means a large backlog; the next day's run continues it. `failed: …` means a
+source changed its shape: say so in the digest. `ambiguous` lists races held
+because two catalog events fit them equally well — nothing was filed for
+them; name them in the digest for Kris (they are usually a duplicate pair
+already in the catalog).
+
 ### 3. Scripted hunt
 
 ```bash
@@ -320,6 +349,7 @@ Print exactly one block, last thing in the turn:
 
 Sweep      : <N new events staged> from did <frontier_from>-<frontier_to> · or "skipped — already ran today (<date>)"
 Sites      : <N organizer sites resolved> · <N rows written> · <N misses checked>
+Sources    : <source>: <N new events> · <N matched> · <N new editions> · <N course files> — per source, or "skipped — already ran today"
 Hunt       : <N editions crawled> → <N with candidates>   (scripted)
              <N editions searched> → <N with candidates>  (in session)
 Emails     : <N emails> · <N names> found · <N rows written>   (organizer contacts)
