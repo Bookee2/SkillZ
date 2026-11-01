@@ -85,16 +85,21 @@ def course_page(rec: dict) -> str:
     """The course page the description links to, checked live. A course snapshot taken before the course had its
     SEO slug carries no page_url, and the old fallback /course/<film slug> 404s (Spine, Badwater, Diagonale and
     Transgrancanaria, 2026-10-29), so ask the site for the course's page now and refuse to dress without one."""
-    path = rec.get('page_url')
-    if not path:
+    def live_path():
         with live_get(f"{SITE}/api/fuel/courses/{rec['id']}") as r:
-            path = json.loads(r.read()).get('page_url')
+            return json.loads(r.read()).get('page_url')
+    path = rec.get('page_url') or live_path()
     if not path:
         sys.exit(f"course {rec['id']} has no page on {SITE}: nothing for the description to link to")
     try:
         live_get(SITE + path).close()
     except urllib.error.HTTPError as e:
-        sys.exit(f"{SITE}{path} answers {e.code}: fix the course page before dressing")
+        # a course renamed after the render keeps its old slug in the snapshot: Spartathlon's record said
+        # /course/spartathlon-2025 after its 2026 relabel (2026-11-01), so ask the site for the page it has now
+        fresh = live_path() if e.code == 404 else None
+        if not fresh or fresh == path:
+            sys.exit(f"{SITE}{path} answers {e.code}: fix the course page before dressing")
+        live_get(SITE + fresh).close(); print(f'course page: {path} moved to {fresh}'); path = fresh
     return path
 
 
