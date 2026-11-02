@@ -178,7 +178,26 @@ def stage_dress(film: dict, p: dict, short: Path, work: Path, vid: str | None) -
                 privacy=film.get('privacy', 'public'), playlist='Race Shorts', related_video=vid)
     if film.get('short_publish_at'): meta['publish_at'] = film['short_publish_at']   # the Thursday of race week
     (short / 'meta.json').write_text(json.dumps(meta, indent=1, ensure_ascii=False))
+    keep_clean(p, work, ff)
     print('SHORT', out, f'{dur:.1f} s'); print('title:', title); print('full film:', full)
+
+
+def keep_clean(p: dict, work: Path, ff: str) -> None:
+    """The portrait frames are ~3.5 GB a Short. Keep them as one clean high-quality video, <slug>-portrait.mp4 (what
+    week_short.py plays behind the race's card), and drop the PNGs once its frame count checks out (KB SS was at 87 %,
+    2026-11-02)."""
+    import shutil
+    frames = work / 'frames'; f0, f1 = p['frames']; n = f1 - f0 + 1
+    if not frames.exists(): return
+    clean = work / f'{work.name}-portrait.mp4'
+    sh(ff, '-y', '-loglevel', 'error', '-framerate', str(p['fps']), '-start_number', str(f0), '-i', frames / 'f_%04d.png',
+       '-frames:v', str(n), '-c:v', 'libx264', '-preset', 'slow', '-crf', '14', '-pix_fmt', 'yuv420p', '-movflags', '+faststart', clean)
+    got = subprocess.run([ff, '-i', clean, '-map', '0:v', '-c', 'copy', '-f', 'null', '-'], capture_output=True, text=True).stderr
+    m = re.findall(r'frame=\s*(\d+)', got)
+    if m and int(m[-1]) == n:
+        shutil.rmtree(frames); print('kept', clean.name, f'({n} frames); frames removed')
+    else:
+        print('portrait video frame count', m[-1] if m else '?', 'vs', n, ': frames kept')
 
 
 def main() -> int:
