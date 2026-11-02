@@ -14,7 +14,8 @@ film.json:
   "intro":   "…/Films/assets/intro-trailgoat-films-1080p24.mp4",
   "dest":    "…/Films/georgia-sky-to-summit-25k",
   "playlist": "Race Flyovers", "privacy": "public",
-  "thumb_at": 95.0                                           optional: seconds into the master for the thumbnail, instead of poster.webp
+  "thumb_at": 95.0,                                          optional: seconds into the master for the thumbnail, instead of poster.webp
+  "publish_at": "2026-11-16T11:00:00Z"                       optional: scheduled public time (UTC); uploads private until then
 }
 
 Writes to dest: {slug}-youtube.mp4, {slug}-thumb.png, description.txt, meta.json (for yt_upload.py), work/.
@@ -506,6 +507,8 @@ def main() -> int:
         tags.append(re.sub(r'\s*,\s*', ' ', rec['event']['organizer']).strip())
     meta = dict(title=title, description=desc, tags=tags[:15], privacy=film.get('privacy', 'public'),
                 thumbnail=str(thumb), playlist=film.get('playlist', 'Race Flyovers'))
+    if film.get('publish_at'):   # race-week publishing (batch 6, 2026-11-02): public on the Monday of the race's week
+        meta['publish_at'] = film['publish_at']
     (dest / 'meta.json').write_text(json.dumps(meta, indent=2))
     print(f"\n{final}\n{thumb}\n{dest/'meta.json'}\ntitle: {title}\nchapters:\n" + '\n'.join(f'  {mmss(t)} {l}' for t, l in marks))
 
