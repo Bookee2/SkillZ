@@ -121,33 +121,45 @@ def the(race: str) -> str:
     return race if race.lower().startswith('the ') else f'the {race}'
 
 
-def stage_dress(film: dict, p: dict, short: Path, work: Path, vid: str | None) -> None:
-    slug = film['slug']; ff = post_film.ffmpeg()
-    silent = work / f'{slug}-short-silent.mp4'
-    sh(PY, REPO / 'scripts/flythrough/short.py', 'dress', work, '--pick', short / 'pick.json', '--film', short.parent / 'film.json', '--dst', silent)
-    # the film's music at the same moment: master frame f plays at intro + (f-1)/fps in the long film, and the track
-    # (from music.start) comes in at music_at, as post_film.py mixes it
+def mix(film: dict, p: dict, m: dict, silent: Path, out: Path, ff: str) -> None:
+    """The film's music at the same moment: master frame f plays at intro + (f-1)/fps in the long film, and the track
+    (from music.start) comes in at music_at, as post_film.py mixes it."""
+    n = p['frames'][1] - p['frames'][0] + 1; dur = n/p['fps']
+    if not m.get('file'):
+        sh(ff, '-y', '-loglevel', 'error', '-i', silent, '-c', 'copy', out); return
+    intro = film.get('intro'); intro_s = post_film.probe(ff, intro)['seconds'] if intro and os.path.exists(intro) else 0.0
+    intro_sound = bool(intro and os.path.exists(intro) and post_film.probe(ff, intro)['audio'])
+    music_at = (intro_s if intro_sound else 0.0) + float(m.get('delay') or 0)
+    at = float(m.get('start') or 0) + intro_s + (p['frames'][0] - 1)/p['fps'] - music_at
+    avail = post_film.probe(ff, m['file'])['seconds'] - max(at, 0.0)
+    lead = max(0.0, -at); play = min(dur - lead, avail)
+    fade = f'afade=t=out:st={max(0.0, play - 1.5):.2f}:d=1.5' if play >= dur - lead - 0.05 else f'afade=t=out:st={max(0.0, play - 0.3):.2f}:d=0.3'
+    af = (f'[1:a]atrim=start={max(at, 0.0):.3f}:end={max(at, 0.0) + play:.3f},asetpts=PTS-STARTPTS,afade=t=in:st=0:d=0.4,{fade},'
+          f'loudnorm=I=-14:TP=-1.5:LRA=11,aresample=48000' + (f',adelay={int(lead*1000)}:all=1' if lead else '') + ',apad[a]')
+    sh(ff, '-y', '-loglevel', 'error', '-i', silent, '-i', m['file'], '-filter_complex', af, '-map', '0:v', '-map', '[a]',
+       '-c:v', 'copy', '-c:a', 'aac', '-b:a', '192k', '-t', f'{dur:.3f}', '-movflags', '+faststart', out)
+
+
+def stage_dress(film: dict, p: dict, short: Path, work: Path, vid: str | None, social_only: bool = False) -> None:
+    """Two cuts of the same Short with the same music: <slug>-short.mp4 for YouTube ("link below") and
+    <slug>-short-social.mp4 for Instagram, Facebook and TikTok (the channel named, since a caption link doesn't click
+    there), plus social-caption.txt. --social-only makes just the second, from the kept portrait video."""
+    slug = film['slug']; ff = post_film.ffmpeg(); dur = (p['frames'][1] - p['frames'][0] + 1)/p['fps']
     import music_rights
     m = music_rights.cleared_music(film.get('music') or {})
     if m is None:
         sys.exit(f"{film['music']['file']} is a YouTube Audio Library recording and Music/public-domain/MAP.json has no cleared "
                  "copy of the piece: add one (see music_rights.py) before making this Short")
+    frames_there = (work / 'frames').exists() and any((work / 'frames').glob('f_*.png'))
+    src = [] if frames_there else ['--src', work / f'{slug}-portrait.mp4']
+    if not frames_there and not (work / f'{slug}-portrait.mp4').exists(): sys.exit(f'{slug}: neither frames nor a portrait video in {work}')
+    dress = [PY, REPO / 'scripts/flythrough/short.py', 'dress', work, '--pick', short / 'pick.json', '--film', short.parent / 'film.json', *src]
     out = short / f'{slug}-short.mp4'
-    n = p['frames'][1] - p['frames'][0] + 1; dur = n/p['fps']
-    if m.get('file'):
-        intro = film.get('intro'); intro_s = post_film.probe(ff, intro)['seconds'] if intro and os.path.exists(intro) else 0.0
-        intro_sound = bool(intro and os.path.exists(intro) and post_film.probe(ff, intro)['audio'])
-        music_at = (intro_s if intro_sound else 0.0) + float(m.get('delay') or 0)
-        at = float(m.get('start') or 0) + intro_s + (p['frames'][0] - 1)/p['fps'] - music_at
-        avail = post_film.probe(ff, m['file'])['seconds'] - max(at, 0.0)
-        lead = max(0.0, -at); play = min(dur - lead, avail)
-        fade = f'afade=t=out:st={max(0.0, play - 1.5):.2f}:d=1.5' if play >= dur - lead - 0.05 else f'afade=t=out:st={max(0.0, play - 0.3):.2f}:d=0.3'
-        af = (f'[1:a]atrim=start={max(at, 0.0):.3f}:end={max(at, 0.0) + play:.3f},asetpts=PTS-STARTPTS,afade=t=in:st=0:d=0.4,{fade},'
-              f'loudnorm=I=-14:TP=-1.5:LRA=11,aresample=48000' + (f',adelay={int(lead*1000)}:all=1' if lead else '') + ',apad[a]')
-        sh(ff, '-y', '-loglevel', 'error', '-i', silent, '-i', m['file'], '-filter_complex', af, '-map', '0:v', '-map', '[a]',
-           '-c:v', 'copy', '-c:a', 'aac', '-b:a', '192k', '-t', f'{dur:.3f}', '-movflags', '+faststart', out)
-    else:
-        sh(ff, '-y', '-loglevel', 'error', '-i', silent, '-c', 'copy', out)
+    if not social_only:
+        silent = work / f'{slug}-short-silent.mp4'
+        sh(*dress, '--dst', silent); mix(film, p, m, silent, out, ff)
+    silent_s = work / f'{slug}-short-social-silent.mp4'
+    sh(*dress, '--cta', 'social', '--dst', silent_s); mix(film, p, m, silent_s, short / f'{slug}-short-social.mp4', ff)
     # title, description, meta
     long_meta = json.loads((short.parent / 'meta.json').read_text())
     long_desc = (short.parent / 'description.txt').read_text()
@@ -168,7 +180,8 @@ def stage_dress(film: dict, p: dict, short: Path, work: Path, vid: str | None) -
         lede = f'{race}, {span}, flown in 3D over the real terrain with the race readout.'
     if len(title) > 100: title = title.replace(', in 3D', '')
     blocks = long_desc.split('\n\n')
-    music = next((b for b in blocks if b.startswith('Music:')), '')
+    music = (f'Music: "{m["title"]}" ({m["artist"]}).' + (f" Why this one: {m['reason']}" if m.get('reason') else '')
+             + (f"\n{m['credit']}" if m.get('credit') else '')) if m.get('title') else ''
     credits = [b for b in blocks if b.startswith(('Terrain:', 'Imagery:', 'Rendered', '©', 'Contains', 'Elevation'))]
     tags_line = next((b for b in reversed(blocks) if b.startswith('#')), '#TrailRunning #Ultramarathon')
     full = f'https://youtu.be/{vid}' if vid else 'https://www.youtube.com/@trailgoatrun'
@@ -182,6 +195,15 @@ def stage_dress(film: dict, p: dict, short: Path, work: Path, vid: str | None) -
                 privacy=film.get('privacy', 'public'), playlist='Race Shorts', related_video=vid)
     if film.get('short_publish_at'): meta['publish_at'] = film['short_publish_at']   # the Thursday of race week
     (short / 'meta.json').write_text(json.dumps(meta, indent=1, ensure_ascii=False))
+    # the off-YouTube caption: links don't click there, so the channel by name; the music and its credit travel with it
+    tag = re.sub(r'[^A-Za-z0-9]', '', race)
+    cap = '\n\n'.join(x for x in [
+        lede.replace('flown in 3D', 'in 3D'),
+        'The whole course and every aid station in the full 3D film on YouTube: @trailgoatrun',
+        'Plan this race free on TrailGoat: trailgoat.run',
+        (f'Music: "{m["title"]}" ({m["artist"]})' + (f"\n{m['credit']}" if m.get('credit') else '')) if m.get('title') else '',
+        f'#trailrunning #ultramarathon #ultrarunning #{tag} #trailgoat'] if x)
+    (short / 'social-caption.txt').write_text(cap + '\n')
     keep_clean(p, work, ff)
     print('SHORT', out, f'{dur:.1f} s'); print('title:', title); print('full film:', full)
 
@@ -210,11 +232,13 @@ def main() -> int:
     ap.add_argument('--seconds', type=float, default=40.0)
     ap.add_argument('--stage', choices=('pick', 'render', 'dress', 'all'), default='all')
     ap.add_argument('--video-id', help="the long film's YouTube id (default: app/films.json by its course link)")
+    ap.add_argument('--social-only', action='store_true', help="only the off-YouTube cut (<slug>-short-social.mp4) of a Short already made")
     o = ap.parse_args()
     film_path = Path(o.film).resolve(); film = json.loads(film_path.read_text())
     short = film_path.parent / 'short'; short.mkdir(exist_ok=True)
     work = STUDIO / 'Renders/flyovers/shorts' / film['slug']
     p = stage_pick(film, short, o.seconds)
+    if o.social_only: stage_dress(film, p, short, work, o.video_id, social_only=True); return 0
     if o.stage in ('render', 'all'): stage_render(film, p, work)
     if o.stage in ('dress', 'all'): stage_dress(film, p, short, work, o.video_id)
     return 0

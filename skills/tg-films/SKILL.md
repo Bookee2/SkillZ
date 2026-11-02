@@ -90,6 +90,29 @@ TRAILGOAT_REPO=<checkout> python3 ~/.claude/skills/tg-films/scripts/short_film.p
 - **Look before publishing**: frames at 0.5 s (the hook must read on the first frame), the climb's top (`climb.frame_top`), and 1 s from the end (the link line). Play the audio at the start: a Short starting mid-phrase is fine, a click isn't.
 - **Publish**: `yt_upload.py upload <dest>/short/<slug>-short.mp4 <dest>/short/meta.json` (a vertical video under 3 min is a Short), then in Studio set the Short's **Related video** to the long film (the API can't), so the player's link under the Short opens it.
 
+## Off YouTube: Instagram, Facebook, TikTok
+
+Kris, 2026-11-02: "I want to set up our own pipeline", rather than a paid cross-poster that reposts the YouTube cut.
+
+- **Two cuts of every Short.** `short_film.py` makes `<slug>-short.mp4` for YouTube and `<slug>-short-social.mp4` for everywhere else, plus `social-caption.txt`.
+  - The two cuts differ only in the closing line: "FULL 3D FILM ON YOUTUBE · @TRAILGOATRUN" instead of "LINK BELOW", since a caption link doesn't click there.
+  - Both carry the same cleared music.
+  - `--social-only` makes the second cut for a Short already made, from its kept `<slug>-portrait.mp4`, with no re-render (trailgoat `short.py dress --cta social --src`).
+  - The weekly Short needs no second cut: its closer names no link.
+- **Posting.** `social_post.py <ig|fb|tiktok|all> <dest>/short` handles each platform as follows:
+  - **Instagram:** a Reel through the Instagram API with Instagram Login. The video is staged in the site's R2 bucket under `social/`, because Instagram fetches from a public URL. Limit: 100 posts a day.
+  - **Facebook Page:** a Reel through the Reels publishing flow.
+  - **TikTok:** a draft in the account's inbox. Kris taps Post in the app until TikTok's audit allows direct public posts.
+  - Tokens live in `~/.config/trailgoat-social/{meta,tiktok}.json` and are never printed.
+  - Each post's id goes into `short/posted.json`, so nothing goes up twice.
+  - `--dry-run` prints the requests; `check` says which credentials are present.
+- **Accounts only Kris can make:**
+  - an Instagram Professional (Creator or Business) account;
+  - a TrailGoat Facebook Page linked to it;
+  - a Meta developer app with Instagram and Page publishing. In development mode it posts to accounts whose owner has a role on the app, with no App Review;
+  - a TikTok account and a TikTok for Developers app with the Content Posting API, then its audit.
+- **Not yet exercised against the live APIs** (2026-11-02): run each platform once by hand when its account exists, before the Monday task posts on its own.
+
 ## This week in Trail Racing (the Monday Short)
 
 Kris, 2026-11-02, in order:
