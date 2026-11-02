@@ -82,6 +82,25 @@ TRAILGOAT_REPO=<checkout> python3 ~/.claude/skills/tg-films/scripts/short_film.p
 - **Look before publishing**: frames at 0.5 s (the hook must read on the first frame), the climb's top (`climb.frame_top`), and 1 s from the end (the link line). Play the audio at the start: a Short starting mid-phrase is fine, a click isn't.
 - **Publish**: `yt_upload.py upload <dest>/short/<slug>-short.mp4 <dest>/short/meta.json` (a vertical video under 3 min is a Short), then in Studio set the Short's **Related video** to the long film (the API can't), so the player's link under the Short opens it.
 
+## The Monday Race Week Short
+
+Kris, 2026-11-02: "lets also make a short every monday announcing the races for the week, the details (distance, elevation, location, etc..) with very short previews of each race in the background."
+
+```bash
+TRAILGOAT_REPO=<checkout> python3 ~/.claude/skills/tg-films/scripts/week_short.py --week <monday>
+```
+
+- **The week's races:** every film whose race runs that Monday to Sunday. That is the batch's race-week films (`queue/batch6_schedule.json`) plus any earlier film whose next edition falls in the week (`queue/<slug>/start`), so a week without a new film still gets its Short when an older one races. A week with no filmed race gets none.
+- **What each race card says:** the long film's own facts:
+  - the name, where it runs, its distance and its climb, all from the description's first line, so the Short says what the film says;
+  - the day and local start time, from `queue/<slug>/start`;
+  - the number of aid stations, from the verified pins.
+- **What plays behind each card:** the race's Short frames from 4 s before the climb's top, or else the 1080p master cropped to 9:16 at its thumbnail moment.
+- **Timing:** opener 2.5 s ("Race week", the dates, each race's day), 6.5 s per race, closer 2.5 s ("Every course in 3D"). Two races run 18 s.
+- **Music:** the series theme, the same every week so it's known by ear: Grieg's Morning Mood, for a Monday morning.
+- **Output:** `Films/_race-week/<monday>/` holds the mp4, `description.txt` (each race's facts, film link and course page) and `meta.json` (playlist "Race Week", `publish_at` the Monday at 07:00 New York, an hour after the week's films; `related_video` the week's first film).
+- **When to build it:** once that week's films are dressed and their Shorts rendered. Hand it to the upload session with the week's last film.
+
 ## Report
 
 For each film: the YouTube link and privacy, length, the track and its licence line, the chapters, where the aid pins came from (shots file or catalogue), and anything skipped (no intro, no end screen yet).
