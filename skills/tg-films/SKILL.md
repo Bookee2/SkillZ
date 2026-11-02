@@ -90,6 +90,24 @@ TRAILGOAT_REPO=<checkout> python3 ~/.claude/skills/tg-films/scripts/short_film.p
 - **Look before publishing**: frames at 0.5 s (the hook must read on the first frame), the climb's top (`climb.frame_top`), and 1 s from the end (the link line). Play the audio at the start: a Short starting mid-phrase is fine, a click isn't.
 - **Publish**: `yt_upload.py upload <dest>/short/<slug>-short.mp4 <dest>/short/meta.json` (a vertical video under 3 min is a Short), then in Studio set the Short's **Related video** to the long film (the API can't), so the player's link under the Short opens it.
 
+## Every race week after: the yearly re-post
+
+Kris, 2026-11-02: "Yes, build the yearly race-week re-post: year in titles and captions, not in the video; fresh cut each year; links to that year's course page." A film is made once. Each year its race comes round, the film's Short goes out again as a fresh cut and the film itself moves to that year. The picture never carries a year, so nothing but the Short's 40 s is rendered again.
+
+```bash
+TRAILGOAT_REPO=<checkout> python3 ~/.claude/skills/tg-films/scripts/short_film.py <dest>/film.json --week <monday>
+TRAILGOAT_REPO=<checkout> python3 ~/.claude/skills/tg-films/scripts/short_film.py <dest>/film.json --uploaded <id> --publish-at <utc>
+TRAILGOAT_REPO=<checkout> python3 ~/.claude/skills/tg-films/scripts/race_year.py --week <monday> [--apply]
+```
+
+- **The edition** (`editions.py`): the catalogue's edition of the film's race that week (film course → event → this week's edition, as week_short.py finds it), its year and race date, and its course page, checked live. An edition with no course yet links the film's page and says so.
+- **The Short's history**, `<dest>/short/history.json`: one entry per edition year (window frames and metres, the hook's place, page, video id, publish time). The first run makes it from the Short already there (its year: uploaded.json's publish_at, else meta.json's, else when pick.json was made).
+- **`--week`** skips a race whose Short already went out for that year. Otherwise it moves last year's files to `short/<year>/` and its portrait video to `Renders/flyovers/shorts/<slug>/<year>/` (moved, never deleted), then picks a window clear of every earlier year's (trailgoat `short.py pick --exclude`, in metres along the course so a re-rendered film keeps its old picks), renders and dresses it as usual. Leadville 2027: miles 6–34, clear of 2026's Hope Pass stretch (41–68).
+- **The year is in the words only**: the Short's title ("Leadville Trail 100 Run 2027 in 3D: miles 6–34 of 100 #Shorts"), its description and a "<race> <year>" tag, all linking that edition's course page, and the captions (below), which open "Racing the … 2027 this Saturday?" in race week.
+- **`--uploaded`** records the upload once the Short is checked and on YouTube: uploaded.json, its history entry, the social cut and TikTok caption in iCloud's `TrailGoat Videos/TikTok/<date> <slug>.mp4` for Kris to post, and the Facebook and Instagram captions in `Films/_social/captions/<date>-<slug>-<platform>.txt`.
+- **`--dry-run`** (with `--week`, or `--edition --race-date --post-date --page`) only picks and writes the words, into `short/dry-<year>/` with a plan.json. Nothing moves, renders or uploads.
+- **The long film, the Monday of race week** (`race_year.py`): the year goes in its title ("Leadville Trail 100 Run 2027: the whole course in 3D, every aid station | TrailGoat", at most 100 characters, " | TrailGoat" dropped first) and the description's first course link moves to that edition's page. The tags, category and languages go back as they came (`yt_video.py`, in the YouTube venv; `videos.update` clears what it isn't sent). Without `--apply` it only reads. With it: read back, old and new logged to `<dest>/title_history.json`, and the film's own `description.txt` and `meta.json` follow, so films_sync.py and the Shorts find the film by its new link. Then run films_sync.py. Every race-week film gets its year this way, a first-year one included.
+
 ## Off YouTube: Instagram, Facebook, TikTok
 
 Kris, 2026-11-02: "I want to set up our own pipeline", rather than a paid cross-poster that reposts the YouTube cut.
@@ -99,6 +117,13 @@ Kris, 2026-11-02: "I want to set up our own pipeline", rather than a paid cross-
   - Both carry the same cleared music.
   - `--social-only` makes the second cut for a Short already made, from its kept `<slug>-portrait.mp4`, with no re-render (trailgoat `short.py dress --cta social --src`).
   - The weekly Short needs no second cut: its closer names no link.
+- **Captions per platform**, `short/captions/{facebook,instagram,tiktok}.txt` (short_film.py writes them; social_post.py and Business Suite use them over social-caption.txt):
+  - the opener ("Racing the Kessel Run Ultra this Saturday? Here are miles 24–38 of 50, in 3D over the real terrain." in race week, else the Short's lede), then "Plan your <short name> <year> free: pacing, fuel, every aid station and cutoff." with the course page, the full-film line, the music and its credit, and the hashtags;
+  - Facebook: the page and trailgoat.run/films as clickable links with `?utm_source=facebook&utm_medium=social&utm_campaign=shorts`;
+  - Instagram: the page as text plus "(link in bio)", and "our YouTube channel, TrailGoat (link in bio)". Never "@trailgoatrun" on Instagram (it tags a stranger; ours is @trailgoat.run) or Facebook (it opens the mention picker);
+  - TikTok: the page as text, no "link in bio", plus #runtok.
+  - The short name is what runners say ("Leadville", "Kessel Run", "Western States", `editions.short_name`); a film.json `short_name` overrides it.
+- **Until the Meta app exists**, Facebook and Instagram Reels go up by hand in Business Suite (the reels composer, per-platform captions; the social-crossposting notes have the upload hook), and TikTok from Kris's phone out of iCloud. After a Business Suite "Publish now" check the Instagram grid: four of six Instagram copies vanished silently on 2026-11-02 and had to be re-posted from the composer, Instagram only.
 - **Posting.** `social_post.py <ig|fb|tiktok|all> <dest>/short` handles each platform as follows:
   - **Instagram:** a Reel through the Instagram API with Instagram Login. The video is staged in the site's R2 bucket under `social/`, because Instagram fetches from a public URL. Limit: 100 posts a day.
   - **Facebook Page:** a Reel through the Reels publishing flow.

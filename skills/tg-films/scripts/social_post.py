@@ -146,7 +146,9 @@ def main() -> int:
     key = f'{slug}-short-{int(mp4.stat().st_mtime)}.mp4'
     for w in (('ig', 'fb', 'tiktok') if o.where == 'all' else (o.where,)):
         if done.get(w): print(f'{w}: already posted ({done[w]})'); continue
-        pid = post_instagram(mp4, cap, key) if w == 'ig' else post_facebook(mp4, cap, key) if w == 'fb' else post_tiktok_draft(mp4)
+        own = d / 'captions' / f"{dict(ig='instagram', fb='facebook').get(w, w)}.txt"   # short_film.py's per-platform words
+        text = own.read_text().strip() if own.exists() else cap
+        pid = post_instagram(mp4, text, key) if w == 'ig' else post_facebook(mp4, text, key) if w == 'fb' else post_tiktok_draft(mp4)
         print(f'{w}: {pid}')
         if not DRY:
             done[w] = pid; done_p.write_text(json.dumps(done, indent=1))
