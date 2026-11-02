@@ -27,9 +27,11 @@ def cleared(path: str) -> bool:
     return False
 
 
-def cleared_music(m: dict) -> dict | None:
+def cleared_music(m: dict, slug: str | None = None) -> dict | None:
     """The film's music block if its recording is cleared everywhere, else the same piece's cleared recording from
-    MAP.json (its own start for the same passage, title, artist and credit), else None."""
+    MAP.json (its own start for the same passage, title, artist and credit), else None. Films that began the old file
+    at different points have their own start under the entry's "starts" ({slug: seconds}), e.g. the Ninth for
+    Shinetsu (12.2 s) and Tor des Géants (130 s)."""
     if not m or not m.get('file'): return m
     if cleared(m['file']): return m
     try:
@@ -37,5 +39,6 @@ def cleared_music(m: dict) -> dict | None:
     except OSError:
         mp = {}
     if not mp.get('file'): return None
-    return {**m, 'file': mp['file'], 'start': float(mp.get('start') or 0), 'title': mp.get('title') or m.get('title'),
+    start = (mp.get('starts') or {}).get(slug, mp.get('start'))
+    return {**m, 'file': mp['file'], 'start': float(start or 0), 'title': mp.get('title') or m.get('title'),
             'artist': mp.get('artist') or m.get('artist'), 'credit': mp.get('credit', '')}
