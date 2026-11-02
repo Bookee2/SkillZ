@@ -383,8 +383,13 @@ def main() -> int:
     ap.add_argument('--skip-hud', action='store_true', help='the master already carries the readout')
     ap.add_argument('--upload', action='store_true', help='run yt_upload.py at the end')
     ap.add_argument('--meta-only', action='store_true', help='keep the assembled video; redo the thumbnail, description and meta.json')
+    ap.add_argument('--youtube-music-ok', action='store_true', help='re-dress a film already on YouTube with its YouTube Audio Library track')
     a = ap.parse_args()
     film = json.loads(Path(a.film).read_text()); ff = ffmpeg()
+    import music_rights   # new films carry recordings cleared everywhere (Kris, 2026-11-02)
+    mf = (film.get('music') or {}).get('file')
+    if mf and not music_rights.cleared(mf) and not a.youtube_music_ok:
+        sys.exit(f'{mf} is licensed for YouTube only; new films use Music/public-domain/ or a CC BY track (music_rights.py)')
     out_dir = Path(film['out_dir']); dest = Path(film['dest']); work = dest / 'work'; work.mkdir(parents=True, exist_ok=True)
     rec = json.loads(next(out_dir.glob('course-*.json')).read_text())
     if film.get('gain_m'): rec['official_gain_m'] = float(film['gain_m'])   # a sourced climb beats the catalogue's terrain estimate
