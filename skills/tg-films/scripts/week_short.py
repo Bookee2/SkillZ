@@ -150,12 +150,19 @@ def background(r: dict, need: int, work: Path) -> list:
     """`need` portrait frames for the race's card: its Short's own frames from 4 s before the climb's top, else a
     preview rendered for the card."""
     sf = SHORTS / r['slug'] / 'frames'; pick = F / r['slug'] / 'short' / 'pick.json'
-    if sf.exists() and pick.exists():
-        p = json.loads(pick.read_text()); frames = sorted(sf.glob('f_*.png'))
-        if len(frames) >= need:
-            top = (p.get('climb') or {}).get('frame_top') or len(frames)//2
-            a = max(0, min(len(frames) - need, top - 4*24))
-            return [str(x) for x in frames[a:a + need]]
+    clean = SHORTS / r['slug'] / f"{r['slug']}-portrait.mp4"
+    if pick.exists():
+        p = json.loads(pick.read_text()); n = p['frames'][1] - p['frames'][0] + 1
+        top = (p.get('climb') or {}).get('frame_top') or n//2
+        a = max(0, min(n - need, top - 4*24))
+        frames = sorted(sf.glob('f_*.png')) if sf.exists() else []
+        if len(frames) >= need: return [str(x) for x in frames[a:a + need]]
+        if clean.exists() and n >= need:      # short_film.py keeps the Short's clean frames as one video, not 3.5 GB of PNGs
+            ff = post_film.ffmpeg(); out = work / f"bg-{r['slug']}"; out.mkdir(parents=True, exist_ok=True)
+            subprocess.run([ff, '-y', '-loglevel', 'error', '-ss', f'{a/24:.3f}', '-i', clean, '-frames:v', str(need),
+                            str(out / 'f_%04d.png')], check=True)
+            got = sorted(out.glob('f_*.png'))
+            if len(got) >= need: return [str(x) for x in got[:need]]
     return preview(r, need)
 
 
