@@ -133,13 +133,15 @@ def preview(r: dict, need: int) -> list:
                     rc = subprocess.run([os.environ.get('BLENDER_BIN', '/Applications/Blender.app/Contents/MacOS/Blender'), '-b', '-P',
                                          REPO / 'scripts/flythrough/render.py', '--', course, out, '--shots', shots, '--res', '1080x1920',
                                          '--portrait', '0.5', '--samples', '32', '--frames', f'{f0}-{f1}'], stdout=log, stderr=subprocess.STDOUT).returncode
-                if rc == 0: break
-                if not re.search(r'URLError|Connection reset|timed out|RemoteDisconnected', (out / 'render.log').read_text()[-4000:]):
-                    sys.exit(f"{r['slug']}: preview render failed, see {out}/render.log")
+                # Blender exits 0 even when the script dies on a dropped tile fetch (Keweenaw, 2026-11-02): count the frames
+                if len(list((out / 'frames').glob('f_*.png')) if (out / 'frames').exists() else []) >= f1 - f0 + 1: break
+                if not re.search(r'URLError|Connection reset|timed out|RemoteDisconnected', (out / 'render.log').read_text()[-6000:]):
+                    sys.exit(f"{r['slug']}: preview render failed (rc {rc}), see {out}/render.log")
                 time.sleep(60*attempt)
         finally:
             lock.rmdir()
-        have = sorted((out / 'frames').glob('f_*.png'))
+        have = sorted((out / 'frames').glob('f_*.png')) if (out / 'frames').exists() else []
+        if len(have) < f1 - f0 + 1: sys.exit(f"{r['slug']}: preview has {len(have)} of {f1 - f0 + 1} frames, see {out}/render.log")
     print(f"preview {r['slug']}: frames {f0}-{f1}, {len(have)} rendered")
     return [str(x) for x in have]
 

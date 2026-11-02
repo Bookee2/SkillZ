@@ -87,8 +87,9 @@ def stage_render(film: dict, p: dict, work: Path) -> None:
                 r = subprocess.run([BLENDER, '-b', '-P', REPO / 'scripts/flythrough/render.py', '--', course_json(film), work,
                                     '--shots', render_shots(film), '--res', '1080x1920', '--portrait', '0.5', '--samples', '32',
                                     '--frames', f'{f0}-{f1}'], stdout=log, stderr=subprocess.STDOUT)
-            if r.returncode == 0: break
-            tail = (work / 'render.log').read_text()[-4000:]
+            # Blender exits 0 even when the script dies on a dropped tile fetch (Keweenaw, 2026-11-02): count the frames
+            if len(list((work / 'frames').glob('f_*.png')) if (work / 'frames').exists() else []) >= f1 - f0 + 1: break
+            tail = (work / 'render.log').read_text()[-6000:]
             if not re.search(r'URLError|Connection reset|timed out|RemoteDisconnected', tail):
                 sys.exit(f'render failed: see {work}/render.log')
             print(f'render: network retry {attempt}'); time.sleep(60*attempt)
