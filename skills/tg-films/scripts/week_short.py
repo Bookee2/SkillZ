@@ -50,7 +50,7 @@ SHORTS = STUDIO / 'Renders/flyovers/shorts'
 NY = ZoneInfo('America/New_York')
 # the series' theme: the same piece every Monday, so the Short is known by ear (Grieg's dawn for a Monday morning)
 THEME = dict(file=str(STUDIO / 'Music/audio-library/Morning Mood (by Grieg) - Grieg.mp3'), title='Morning Mood', artist='Edvard Grieg',
-             reason='The race-week theme: Monday morning.')
+             reason='The theme of This week in Trail Racing, for a Monday morning.')
 FIRST = re.compile(r'^(?P<name>.+?) from the start line to the finish: (?P<dist>[\d,.]+ (?:miles|km)) and (?P<gain>[\d,.]+ (?:ft|m)) of climbing '
                    r'over the real terrain of (?P<where>.+?), with every aid station')
 
