@@ -146,7 +146,7 @@ def stage_dress(film: dict, p: dict, short: Path, work: Path, vid: str | None, s
     there), plus social-caption.txt. --social-only makes just the second, from the kept portrait video."""
     slug = film['slug']; ff = post_film.ffmpeg(); dur = (p['frames'][1] - p['frames'][0] + 1)/p['fps']
     import music_rights
-    m = music_rights.cleared_music(film.get('music') or {})
+    m = music_rights.cleared_music(film.get('music') or {}, slug)
     if m is None:
         sys.exit(f"{film['music']['file']} is a YouTube Audio Library recording and Music/public-domain/MAP.json has no cleared "
                  "copy of the piece: add one (see music_rights.py) before making this Short")
