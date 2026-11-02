@@ -127,7 +127,11 @@ def stage_dress(film: dict, p: dict, short: Path, work: Path, vid: str | None) -
     sh(PY, REPO / 'scripts/flythrough/short.py', 'dress', work, '--pick', short / 'pick.json', '--film', short.parent / 'film.json', '--dst', silent)
     # the film's music at the same moment: master frame f plays at intro + (f-1)/fps in the long film, and the track
     # (from music.start) comes in at music_at, as post_film.py mixes it
-    m = film.get('music') or {}
+    import music_rights
+    m = music_rights.cleared_music(film.get('music') or {})
+    if m is None:
+        sys.exit(f"{film['music']['file']} is a YouTube Audio Library recording and Music/public-domain/MAP.json has no cleared "
+                 "copy of the piece: add one (see music_rights.py) before making this Short")
     out = short / f'{slug}-short.mp4'
     n = p['frames'][1] - p['frames'][0] + 1; dur = n/p['fps']
     if m.get('file'):

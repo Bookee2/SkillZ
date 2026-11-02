@@ -285,7 +285,13 @@ def main() -> int:
     mp4 = out / f'this-week-{monday.isoformat()}.mp4'
     af = (f'[1:a]atrim=start=0:end={dur:.3f},asetpts=PTS-STARTPTS,afade=t=in:st=0:d=0.3,afade=t=out:st={max(0, dur - 1.8):.2f}:d=1.8,'
           f'loudnorm=I=-14:TP=-1.5:LRA=11,aresample=48000,apad[a]')
-    subprocess.run([ff, '-y', '-loglevel', 'error', '-i', silent, '-i', THEME['file'], '-filter_complex', af, '-map', '0:v', '-map', '[a]',
+    import music_rights   # the theme too must be cleared everywhere: its public-domain copy from MAP.json (2026-11-02)
+    theme = music_rights.cleared_music(dict(THEME))
+    if theme is None: sys.exit(f"the theme {THEME['file']} has no cleared copy in Music/public-domain/MAP.json")
+    af = af.replace('atrim=start=0:', f"atrim=start={float(theme.get('start') or 0):.3f}:")
+    af = re.sub(r'atrim=start=([\d.]+):end=([\d.]+)', lambda m_: f'atrim=start={m_[1]}:end={float(m_[1]) + dur:.3f}', af)
+    THEME.update({k: theme[k] for k in ('title', 'artist') if theme.get(k)})
+    subprocess.run([ff, '-y', '-loglevel', 'error', '-i', silent, '-i', theme['file'], '-filter_complex', af, '-map', '0:v', '-map', '[a]',
                     '-c:v', 'copy', '-c:a', 'aac', '-b:a', '192k', '-t', f'{dur:.3f}', '-movflags', '+faststart', mp4], check=True)
     names = [r['name'] for r in races]
     lead = names[0] if len(names) == 1 else ', '.join(names[:-1]) + ' and ' + names[-1]
@@ -302,7 +308,7 @@ def main() -> int:
         if r['page']: lines.append(f"Plan it: {r['page']}")
         lines.append('')
     tail = ['Plan any of them free on TrailGoat: https://trailgoat.run', '',
-            f'Music: "{THEME["title"]}" ({THEME["artist"]}). {THEME["reason"]}', '',
+            f'Music: "{THEME["title"]}" ({THEME["artist"]}). {THEME["reason"]}' + (f"\n{theme['credit']}" if theme.get('credit') else ''), '',
             'Terrain and imagery credits are in each race\'s full film.', '', '#Shorts #TrailRunning #Ultramarathon #ThisWeekInTrailRacing']
     rows = [f"{a['day'].title()} · {a['name']} · {a['where']} · {a['dists'].replace(' · ', ', ')}" for a in also]
     def compose(k):                           # YouTube's limit is 5,000 characters: the list loses its last rows first
