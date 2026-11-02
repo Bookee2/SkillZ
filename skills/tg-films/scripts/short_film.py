@@ -190,11 +190,11 @@ def stage_dress(film: dict, p: dict, short: Path, work: Path, vid: str | None, s
         f'The whole course, every aid station, in the full film:\n▶ {full}',
         f'Plan this race free on TrailGoat:\n▶ {page}',
         music, *credits, f'#Shorts {tags_line.strip()}'] if x)
-    (short / 'description.txt').write_text(desc + '\n')
+    if not social_only: (short / 'description.txt').write_text(desc + '\n')   # the YouTube cut's, untouched by --social-only
     meta = dict(title=title, description=desc, tags=list(dict.fromkeys(long_meta.get('tags', []) + ['Shorts'])),
                 privacy=film.get('privacy', 'public'), playlist='Race Shorts', related_video=vid)
     if film.get('short_publish_at'): meta['publish_at'] = film['short_publish_at']   # the Thursday of race week
-    (short / 'meta.json').write_text(json.dumps(meta, indent=1, ensure_ascii=False))
+    if not social_only: (short / 'meta.json').write_text(json.dumps(meta, indent=1, ensure_ascii=False))
     # the off-YouTube caption: links don't click there, so the channel by name; the music and its credit travel with it
     tag = re.sub(r'[^A-Za-z0-9]', '', race)
     cap = '\n\n'.join(x for x in [
@@ -205,7 +205,7 @@ def stage_dress(film: dict, p: dict, short: Path, work: Path, vid: str | None, s
         f'#trailrunning #ultramarathon #ultrarunning #{tag} #trailgoat'] if x)
     (short / 'social-caption.txt').write_text(cap + '\n')
     keep_clean(p, work, ff)
-    print('SHORT', out, f'{dur:.1f} s'); print('title:', title); print('full film:', full)
+    print('SHORT', short / f'{slug}-short-social.mp4' if social_only else out, f'{dur:.1f} s'); print('title:', title); print('full film:', full)
 
 
 def keep_clean(p: dict, work: Path, ff: str) -> None:

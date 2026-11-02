@@ -47,6 +47,8 @@ DRY = False
 
 def creds(name: str) -> dict:
     p = CONF / f'{name}.json'
+    if not p.exists() and DRY:     # a dry run before the accounts exist shows the calls with placeholders
+        return {'ig_user_id': '<ig-user-id>', 'ig_access_token': '', 'page_id': '<page-id>', 'page_access_token': '', 'access_token': ''}
     if not p.exists():
         sys.exit(f'no {p}: set up the {name} account first (tg-films SKILL.md, "Off YouTube")')
     return json.loads(p.read_text())
