@@ -15,6 +15,8 @@ Kris, 2026-11-02:
 - "And add YouTube posts"
 Social media is not his thing, so never ask him to do anything here. Report problems at the end instead.
 
+**Shell commands.** Run every shell command exactly as written in this file, one command per call, with no `cd`, `&&` or pipes. These exact shapes are allowlisted. Anything else makes this unattended run stop at an approval prompt that nobody sees: the first noon run, on 2026-11-03, waited at one for two hours and posted nothing. Read caption files with the Read tool, not `cat`.
+
 ## 1. What's due
 Run `python3 "/Volumes/KB SS/TrailGoat-Studio/Films/_social/queue.py" due`.
 - If it exits 1, nothing is due: say "Nothing due" and stop without opening the browser.
@@ -26,7 +28,7 @@ Run `python3 "/Volumes/KB SS/TrailGoat-Studio/Films/_social/queue.py" due`.
 ## 2. Upload copies
 The Chrome upload tool reads files only from this session's own folders, at most 10 MB per call.
 - **Video:** run `/Users/kb/Desktop/Projects/TrailGoat/.claude/worktrees/weekly-shorts/.venv/bin/python "/Volumes/KB SS/TrailGoat-Studio/Films/_social/upload_copy.py" "<mp4>" "<this session's scratchpad>/<id>.mp4"`. It must print a size under 10 MB.
-- **Carousel:** copy each image into this session's scratchpad, keeping the names slide_N.jpg. They're about 100 KB each.
+- **Carousel:** run `cp "/Volumes/KB SS/TrailGoat-Studio/Films/_social/posts/<id>/"slide_*.jpg "<this session's scratchpad>/"`. This keeps the names slide_N.jpg. Each slide is about 100 KB.
 
 ## 3. Browser
 Use Claude in Chrome. Load in ONE ToolSearch call: tabs_context_mcp, tabs_create_mcp, tabs_close_mcp, navigate, computer, find, read_page, get_page_text, javascript_tool, file_upload, browser_batch.
@@ -59,12 +61,18 @@ Tested 2026-11-02, up to the Publish button.
 1. Open `https://business.facebook.com/latest/composer?asset_id=1416503504877536&business_id=2080617366212310` ("Create post").
 2. Run the file hook as above, then click "Add photo/video". `find("tg file input")`, then call file_upload ONCE with ALL slides in order. The Media list shows each one as 1080 × 1350, in order.
 3. "Post to": keep only this platform. Screenshot and check that exactly one is ticked.
-4. Paste the caption from instagram.txt or facebook.txt into "Text". Click outside it to close any suggestion list.
+4. Type the caption from instagram.txt or facebook.txt into "Text", one line at a time.
+   - Click into Text. Type each paragraph with the computer `type` action, and press Return twice between paragraphs (the file's blank lines).
+   - After the hashtag line, type one space to close the hashtag suggestions.
+   - Don't paste the whole caption with javascript insertText. This composer's editor then replaces the first paragraph with the hashtag line.
+   - Don't use select-all + delete to clear the box: it crashes the editor.
+   - Check the preview on the right shows the caption exactly, every hashtag included. Clicking outside once dropped the last hashtag (2026-11-03).
+   - If the composer breaks, click Cancel, then "Discard changes", and start a fresh composer. A tab left with unsaved changes blocks navigation behind a "Leave site?" dialog.
 5. Schedule off, Facebook story off. Click "Publish", not "Finish later".
 
 ## 5. YouTube (carousels only)
 Tested 2026-11-02, up to the Post button.
-1. Open https://www.youtube.com/@trailgoatrun/posts. The composer at the top must show "TrailGoat" as the author, and the page must show "Customize channel". If it shows a personal account instead, stop and report it: don't switch accounts yourself.
+1. Open https://www.youtube.com/@trailgoatrun/posts. The composer at the top must show "TrailGoat" as the author, and the page must show "Customize channel". If it shows a personal account instead, don't switch accounts yourself. Skip YouTube for this item: run `python3 "/Volumes/KB SS/TrailGoat-Studio/Films/_social/queue.py" mark <id> yt "skipped: YouTube signed in as the personal account"`, so the queue moves on, and report it. On 2026-11-03 the Posts tab showed the channel as a subscriber sees it (Subscribed, no Posts tab).
 2. Click "Image" ("Add an image"). The composer opens "Drag up to 10 images or GIFs or select from your computer".
 3. Find the image post's file input (a file input inside the image-post area, not the image-poll one) and call file_upload ONCE with all slides in order. The thumbnails show them in order.
 4. Click into the text box above the images ("Share a sneak peek of your next video") and type the caption from `<captions dir>/youtube.txt`. Its links are clickable on YouTube.
