@@ -2,6 +2,7 @@
 """Lengthen a classical track that's shorter than its film by playing one of its phrases once more.
 
     extend_track.py find   <track.mp3> [--theme 0.7] [--len 8]
+    extend_track.py loops  <track.mp3> <min add s> <max add s> [--max-b S]
     extend_track.py splice <track.mp3> <out.wav> --at A --again B
 
 find lists where the opening theme comes back (chroma match), with how alike the 1.5 s before each return
@@ -9,6 +10,14 @@ sounds and the level either side. Pick two returns whose lead-ins match (similar
 up to the later one and then again from the earlier one repeats the phrase between them, like taking a repeat
 once more. Then pin both to the same note: run splice with rough times, read the note list it prints, and rerun
 with the onset of the same note (the theme's first note) at each return.
+
+loops searches the whole track, not only the opening theme: for every jump length between min and max add it finds
+the a..b where the 3 s either side of a sound like the 3 s either side of b (chroma, and level), keeping the last 20 s
+(the ending) whole. Splice its a and b as --at and --again. Chroma 0.95+ is a literal repeat (National Emblem's strain
+0.996); ~0.87 is the same harmony in a new scoring (a band's next verse). Then read splice's rhythm (the gaps across
+the join should look like the gaps either side) and click numbers (both at or under the local percentiles). To add
+more than one loop's length, splice the result again at the same a and b: each pass plays a..b once more. Batch 6
+(2026-11-03): nine tracks, e.g. Mountain King's quiet opening build (15.28-50.99 s) three times for Chiang Dao.
 
 splice writes out.wav = track[0 : B] + track[A : end], cut 25 ms before the onsets with a 20 ms equal-power
 crossfade, and checks the join: the notes either side, the gaps between them, high-frequency (click) energy
@@ -142,15 +151,36 @@ def splice(a) -> None:
           f'{np.percentile(np.abs(np.diff(seg)), 99.9):.4f})')
 
 
+def loops(a) -> None:
+    X = load(a.track); x = X.mean(1); hop = 2048; fps = SR / hop
+    C = chroma_frames(x, hop, 8192); n = len(C)
+    lr = np.log10(np.array([np.sqrt(np.mean(x[i*hop:i*hop+8192] ** 2)) for i in range(n)]) + 1e-4)
+    W = int(3 * fps); k = np.ones(2*W + 1) / (2*W + 1); res = []
+    for L in range(max(1, int(a.min_add * fps)), min(int(a.max_add * fps), n - 2*W)):
+        m = np.convolve((C[:-L] * C[L:]).sum(1), k, 'same'); ml = np.convolve(np.abs(lr[:-L] - lr[L:]), k, 'same')
+        s = m - 0.5 * ml; b = np.arange(len(s)) + L
+        s[:W + int(2*fps)] = -9; s[-W:] = -9; s[(b > n - int(20*fps)) | (b > a.max_b * fps)] = -9
+        i = int(np.argmax(s)); res.append((float(s[i]), float(m[i]), float(ml[i]), i / fps, (i + L) / fps))
+    print(f'{len(x)/SR:.1f} s; loops that add {a.min_add:g}-{a.max_add:g} s:')
+    seen: list[float] = []
+    for sc, mm, ml, s0, s1 in sorted(res, reverse=True):
+        if any(abs((s1 - s0) - u) < 3 for u in seen): continue
+        seen.append(s1 - s0)
+        print(f'  --at {s0:7.2f} --again {s1:7.2f}  adds {s1-s0:6.2f}  chroma {mm:.3f}  level diff {ml:.3f}')
+        if len(seen) >= 6: break
+
+
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__.split('\n')[0]); sub = ap.add_subparsers(dest='cmd', required=True)
     f = sub.add_parser('find'); f.add_argument('track'); f.add_argument('--theme', type=float, default=0.7)
     f.add_argument('--len', type=float, default=8.0)
+    lp = sub.add_parser('loops'); lp.add_argument('track'); lp.add_argument('min_add', type=float); lp.add_argument('max_add', type=float)
+    lp.add_argument('--max-b', type=float, default=1e9, help='keep the jump before this time (e.g. inside a slow opening)')
     s = sub.add_parser('splice'); s.add_argument('track'); s.add_argument('out')
     s.add_argument('--at', type=float, required=True, help='the earlier return: the onset the music jumps back to')
     s.add_argument('--again', type=float, required=True, help='the later return: the onset where it jumps back')
     a = ap.parse_args()
-    find(a) if a.cmd == 'find' else splice(a)
+    {'find': find, 'loops': loops, 'splice': splice}[a.cmd](a)
     return 0
 
 
