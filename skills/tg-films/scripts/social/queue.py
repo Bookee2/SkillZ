@@ -33,8 +33,10 @@ def save(items):
 
 
 def platforms(it):
-    """the platforms an item goes to: carousels also to the YouTube channel's Posts tab (videos are on YouTube already)"""
-    return ('ig', 'fb', 'yt') if it.get('images') else ('ig', 'fb')
+    """the platforms an item goes to: Instagram and the Facebook Page. Carousels went to the YouTube channel's Posts tab
+    too until Kris, 2026-11-03: "I don't think that post will do well on YouTube. We only have 3 subscribers ... Let's see
+    how it does on IG first." Now a carousel goes there only when its item says "yt": true (videos are on YouTube already)."""
+    return ('ig', 'fb', 'yt') if it.get('images') and it.get('yt') else ('ig', 'fb')
 
 
 def done(it):

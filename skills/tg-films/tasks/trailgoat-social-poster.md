@@ -1,12 +1,14 @@
 ---
 name: trailgoat-social-poster
-description: Post the next due item from Films/_social/queue.json to Instagram and the Facebook Page (Business Suite), and carousels also to the YouTube channel's Posts tab, one item per run.
+description: Post the next due item from Films/_social/queue.json to Instagram and the Facebook Page (Business Suite), one item per run (YouTube Posts only for carousels marked "yt": true).
 ---
 
 Post the next due TrailGoat item. An item is either:
 - a video (a Short or "How it was won"), which goes to Instagram (@trailgoat.run) and the TrailGoat Facebook Page;
-- a carousel (slides from the social calendar), which also goes to the YouTube channel's Posts tab (@trailgoatrun).
+- a carousel (slides from the social calendar), which goes to the same two places. It goes to the YouTube channel's Posts tab (@trailgoatrun) too only when the item says `"yt": true`.
 One run posts at most ONE item.
+
+Kris, 2026-11-03, on YouTube Posts: "I don't think that post will do well on YouTube. We only have 3 subscribers. … don't post that one to YouTube. Let's see how it does on IG first." So YouTube Posts are paused for carousels. queue.py leaves yt out unless an item opts in.
 
 Kris, 2026-11-02:
 - "By automate, I mean the whole creation and posting process of these shorts. Once we perfect it I want it just to run."
@@ -22,7 +24,7 @@ Run `python3 "/Volumes/KB SS/TrailGoat-Studio/Films/_social/queue.py" due`.
 - If it exits 1, nothing is due: say "Nothing due" and stop without opening the browser.
 - Otherwise it prints one item with: an id, a captions dir, and `posted`. Post only to the platforms not yet in `posted`:
   - videos: ig and fb;
-  - carousels: ig, fb and yt.
+  - carousels: ig and fb, plus yt only when the item has `"yt": true`.
 - A video item has `mp4`. A carousel item has `images` (slide_1.jpg, slide_2.jpg…, in order) and `mp4` null.
 
 ## 2. Upload copies
@@ -70,7 +72,7 @@ Tested 2026-11-02, up to the Publish button.
    - If the composer breaks, click Cancel, then "Discard changes", and start a fresh composer. A tab left with unsaved changes blocks navigation behind a "Leave site?" dialog.
 5. Schedule off, Facebook story off. Click "Publish", not "Finish later".
 
-## 5. YouTube (carousels only)
+## 5. YouTube (only carousels with `"yt": true`)
 Tested 2026-11-02, up to the Post button.
 1. Open https://www.youtube.com/@trailgoatrun/posts. The composer at the top must show "TrailGoat" as the author, and the page must show "Customize channel". If it shows a personal account instead, don't switch accounts yourself. Skip YouTube for this item: run `python3 "/Volumes/KB SS/TrailGoat-Studio/Films/_social/queue.py" mark <id> yt "skipped: YouTube signed in as the personal account"`, so the queue moves on, and report it. On 2026-11-03 the Posts tab showed the channel as a subscriber sees it (Subscribed, no Posts tab).
 2. Click "Image" ("Add an image"). The composer opens "Drag up to 10 images or GIFs or select from your computer".
