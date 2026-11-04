@@ -66,7 +66,7 @@ Then run `$PY won.py <slug> plan`:
 - the length should be 30–45 s.
 
 ## 4. Render
-- `cd "/Volumes/KB SS/TrailGoat-Studio/Films/_won" && ./won_render.sh <slug> dry` (only if Renders/flyovers/shorts/<slug>/won-<year>/cam.json is missing).
+- `cd "/Volumes/KB SS/TrailGoat-Studio/Films/_won" && ./won_render.sh <slug> dry` (only if Renders/flyovers/shorts/<slug>/won-<year>/cam.json is missing). Its last line must be "DRY ok"; a network reset can make Blender quit with no output (Madeira, 2026-11-03), so run it again once if it isn't.
 - Then `./won_render.sh <slug> <the ranges plan printed>`. It waits for the studio's render lock and takes about 20–40 minutes. Run it in the background and wait for it; never start a second render yourself.
 
 ## 5. Build and look
