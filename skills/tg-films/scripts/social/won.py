@@ -658,8 +658,8 @@ def words(film_id, page):
         heads.append(f"{who.split()[-1]} by {secs_words(st['margin']) if st['margin'] < 60 else ms(st['margin'])}" if st['margin'] else who.split()[-1])
         parts_top = ' · '.join(f"{i + 1} {t['name']} {hms(t['finish_s'])}" for i, t in enumerate(st['top']))
         st['podium'] = f'{label}: {parts_top}'; RACES[r]['story'] = st
-    title = f"How the {race_name} was won: {', '.join(heads)} #Shorts"
-    if len(title) > 100: title = f"How the {race_name} was won #Shorts"
+    title = f"{how(race_name)} was won: {', '.join(heads)} #Shorts"
+    if len(title) > 100: title = f"{how(race_name)} was won #Shorts"
     m = MUSIC
     music = f'Music: "{m["title"]}" ({m["artist"]}).' + (f"\n{m['credit']}" if m.get('credit') else '')
     long_desc = open(f'{STUDIO}/Films/{SLUG}/description.txt').read().split('\n\n')
@@ -687,7 +687,7 @@ def words(film_id, page):
     sound = f'Music: "{m["title"]}" ({m["artist"]})' + (f"\n{m['credit']}" if m.get('credit') else '')
     hashtags = f'#trailrunning #ultramarathon #ultrarunning #{tag} #trailgoat'
     utm = 'utm_source=facebook&utm_medium=social&utm_campaign=won'
-    open_line = f"How the {race_name} was won, from the official splits."
+    open_line = f"{how(race_name)} was won, from the official splits."
     ig_tag = f" @{CFG['instagram']}" if CFG.get('instagram') else ''
     # congratulate every winner (Kris, 2026-11-03: "make it standard for every How it was won"); Instagram tags them
     # with handles confirmed by hand into cfg.json "handles" (runner key -> handle), never guessed: no handle, just the name
@@ -708,6 +708,10 @@ def track():
     if not m: sys.exit('no cleared music for this film: set cfg.music')
     return m
 MUSIC = None
+
+def how(race_name):
+    """"How the Mt. Fuji 100 2026", but "How The Bear 100 2026" when the race's own name starts with The"""
+    return f"How {race_name}" if race_name.lower().startswith('the ') else f"How the {race_name}"
 
 def loudness(path):
     """momentary loudness every 0.1 s (ffmpeg ebur128)"""
@@ -735,10 +739,19 @@ def mix(cut):
           f"measured_thresh={j['input_thresh']}:offset={j['target_offset']}:linear=true,aresample=48000[a]")
     os.makedirs(DEST, exist_ok=True)
     dst = DEST + f"{SLUG}-{YEAR}-how-it-was-won{'' if cut == 'youtube' else '-social'}.mp4"
-    subprocess.run([hud.ffmpeg(), '-y', '-loglevel', 'error', '-i', silent, '-i', m['file'], '-filter_complex', af, '-map', '0:v', '-map', '[a]',
-                    '-c:v', 'copy', '-c:a', 'aac', '-b:a', '192k', '-t', f'{dur:.3f}', '-movflags', '+faststart', dst], check=True)
-    r = subprocess.run([hud.ffmpeg(), '-hide_banner', '-nostats', '-i', dst, '-af', 'ebur128', '-f', 'null', '-'], capture_output=True, text=True).stderr
-    print('MUXED', dst, f'{dur:.1f} s', 'music from', f'{start:.1f} s', r[r.rindex('I:'):].split('\n')[0].strip())
+    def mux(af):
+        subprocess.run([hud.ffmpeg(), '-y', '-loglevel', 'error', '-i', silent, '-i', m['file'], '-filter_complex', af, '-map', '0:v', '-map', '[a]',
+                        '-c:v', 'copy', '-c:a', 'aac', '-b:a', '192k', '-t', f'{dur:.3f}', '-movflags', '+faststart', dst], check=True)
+        r = subprocess.run([hud.ffmpeg(), '-hide_banner', '-nostats', '-i', dst, '-af', 'ebur128', '-f', 'null', '-'], capture_output=True, text=True).stderr
+        return r[r.rindex('I:'):].split('\n')[0].strip()
+    got = mux(af)
+    # A quiet, peaky piece (the Bear's Brahms lullaby, 2026-11-04) came out at -26 LUFS from linear loudnorm, and at -20
+    # from its dynamic mode. A plain gain to -14 with a -1.5 dBFS limiter on the peaks reaches it.
+    if float(re.search(r'-?[\d.]+', got)[0]) < -16.5:
+        gain = -14 - float(j['input_i'])
+        print('loudnorm left it at', got, f'- {gain:+.1f} dB with a limiter instead')
+        got = mux(f"[1:a]{pre},volume={gain:.2f}dB,alimiter=limit=0.841:attack=5:release=50:level=0,aresample=48000[a]")
+    print('MUXED', dst, f'{dur:.1f} s', 'music from', f'{start:.1f} s', got)
 
 def auto_cut(max_span=12.0, after=4.0, early=0.2):
     """the cut chosen from the splits alone, for the unattended Monday run. Per sex: the winner; the decisive miles
