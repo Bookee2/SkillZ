@@ -18,7 +18,9 @@ The queue lives beside this file in queue.json; items are never removed, only ma
 import datetime as dt
 import json
 import os
+import subprocess
 import sys
+import time
 from pathlib import Path
 
 Q = Path(__file__).with_name('queue.json')
@@ -30,6 +32,24 @@ def load():
 
 def save(items):
     tmp = Q.with_suffix('.tmp'); tmp.write_text(json.dumps(items, indent=1, ensure_ascii=False)); tmp.replace(Q)
+    sync(changed=True)
+
+
+def sync(changed=False):
+    """refresh the posting calendar on trailgoat.run/admin/social (calendar_sync.py) in the background: after every
+    change, and otherwise at most every three hours, so its planned days and moments stay current. Never blocks or
+    fails the queue command that started it; calendar-sync.log beside this file says how each went. Off until
+    calendar-sync.on exists beside this file: the sync writes to the site's production database, which waits for Kris's yes."""
+    if not Q.with_name('calendar-sync.on').exists(): return
+    st = Q.with_name('calendar-sync.json')
+    if not changed and st.exists() and time.time() - st.stat().st_mtime < 3 * 3600: return
+    py = '/Users/kb/Desktop/Projects/TrailGoat/.claude/worktrees/weekly-shorts/.venv/bin/python'
+    try:
+        with open(Q.with_name('calendar-sync.log'), 'a') as log:
+            subprocess.Popen([py if os.path.exists(py) else sys.executable, str(Q.with_name('calendar_sync.py'))],
+                             stdout=log, stderr=subprocess.STDOUT, stdin=subprocess.DEVNULL, start_new_session=True)
+    except OSError:
+        pass
 
 
 def platforms(it):
@@ -46,6 +66,7 @@ def done(it):
 def main():
     a = sys.argv[1:]
     items = load()
+    if not a or a[0] in ('list', 'due'): sync()          # the poster's twice-daily `due` keeps the calendar fresh
     if not a or a[0] == 'list':
         for it in items:
             print(it['at'], it['id'], it['kind'], 'carousel' if it.get('images') else 'video', *[(w.upper() if it['posted'].get(w) else '--') for w in platforms(it)])
