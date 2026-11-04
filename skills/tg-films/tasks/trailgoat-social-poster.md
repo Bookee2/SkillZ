@@ -17,7 +17,7 @@ Kris, 2026-11-02:
 - "And add YouTube posts"
 Social media is not his thing, so never ask him to do anything here. Report problems at the end instead.
 
-**Shell commands.** Run every shell command exactly as written in this file, one command per call, with no `cd`, `&&` or pipes. These exact shapes are allowlisted. Anything else makes this unattended run stop at an approval prompt that nobody sees: the first noon run, on 2026-11-03, waited at one for two hours and posted nothing. Read caption files with the Read tool, not `cat`.
+**Shell commands.** Run every shell command exactly as written in this file, one command per call, with no `cd`, `&&` or pipes. Read caption files with the Read tool, not `cat`. This task runs unattended in Auto mode (re-created 2026-11-03 after runs stalled for hours at approval prompts nobody saw); if an action is refused anyway, don't work around it: report it.
 
 ## 1. What's due
 Run `python3 "/Volumes/KB SS/TrailGoat-Studio/Films/_social/queue.py" due`.
@@ -36,6 +36,7 @@ The Chrome upload tool reads files only from this session's own folders, at most
 Use Claude in Chrome. Load in ONE ToolSearch call: tabs_context_mcp, tabs_create_mcp, tabs_close_mcp, navigate, computer, find, read_page, get_page_text, javascript_tool, file_upload, browser_batch.
 - Call tabs_context_mcp, open a NEW tab, and close it at the end.
 - Kris is signed in to Business Suite and YouTube. If either asks for a login, stop and report it. Never type credentials.
+- If file_upload waits on an approval and then expires (the 2026-11-03 6 PM run lost its post this way before the task ran in Auto mode), discard the half-made post inside the page (Cancel, then "Discard changes"), close the tab, mark nothing, and report it plainly.
 
 ## 4. Instagram and Facebook: each platform as its OWN post (Instagram first)
 Never post both from one composer, and never use a Planner card's "Publish now": that path silently dropped 4 of 6 Instagram Reels on 2026-11-02.
