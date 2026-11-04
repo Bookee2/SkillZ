@@ -211,6 +211,13 @@ leaves fall; blue-hour hold on the lit cabin; Capra lockup. 80 s at 24 fps.
 - For clients: any parcel with public lidar (USGS 3DEP) + county GIS + OSM; the honest-view study and the
   approximate-boundary and concept-home labels are part of the product.
 
+### Capra land films, batch 1 (spec for five listing agents) · **720p drafts delivered 2026-10-29**
+Five lots in WNC and north Georgia (Timber Cliff, Wilson Cove, Bear Creek, Little Potts, Big Knoll), each with a
+different listing agent, made in one night on the shared `Caprastudios/unreal/landfilm/` pipeline (a `lot.json` per
+lot, APFS clones of the PetitRidge project, `orchestrate.sh`). Petit Ridge's beats and look; the stone cabin on all
+five. Cost per lot: ~45 min of downloads and offline steps (parallel), 16–30 min editor build, 26–31 min 720p.
+Details: capra-realtorfilm `references/batch-2026-10-29.md`.
+
 ## B. Building blocks (mix and match)
 
 | Block | Proven in | Notes |
