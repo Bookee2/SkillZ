@@ -362,3 +362,15 @@ Each line: what went wrong → the fix. Grouped by where it bites.
 - **Opaque blocks are not smoke**: 34,870 blocks at 1.5 cm in a 1.7 m dome previewed as a solid wall. For a haze, size
   the blocks so n·σ·L ≈ 0.4 (0.8 cm here) and thin the count as the cloud shrinks; put a gradient scrim under captions
   that sit over it.
+- **A masked-out model still shows in a glossy floor** (spray film v2: after the forearm and bottle dissolved, their
+  dark silhouettes sat in the floor's reflection under the end words; ray-traced reflections ignore the opacity mask)
+  → give every such actor a Sequencer visibility track and hide it outside its appearance window (bool keys from the
+  same windows the material uses). Check an eye-level still after every dissolve-out, not only the top-down ones.
+- **Voice cut in a very quiet room**: a noise floor of -80 dB put the "floor + 14 dB" speech threshold at -66 dB, so
+  breaths and tails counted as words and no pause was tightened (the edit ran 3 s long) → take the threshold from the
+  speech level instead (95th percentile - 34 dB). Whisper also starts a sentence's first word up to 0.9 s early when a
+  breath precedes it: if no onset is found near its time, take the first sound after it; and list the above-threshold
+  runs inside each clip to catch a lip click before the first word.
+- **Re-timing to a voice squeezes camera moves**: a push-in keyed between two beats that the narration pulls together
+  dropped from 1.0 s to 0.5 s. After the warp, print the camera key times and re-key any move under ~1.5 s to start
+  on an earlier word. Model fade-ins and block transitions keep their own length; only their start time is warped.

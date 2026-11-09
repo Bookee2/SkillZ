@@ -3,6 +3,13 @@
 One entry per piece or session: date, piece, versions, Kris's notes → fixes,
 outcome, and what the skill learned. Add the entry at close-out (step 9).
 
+## 2026-11-09 · Notes Below · Sauvage spray film ("one spray, eight hours") · v2 720p narrated, awaiting notes
+- Kris recorded the narration from the HTML page (one clean 46 s take, m4a upload). Cut to 14 phrases (40 s), picture
+  and captions warped to his words, 720p render with the voice at -14 LUFS.
+- Fixes this pass: speech threshold from the speech level (quiet room), early whisper onsets, a lip click before the
+  first word, ghost reflections of dissolved models (visibility tracks), a camera push squeezed to 0.5 s by the warp.
+- Learned: lessons.md (three entries above); vo_edit.py and timeline_spray.py are now film-aware (NOTES_FILM=spray).
+
 ## 2026-11-09 · Notes Below · Sauvage hero episode · v2 720p sent, awaiting notes
 - Kris: redo the Sauvage Reel with Meshy models rendered in Unreal; consult the second brain and the TrailGoat swarms.
   Interview (one round): merged hero episode, swarm becomes the object, dark glossy stage, SAUVAGE lettering only.
