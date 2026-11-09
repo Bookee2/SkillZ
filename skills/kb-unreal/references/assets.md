@@ -34,6 +34,11 @@
   bevel), Capra ribbon unicorn (`Caprastudios/blender/capra-ribbon-
   unicorn.blend`), Sky to Summit 25K course model (DEM + GPX).
 - **Amandine** (Meshy fitness character, Saint Mercy church from Blender).
+- **Notes Below (fragrance)**: Meshy bottle (SAUVAGE lettering), bergamot, black pepper, lavender, pink pepper, vetiver,
+  cedar in `KB SS/Notes Below/models/*.glb` (4K textures, 49 k to ~10 M triangles); placed solids, PNG maps and
+  `shapes.exr` in `KB SS/Notes Below/data/`; scripts in `Fragrance/unreal/`; the ambroxan conformer (PubChem CID 10857465)
+  in `Fragrance/motion/scentsim/ambroxide-3d.sdf`.
+
 
 ## Brand files
 - Capra: `Caprastudios/assets/brand/` (mark.svg, wordmark.svg, favicon,

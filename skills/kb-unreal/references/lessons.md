@@ -331,3 +331,25 @@ Each line: what went wrong → the fix. Grouped by where it bites.
 - `-run=pythonscript` does nothing in a project without PythonScriptPlugin enabled, even
   with `-EnablePlugins=` on the command line (Project Titan). Export what you need from a
   project that has it, or enable the plugin in a clone.
+
+## Notes Below Sauvage (2026-11-09)
+- **`unreal.MaterialProperty` has no `MP_CUSTOM_DATA0/1` in 5.8 Python** (dir() shows no MP_C* at all), so a clear coat
+  can't be wired with `connect_material_property` → look the pin up with `hasattr` and fall back to default lit with low
+  roughness (0.10–0.16 read as lacquered glass under strip lights); a material function or a hand-made parent is the
+  untested alternative.
+- **Scripted material graphs log "Failed to compile Material … missing input" once per wire** (the editor recompiles a
+  half-built graph after every connect). Those are not failures: judge by the render log (`grep -c "Failed to compile"`
+  = 0) or by errors logged after the final `recompile_material`.
+- **Bright blocks under lights sized for a dark hero clip to pastel**: a 110 cd top light chosen for a near-black bottle
+  put ~2 nits on albedo-0.9 blocks, so red read pink and the vote colours went mint. → a per-shape albedo scale
+  (0.2–0.35 for word and colour shapes, 1.0 for textured object shapes) and emissive ≤ ~0.6× colour; flight glow
+  0.7·bump, blast +1.6. Tokyo Night's "red" #f7768e is salmon: for HATE/danger use a truer red (linear 0.90, 0.045, 0.10).
+- **Meshy 7.1 "Ultra 2K" models are 1–10 M triangles** (GLBs of 40–330 MB). trimesh voxelisation and closest-point
+  queries crawl at that size → 2.5 M area-weighted surface samples (with the texture colour under each), cells from
+  `floor(p/pitch)`, `ndimage.binary_fill_holes`, colours from a cKDTree over the samples: 8 models + words in 59 s.
+  Import them as Nanite; seven models took ~4.5 min headless, and instance/triangle count barely moved render time.
+- **Portrait with captions: the subject only owns y 640–1300 of 1920** (34 % of the height). Pushing the hero closer
+  for "presence" ran the bottle into the sub-line and the source line. Compute the camera distance from that band, and
+  judge framing on captioned key frames, not clean stills.
+- A violet rim light behind the subject mirrors in a glossy dark floor as a large blob at the bottom of frame → keep the
+  rim small, off-axis and a few candela; give the floor albedo ~0.03 and roughness ~0.3 so the top light pools on it.

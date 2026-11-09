@@ -166,3 +166,12 @@ render; the quote or incident is kept so you know how hard the rule is.
   try this". Real prompts are recoverable from the session `.jsonl` files.
 - Channel package: intro (10–15 s), end screen (20 s, room for end-screen
   elements), upload 4K so YouTube uses its better encoding ladder.
+
+## Notes Below (fragrance Reels, 2026-11-09)
+- Kris asked to redo the Sauvage Reel with "a real bottle made in meshy, real fruit & notes made in meshy and then a
+  render in Unreal Engine for high fidelity". He took every recommended option: one merged hero episode (the
+  controversy story plus a "what's in the bottle" beat), blocks that build the object then dissolve into the solid
+  model, a dark glossy stage, SAUVAGE lettering with no Dior logo.
+- "Let's start out at 360p for speed so I can review it": offer a 360p first cut on new formats, then 720p.
+- Here he generated the Meshy models through Claude in Chrome (logged in, asked for it); elsewhere he makes them himself.
+- Channel rules carry over from the HTML episodes: every on-screen fact sourced, size C captions, silent masters.

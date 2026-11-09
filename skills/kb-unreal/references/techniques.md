@@ -376,3 +376,25 @@ ProRes 4444 overlays (`-itsoffset`, `overlay=eof_action=pass`).
   one twig snap.
 - Never reverse a click; reverse only power-ups. Cut risers just before the
   hit. Kris's own music goes on with `mux_music.sh` (loudnorm −14 LUFS).
+
+## Shape-table block swarm (Notes Below Sauvage, 2026-11-09)
+One block per data point (34,870 Fragrantica votes) through ~15 shapes in one film. Code: `Fragrance/unreal/`
+(`prep_sauvage.py`, `timeline.py`, `previz.py`, `build_sauvage.py`, `captions.py`, `render_sauvage.sh`).
+- **Data**: a float EXR W = 4096, R = ceil(N/W) rows per row set, two row sets per shape (xyz + order, rgb + block
+  size), so shape k for block i is texel (i % W, (2k + j)·R + i // W). 15 shapes = 270 rows. Written with the OpenEXR
+  Python package (no Blender); imported clean (NONE power-of-two, HDR_F32, nearest).
+- **Objects as solid lattices**: place each Meshy GLB in scene coordinates offline, fill it with a voxel lattice at the
+  pitch that yields exactly the block budget (bisect the pitch; drop the deepest cells), colour each block from the
+  texture. Words: Pillow raster extruded 11–16 cm deep at ~1 cm pitch. A crowd: a carpet of tiles; a verdict: towers.
+- **Assignment**: sort every shape's targets by screen-x with 6 % jitter against block index, so transitions flow
+  sideways instead of crossing; shapes that sort by a property (towers by vote) deliberately break it.
+- **One clock**: the transition table (a, b, t0, D, stagger, order mix, arcs, swirl, style) is generated into the HLSL
+  as a chain of `if (T >= t0)`; only MPC `T` is keyed (every frame, ticks). `dl = lerp(hash, order_b, mix)`,
+  `u = saturate((T − t0 − dl·stag·D)/(D(1 − stag)))`; styles: smoothstep with arc and swirl, fall (u²), burst
+  (1 − (1 − u)³). In flight each block shows its voter colour. Per-shape glow, idle drift and albedo ride the same table.
+- **Dissolve to the solid models**: the Capra cell hash, with piecewise-linear `Solid(T)` ramps generated into both
+  materials and a per-tier delay (`saturate(Sol·(1 + K) − tier·K)`, K 1.2) so top, heart and base notes resolve in turn;
+  a blue seam glows on cells as they arrive. Solids are written as geometry-only GLB in scene coordinates with their
+  normals (glTF = (X, Z, Y)/100; bounds matched to 0.1 cm) and get their Meshy base/normal/ORM PNGs in one masked material.
+- **Previz first**: `previz.py` replays the same table and camera in numpy and draws dots (29 frames in 1.4 s). It
+  caught three framing problems before the first Unreal launch; the first Unreal render was right first time.

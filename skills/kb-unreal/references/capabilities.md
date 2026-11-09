@@ -218,6 +218,17 @@ lot, APFS clones of the PetitRidge project, `orchestrate.sh`). Petit Ridge's bea
 five. Cost per lot: ~45 min of downloads and offline steps (parallel), 16–30 min editor build, 26–31 min 720p.
 Details: capra-realtorfilm `references/batch-2026-10-29.md`.
 
+### Notes Below · Sauvage hero episode (fragrance Reel, 9:16) · **Draft v1 (360p), awaiting notes (2026-11-09)**
+1,900 red blocks hover (the haters); all 34,870 blocks (one per Fragrantica vote) pour in and build the Sauvage bottle,
+which resolves into Kris's Meshy model with its SAUVAGE lettering; the blocks spell EAU / SAUVAGE (EAU falls to the
+floor), 2022 (bursts), KEPT HIM, 2019 (swept away), 4 AWARDS; they build bergamot, pepper, lavender, pink pepper,
+vetiver, cedar and the real ambroxan molecule around the bottle and resolve into the Meshy models tier by tier; a
+carpet of voters rises into five vote towers; 3.85; the Notes Below lockup. 51 s at 30 fps, silent (IG licensed music).
+- Technique: shape-table block swarm (techniques.md), voxel-lattice objects, tiered hash dissolve, dark glossy stage,
+  portrait filmback 20.25 × 36, size C captions as a ProRes 4444 HTML overlay.
+- Project: `KB SS/Notes Below/Unreal/NotesLab` (blank project, `/Game/Sauvage/Main`); models in `KB SS/Notes Below/models`.
+- Cost: prep 59 s; import 4.5 min; build 23 s; check stills (every 30th, 720×1280) 68 s; 360×640 2 samples 168 s.
+
 ## B. Building blocks (mix and match)
 
 | Block | Proven in | Notes |
@@ -246,3 +257,4 @@ Details: capra-realtorfilm `references/batch-2026-10-29.md`.
 | Music mux at −14 LUFS | TG pieces | `mux_music.sh` |
 | Out-of-process MRQ with check/resume queues | everything Unreal | see pipeline.md |
 | Real land from lidar: Nanite tiles, OSM roads, data forest, viewshed | Petit Ridge | techniques.md "Real land from lidar" |
+| Shape-table swarm: N data points through many shapes on one clock, objects as voxel lattices | Notes Below Sauvage | previz in numpy first |

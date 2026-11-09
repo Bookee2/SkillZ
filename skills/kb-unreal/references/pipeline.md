@@ -111,6 +111,8 @@ anything the sample re-applies on load (switchers) in the clone.
 | Petit Ridge land flyover (4 km Nanite terrain, 292k Nanite trees, Lumen HWRT) | 720p, 4 samples / checks every 48th | 0.86 s/frame (1,921 in 27.5 min) / ~7 min |
 | Petit Ridge v2 (8 km of Nanite forest: 508k trees, 12k understory, 76k ground pieces, 2 × 8K ground photos) | 720p, 4 samples / checks every 48th | 0.82 s/frame (26.4 min) / 2 min 45 s: instance count barely matters on Nanite |
 | Petit Ridge v2 final | 4K, 8 samples, continuous | 5.1 s/frame (1,921 in 2 h 44 min, Blender batch frozen); 141-frame reveal pass 9.4 min; 10 MB/frame (19 GB) |
+| Notes Below Sauvage (34,870 lit WPO blocks, 8 Nanite Meshy solids, Lumen HWRT, portrait) | 360×640, 2 samples / checks every 30th at 720×1280 | 0.11 s/frame (1,531 frames in 168 s with startup) / 52 stills in 68 s |
+
 
 ## Encode and post (ffmpeg)
 - Master from frames: `ffmpeg -framerate 30 -i f_%04d.png -frames:v N
@@ -136,3 +138,9 @@ anything the sample re-applies on load (switchers) in the clone.
   `output/unreal/` with byte ranges on the LAN.
 - Final for YouTube: upload 4K (better encoding ladder even when watched at
   1080p).
+
+## Meshy from Chrome (when Kris is logged in and asks)
+Image page (Nano Banana Pro, 9 credits an image; ask for 2 and pick) → hover the image → "Image to 3D" starts the model
+with the Model panel's current settings (Meshy 7.1 Ultra 2K 25 credits; with Texture on at 4K, 35) → open the model →
+download as GLB (lands in ~/Downloads as `Meshy_AI_<prompt>_<stamp>_texture.glb`). Six models run in parallel in ~5 min.
+Prompt for one isolated object, three-quarter view, plain light grey background, no cast shadow.

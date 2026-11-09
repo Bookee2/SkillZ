@@ -3,6 +3,18 @@
 One entry per piece or session: date, piece, versions, Kris's notes → fixes,
 outcome, and what the skill learned. Add the entry at close-out (step 9).
 
+## 2026-11-09 · Notes Below · Sauvage hero episode · v1 360p sent, awaiting notes
+- Kris: redo the Sauvage Reel with Meshy models rendered in Unreal; consult the second brain and the TrailGoat swarms.
+  Interview (one round): merged hero episode, swarm becomes the object, dark glossy stage, SAUVAGE lettering only.
+  Mid-build: "Let's start out at 360p for speed so I can review it".
+- Built in one session: 7 Meshy models through Chrome (~330 credits), prep (voxel lattices, words, crowd, towers),
+  numpy previz, a blank NotesLab project, headless build, three rounds of check stills, the 360p cut with captions.
+- Failures and fixes: trimesh too slow on multi-million-triangle Meshy meshes → sample-based fill; no clear-coat pin in
+  Python; pastel colours from over-lit bright blocks → per-shape albedo and lower glow; violet rim flooding the floor;
+  hero pushed into the caption zones → distance from the 640–1300 band.
+- Learned: lessons.md (Notes Below section), techniques.md (shape-table swarm), pipeline.md (timings, Meshy from
+  Chrome), taste.md (360p first cut), capabilities.md entry.
+
 ## 2026-10-29 (evening) · Land films batch 1 · five lots, five agents · 720p drafts
 - Kris asked for 5 lots in WNC and north Georgia with different listing agents, 720p tonight, free house models,
   "batches of 5". Built `Caprastudios/unreal/landfilm/`: one pipeline, a `lot.json` per lot, APFS project clones,
