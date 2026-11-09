@@ -67,6 +67,12 @@ def probe(ff: str, path: str) -> dict:
                 audio='Audio:' in r.stderr)
 
 
+def integrated(ff: str, path) -> float:
+    """the file's integrated loudness, LUFS (ffmpeg ebur128)"""
+    r = subprocess.run([ff, '-hide_banner', '-nostats', '-i', str(path), '-af', 'ebur128', '-f', 'null', '-'], capture_output=True, text=True).stderr
+    return float(re.findall(r'I:\s+(-?[\d.]+) LUFS', r)[-1])
+
+
 def race_name(rec: dict) -> str:
     base = re.split(r'\s+[—–-]\s+', rec.get('name', ''))[0]
     return re.sub(r'\s{2,}', ' ', re.sub(r'\b(19|20)\d{2}\b', '', base)).strip(' -—–')
@@ -479,6 +485,18 @@ def main() -> int:
         sh(ff, '-y', '-loglevel', 'error', *inputs, '-filter_complex', ';'.join(fc), *maps,
            '-c:v', 'libx264', '-preset', 'slow', '-crf', 16, '-pix_fmt', 'yuv420p', '-r', FPS,
            '-color_primaries', 'bt709', '-color_trc', 'bt709', '-colorspace', 'bt709', '-movflags', '+faststart', '-t', f'{total_s:.3f}', final)
+    # The music's one-pass loudnorm can leave a quiet, wide-dynamics piece well under -14: the Lofoten film's Grieg concerto
+    # came out at -18.5 LUFS (2026-11-09) and the post chain held it. Then lift the whole soundtrack by the shortfall under a
+    # -1.5 dBFS limiter (as won.py's mix does), copying the video untouched.
+    if (m.get('file') or intro_sound) and not a.meta_only:
+        lufs = integrated(ff, final)
+        if lufs < -16.5:
+            gain = -14 - lufs; loud = final.with_name(final.stem + '-loud.mp4')
+            sh(ff, '-y', '-loglevel', 'error', '-i', final, '-c:v', 'copy', '-af',
+               f'volume={gain:.2f}dB,alimiter=limit=0.841:attack=5:release=50:level=0', '-c:a', 'aac', '-b:a', '192k',
+               '-movflags', '+faststart', loud)
+            loud.replace(final)
+            print(f'soundtrack {lufs:.1f} LUFS: lifted {gain:+.1f} dB under a limiter -> {integrated(ff, final):.1f} LUFS')
     got = probe(ff, str(final)); print('final', got)
     if abs(got['seconds'] - total_s) > 0.6 or got['w'] != 1920:
         sys.exit(f'assembly came out wrong: {got} vs {total_s:.1f} s expected')
