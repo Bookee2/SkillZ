@@ -111,7 +111,7 @@ anything the sample re-applies on load (switchers) in the clone.
 | Petit Ridge land flyover (4 km Nanite terrain, 292k Nanite trees, Lumen HWRT) | 720p, 4 samples / checks every 48th | 0.86 s/frame (1,921 in 27.5 min) / ~7 min |
 | Petit Ridge v2 (8 km of Nanite forest: 508k trees, 12k understory, 76k ground pieces, 2 × 8K ground photos) | 720p, 4 samples / checks every 48th | 0.82 s/frame (26.4 min) / 2 min 45 s: instance count barely matters on Nanite |
 | Petit Ridge v2 final | 4K, 8 samples, continuous | 5.1 s/frame (1,921 in 2 h 44 min, Blender batch frozen); 141-frame reveal pass 9.4 min; 10 MB/frame (19 GB) |
-| Notes Below Sauvage (34,870 lit WPO blocks, 8 Nanite Meshy solids, Lumen HWRT, portrait) | 360×640, 2 samples / checks every 30th at 720×1280 | 0.11 s/frame (1,531 frames in 168 s with startup) / 52 stills in 68 s |
+| Notes Below Sauvage (34,870 lit WPO blocks, 8 Nanite Meshy solids, Lumen HWRT, portrait) | 360×640, 2 samples / 720×1280, 4 samples / checks every 30th at 720×1280 | 0.11 s/frame (168 s) / 0.31 s/frame (1,531 frames in 470 s) / 52 stills in 68 s |
 
 
 ## Encode and post (ffmpeg)

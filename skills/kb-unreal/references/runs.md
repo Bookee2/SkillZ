@@ -3,7 +3,7 @@
 One entry per piece or session: date, piece, versions, Kris's notes → fixes,
 outcome, and what the skill learned. Add the entry at close-out (step 9).
 
-## 2026-11-09 · Notes Below · Sauvage hero episode · v1 360p sent, awaiting notes
+## 2026-11-09 · Notes Below · Sauvage hero episode · v2 720p sent, awaiting notes
 - Kris: redo the Sauvage Reel with Meshy models rendered in Unreal; consult the second brain and the TrailGoat swarms.
   Interview (one round): merged hero episode, swarm becomes the object, dark glossy stage, SAUVAGE lettering only.
   Mid-build: "Let's start out at 360p for speed so I can review it".
@@ -14,6 +14,12 @@ outcome, and what the skill learned. Add the entry at close-out (step 9).
   hero pushed into the caption zones → distance from the 640–1300 band.
 - Learned: lessons.md (Notes Below section), techniques.md (shape-table swarm), pipeline.md (timings, Meshy from
   Chrome), taste.md (360p first cut), capabilities.md entry.
+- v2 (same day, 720p sent): Kris on v1: "Several lines need to be in bold colors and maybe bold the font to make them
+  stand out" (best-selling, the trial should have ended it, sales rose during the trial), then "Also fix the overlaps
+  and the notes wide shots and render in 720p". → those lines in Red Hat Display 800 at 64 px, green for what favours
+  the scent and red for what counts against it (the vote colours); notes re-laid from a ring into three rows sized to
+  the portrait width (objects 18 % → 27 % of frame width, camera 37° down); bottle returns late in the notes beat so it
+  never stands behind the headline; key points projected through the camera offline to place captions before rendering.
 
 ## 2026-10-29 (evening) · Land films batch 1 · five lots, five agents · 720p drafts
 - Kris asked for 5 lots in WNC and north Georgia with different listing agents, 720p tonight, free house models,

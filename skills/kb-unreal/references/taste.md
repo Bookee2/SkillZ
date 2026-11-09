@@ -175,3 +175,7 @@ render; the quote or incident is kept so you know how hard the rule is.
 - "Let's start out at 360p for speed so I can review it": offer a 360p first cut on new formats, then 720p.
 - Here he generated the Meshy models through Claude in Chrome (logged in, asked for it); elsewhere he makes them himself.
 - Channel rules carry over from the HTML episodes: every on-screen fact sourced, size C captions, silent masters.
+- Caption emphasis (v1 note): "Several lines need to be in bold colors and maybe bold the font to make them stand out".
+  The lines that carry the argument get the heavy display face and a colour; plain mono sub-lines undersell them.
+- A ring of small objects in a portrait frame reads as tiny ("fix … the notes wide shots"): lay objects out in rows to
+  the frame's width and use the height for depth.
