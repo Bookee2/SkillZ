@@ -14,6 +14,11 @@ outcome, and what the skill learned. Add the entry at close-out (step 9).
   hero pushed into the caption zones → distance from the 640–1300 band.
 - Learned: lessons.md (Notes Below section), techniques.md (shape-table swarm), pipeline.md (timings, Meshy from
   Chrome), taste.md (360p first cut), capabilities.md entry.
+- v3 (captions only, 720p sent): Kris liked the visuals but the story felt like "random facts" and the ask needed to be
+  bold → reframed script (premise, three numbered controversies each with its why, "and yet", the crowd's verdict, bold
+  two-colour ask repeated on the end frame); the ad's "why" verified by search before it went on screen; a claim that
+  people campaigned for Dior to drop Depp was left out because it could not be sourced. Then: he wants to narrate it
+  himself → narration beat sheet (`Fragrance/unreal/NARRATION.md`); picture to be re-timed to his take.
 - v2 (same day, 720p sent): Kris on v1: "Several lines need to be in bold colors and maybe bold the font to make them
   stand out" (best-selling, the trial should have ended it, sales rose during the trial), then "Also fix the overlaps
   and the notes wide shots and render in 720p". → those lines in Red Hat Display 800 at 64 px, green for what favours

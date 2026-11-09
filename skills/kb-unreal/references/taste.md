@@ -177,5 +177,13 @@ render; the quote or incident is kept so you know how hard the rule is.
 - Channel rules carry over from the HTML episodes: every on-screen fact sourced, size C captions, silent masters.
 - Caption emphasis (v1 note): "Several lines need to be in bold colors and maybe bold the font to make them stand out".
   The lines that carry the argument get the heavy display face and a colour; plain mono sub-lines undersell them.
+- Story before spectacle (v2 note, word for word): "I like the visuals very much, the issue I have is with the story, it
+  kind of feels like it comes out of nowhere with just random facts. Can we frame it better so people understand we're
+  explaining the controversy and then asking them to weigh in in the comments? … the controversy and what's going on
+  seems very nebulous." → open with the premise, promise the structure ("three controversies, then you decide"), number
+  the chapters, give each fact its why, mark the turn, and make the ask bold and repeated on the end frame. Ask
+  "what is the viewer being told they are watching?" in the interview for any piece that carries facts.
+- He wants to narrate these himself: "Not read it but short to the point tell the story" → give a beat sheet (point,
+  sample line, window), let his take lead, re-time the picture to the voice, and thin the captions once the voice is in.
 - A ring of small objects in a portrait frame reads as tiny ("fix … the notes wide shots"): lay objects out in rows to
   the frame's width and use the height for depth.
