@@ -3,6 +3,15 @@
 One entry per piece or session: date, piece, versions, Kris's notes → fixes,
 outcome, and what the skill learned. Add the entry at close-out (step 9).
 
+## 2026-11-09 · Notes Below · audit and rework of both Sauvage films · hero v5 and spray v3 at 720p, awaiting voice
+- Kris rejected his own spray narration ("it feels like I'm trying too hard") and asked for a full audit of story,
+  flow, visuals and text "to maximize social media effectiveness", then: "I agree with all of this, let's fix it all".
+- Audit as an HTML page (half-second contact sheets, findings with severity and status). Fixes: both films open on the
+  product and the action; four Meshy props replace the block words; camera distance carries the spray film; auto-fit
+  bold lines; labels on the notes; one ask plus a "send this" line; synthesised transition sounds; talk-prompt
+  narration pages for both films.
+- Learned: lessons.md (ten entries from "Social films" down), taste.md (narration and audit signals), interview.md.
+
 ## 2026-11-09 · Notes Below · Sauvage spray film ("one spray, eight hours") · v2 720p narrated, awaiting notes
 - Kris recorded the narration from the HTML page (one clean 46 s take, m4a upload). Cut to 14 phrases (40 s), picture
   and captions warped to his words, 720p render with the voice at -14 LUFS.

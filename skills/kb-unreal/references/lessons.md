@@ -374,3 +374,29 @@ Each line: what went wrong → the fix. Grouped by where it bites.
 - **Re-timing to a voice squeezes camera moves**: a push-in keyed between two beats that the narration pulls together
   dropped from 1.0 s to 0.5 s. After the warp, print the camera key times and re-key any move under ~1.5 s to start
   on an earlier word. Model fade-ins and block transitions keep their own length; only their start time is warped.
+- **Social films: the first second has to hold the product, motion and the claim** (audit of both Notes Below films,
+  9 Nov 2026: the hero showed the bottle at 5.5 s behind a near-static red ball; the spray film sprayed at 6.5 s after
+  building its own set). Never open by assembling the set. Start the first transition before frame 0 (t0 = -1.1 s) so
+  frame 0 is already mid-motion with the object half-built, put the headline up at t = 0 with no fade, and give it a
+  dark gradient scrim while blocks pour in behind it.
+- **Block words that repeat the caption are dead screen time** (26 of 68 s were white block letters on black, the
+  Meshy models on screen for 10 s). Give each story beat a real object (two bottles for "the name", a gavel for the
+  trial, a clapperboard for the ad, four trophies) and keep block words for the one number the film is about.
+- **Tell a beat in the order the picture needs**: "ad pulled within a day, accused of..." swept the stage empty for
+  3.5 s while the accusation was read. Cause first, effect last, so the sweep is the end of the beat.
+- **Let the camera carry the idea**: three "distances" shot from one distance read as one shot. Wide for the room,
+  closer for arm's length, a close-up for skin; move the props in to fit the close-up.
+- **A haze that hides the props**: clear a pocket along the camera's line of sight to each prop (push blocks
+  perpendicular to the view ray out to a radius of ~0.6 x the prop's size), not a sphere around it.
+- **Labels on models**: project a point on each model through `cam_at` per frame and pin a mono label there. Label only
+  the group being named (two or three at a time), front row on the floor in front, back rows above, each on a dark pill.
+- **Meshy with 2K textures gives 40-180 k faces** (not 1-10 M): imports in seconds and looks the same at 720p. Its gold
+  comes out ivory and its black comes out too dark for a dark stage: multiply the base texture by a gold tone
+  (1.0, 0.76, 0.36), lift dark props with a material tint of ~1.9, and apply the same factor to the block lattice.
+- **Selective dissolve**: to keep some blocks alive while others dissolve into a solid, gate the dissolve by position
+  (`if outside the model's box: sol = 0`), not by block id; blocks flown into the box later vanish as they enter it.
+- **Synth transition sounds** (`sfx.py`: whoosh, thump, boom, hiss, blips from the timeline table) stay in sync through
+  any re-time and need no licence. Phone speakers drop everything under ~150 Hz: thumps at 150->85 Hz with a 2nd
+  harmonic, not 74->44. About -31 LUFS under a -14 LUFS voice.
+- **Four props through Chrome in a forked agent** took 10 min and 212 Meshy credits while the main thread kept
+  building; write the prep with a fallback (the old block word) for each prop so the build never waits on them.

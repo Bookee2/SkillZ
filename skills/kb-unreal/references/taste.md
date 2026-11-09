@@ -187,3 +187,11 @@ render; the quote or incident is kept so you know how hard the rule is.
   sample line, window), let his take lead, re-time the picture to the voice, and thin the captions once the voice is in.
 - A ring of small objects in a portrait frame reads as tiny ("fix … the notes wide shots"): lay objects out in rows to
   the frame's width and use the height for depth.
+
+## Notes Below (fragrance Reels) · signals from 9 Nov 2026
+- On his own narration: "My VO is bad, it just feels off. It feels like I'm trying too hard." and "I don't have a great
+  commercial or voice actor voice... maybe I need to just read them naturally." Give talking prompts (a question to
+  answer, cues, fact chips, "one way to say it"), never tight scripted lines; keep his natural pauses in the edit.
+- He asked for a whole-film audit ("the story, the flow, all of it") and accepted every finding: product and action in
+  the first second, real objects instead of block words, one big line per beat, one ask, a share prompt, sound under the
+  voice. Offer this kind of audit before a narration pass, not after.
