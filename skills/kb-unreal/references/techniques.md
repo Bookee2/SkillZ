@@ -398,3 +398,18 @@ One block per data point (34,870 Fragrantica votes) through ~15 shapes in one fi
   normals (glTF = (X, Z, Y)/100; bounds matched to 0.1 cm) and get their Meshy base/normal/ORM PNGs in one masked material.
 - **Previz first**: `previz.py` replays the same table and camera in numpy and draws dots (29 frames in 1.4 s). It
   caught three framing problems before the first Unreal launch; the first Unreal render was right first time.
+
+## Narration leads: re-time a finished picture to a voice take (Notes Below Sauvage v4, 2026-11-09)
+Kris narrates in his own words from an HTML beat sheet (`Fragrance/unreal/narration.py`); the picture follows.
+- `vo_edit.py`: the take (iPhone Voice Memos `.qta`: stream 0 is plain AAC) → faster-whisper word times
+  (kb-ytvideo `transcribe.py`) → a CLIPS table of the phrases to keep (he repeats lines until happy: use the last try) →
+  real edges from a 10 ms energy envelope (onset = first frame over floor + 14 dB after 100 ms of quiet; release bounded
+  by the next phrase's start, or two phrases 0.3 s apart both keep the same words) → pauses inside a phrase over 0.27 s
+  cut to 0.2 s → gaps of 0.2–0.45 s on a loop of his own room tone → a static gain to -14 LUFS and a limiter.
+  Re-transcribe the edit to prove nothing was clipped or doubled.
+- `warp.json`: anchors (old timeline time → the moment he says it: a clip's start or end, or a word inside a clip).
+  `timeline.py` applies the piecewise-linear warp to transition starts, solid ramps, camera keys and caption times;
+  transition durations stay natural (clamped to the gap) except long sequences (the vote towers), which stretch.
+  Shader constants are generated from the timeline, so the materials stage must be rebuilt after a re-time.
+- Captions start with the words that carry them: set their old-timeline times to the beat starts, then warp.
+- His pace was 2.0 words a second: a 110-word beat sheet became 68 s, not 51. Budget length from his pace.

@@ -353,3 +353,12 @@ Each line: what went wrong → the fix. Grouped by where it bites.
   judge framing on captioned key frames, not clean stills.
 - A violet rim light behind the subject mirrors in a glossy dark floor as a large blob at the bottom of frame → keep the
   rim small, off-axis and a few candela; give the floor albedo ~0.03 and roughness ~0.3 so the top light pools on it.
+- **ffmpeg `alimiter` auto-levels by default** (`level=true` normalises the output to 0 dBFS): a mix set to -14 LUFS came
+  out at -12.5 with a 0 dBTP peak → `alimiter=limit=0.84:level=false`. Measure the muxed file, not the intermediate.
+- **A hand nearest the camera balloons** (spray film v1: the Meshy forearm lay along depth, hand toward a 34 mm camera
+  2 m away; it filled half the frame, hid the notes and clipped to white) → shoot bodies from high (52–56°) and far with
+  a 50 mm lens, scale them to leave the props a quarter of the frame width each, and give skin a 0.55 albedo tint under
+  lights sized for a dark bottle.
+- **Opaque blocks are not smoke**: 34,870 blocks at 1.5 cm in a 1.7 m dome previewed as a solid wall. For a haze, size
+  the blocks so n·σ·L ≈ 0.4 (0.8 cm here) and thin the count as the cloud shrinks; put a gradient scrim under captions
+  that sit over it.

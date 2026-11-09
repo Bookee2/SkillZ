@@ -19,6 +19,12 @@ outcome, and what the skill learned. Add the entry at close-out (step 9).
   two-colour ask repeated on the end frame); the ad's "why" verified by search before it went on screen; a claim that
   people campaigned for Dior to drop Depp was left out because it could not be sourced. Then: he wants to narrate it
   himself → narration beat sheet (`Fragrance/unreal/NARRATION.md`); picture to be re-timed to his take.
+- v4 (narrated, 720p sent): Kris recorded a 2 min 18 s take on his iPhone (redid it once and overwrote the file mid-run).
+  Cut to 23 phrases (68 s), picture and captions warped to his words, voice at -14 LUFS. He asked for narrations
+  "always in html" → `narration.py` writes a phone-first page per episode.
+- Same session, second film started ("Spray then how it lasts on your skin"): interview picked a real Meshy forearm,
+  clock plus three distances, his narration. The build was generalised to a film parameter (`NOTES_FILM=spray`:
+  `prep_spray.py`, `timeline_spray.py`, `captions_spray.py`, per-solid appearance windows as material-instance params).
 - v2 (same day, 720p sent): Kris on v1: "Several lines need to be in bold colors and maybe bold the font to make them
   stand out" (best-selling, the trial should have ended it, sales rose during the trial), then "Also fix the overlaps
   and the notes wide shots and render in 720p". → those lines in Red Hat Display 800 at 64 px, green for what favours
