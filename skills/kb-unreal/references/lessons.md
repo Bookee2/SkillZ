@@ -407,5 +407,12 @@ Each line: what went wrong → the fix. Grouped by where it bites.
   `assets.mixkit.co/active_storage/sfx/<id>/<id>.wav` (Referer mixkit.co), which is not rate-limited.
 - Choosing recordings without ears: profile each file (length, onsets, loudest 10 ms, band energy) and read a
   log-frequency spectrogram (`showspectrumpic`); a pump spray is broadband, an aerosol can has a ring near 1.5 kHz.
+- **Audit the story before the polish** (Notes Below second audit): the first audit fixed pacing and pictures and left
+  a trial beat that said nothing about the trial and an opinion line ("should have ended it") the verdict contradicts.
+  For each beat ask what a stranger learns, and whether every promise the hook makes is paid off in words.
+- News photos of a trial are agency-owned (AP, Getty, pool); Wikimedia Commons had none for Depp v. Heard. Free and
+  real: the courthouse (CC0), court documents. Check licence per file with the Commons API (`iiprop=extmetadata`);
+  prefer CC0/CC BY over BY-SA for video. Meshy's image tool (Nano Banana Pro) costs 9 credits an image, 16:9 only,
+  1376x768; ask for silhouettes from behind when a real person is involved and label the result on screen.
 - **Four props through Chrome in a forked agent** took 10 min and 212 Meshy credits while the main thread kept
   building; write the prep with a fallback (the old block word) for each prop so the build never waits on them.

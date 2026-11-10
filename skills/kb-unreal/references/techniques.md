@@ -378,6 +378,11 @@ ProRes 4444 overlays (`-itsoffset`, `overlay=eof_action=pass`).
   hit. Kris's own music goes on with `mux_music.sh` (loudnorm −14 LUFS).
 
 ## Shape-table block swarm (Notes Below Sauvage, 2026-11-09)
+- **Picture cards over a held prop** (hero v6): `HOLDS = [(t, seconds)]` in `timeline.py` and `hold(t)` push every
+  later time (transitions, model windows, camera keys, captions, sound cues) so a prop stays on stage while a still sits
+  over it; `warp = vo(hold(t))` keeps the narration re-time working. The card is a div in the caption overlay (image as
+  base64, a caption and credit strip, a "RE-CREATION" badge on anything generated), so only materials, sequence and
+  queue rebuild: 25 s build, 69 s check, 338 s for 1,672 frames at 720p.
 One block per data point (34,870 Fragrantica votes) through ~15 shapes in one film. Code: `Fragrance/unreal/`
 (`prep_sauvage.py`, `timeline.py`, `previz.py`, `build_sauvage.py`, `captions.py`, `render_sauvage.sh`).
 - **Data**: a float EXR W = 4096, R = ceil(N/W) rows per row set, two row sets per shape (xyz + order, rgb + block

@@ -3,6 +3,15 @@
 One entry per piece or session: date, piece, versions, Kris's notes → fixes,
 outcome, and what the skill learned. Add the entry at close-out (step 9).
 
+## 2026-11-09 · Notes Below · second audit (story) · hero v6 at 720p, 55.7 s, awaiting voice
+- Kris: "Audit the films again, being a critical judge. Does the story make sense, there's so little about the trial
+  and the ad that got pulled." He asked for a real trial picture in a box after the gavel and a re-created picture of
+  the pulled ad.
+- Fixes: two picture cards (HTML overlay) over a held prop; the trial and the ad each say what happened, with sources;
+  a payoff line for the hook. Courtroom photos are AP/Getty only, so the card uses a CC0 courthouse photo until Kris
+  licenses one. The ad is an AI re-creation in silhouette, labelled on the image.
+- Learned: holds in the timeline, picture cards, and to audit story before polish.
+
 ## 2026-11-09 · Notes Below · sound redone with real recordings · same picture, 720p drafts, awaiting voice
 - Kris on hero v5 and spray v3: "I like the videos, but the sounds are absolutely terrible ... I'd rather have no
   sounds than these." He pointed at the libraries used for TrailGoat and Capra.
