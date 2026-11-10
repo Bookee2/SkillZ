@@ -395,8 +395,17 @@ Each line: what went wrong → the fix. Grouped by where it bites.
   (1.0, 0.76, 0.36), lift dark props with a material tint of ~1.9, and apply the same factor to the block lattice.
 - **Selective dissolve**: to keep some blocks alive while others dissolve into a solid, gate the dissolve by position
   (`if outside the model's box: sol = 0`), not by block id; blocks flown into the box later vanish as they enter it.
-- **Synth transition sounds** (`sfx.py`: whoosh, thump, boom, hiss, blips from the timeline table) stay in sync through
-  any re-time and need no licence. Phone speakers drop everything under ~150 Hz: thumps at 150->85 Hz with a 2nd
-  harmonic, not 74->44. About -31 LUFS under a -14 LUFS voice.
+- **Never synthesise sound effects, a third time** (Notes Below, 2026-11-09: synth whooshes, thumps and blips on every
+  block move; Kris: "absolutely terrible ... these fake synth sounds don't represent what's happening at all. I'd rather
+  have no sounds than these"). Read `taste.md` "Real sound" before any sound pass. Fix: real recordings only, one per
+  thing on screen (crowd, glass, gavel, clapperboard, broom, applause, spritz, blocks stacking, clock), silence for moves
+  with no real-world sound, placed from the timeline table so a re-time keeps them in sync (`Fragrance/unreal/sfx.py`).
+  One-shots peak -16 to -8 dBFS, beds about -30 dBFS RMS under a -14 LUFS voice.
+- Mixkit has no gavel or clapperboard: a wood-hammer hit and a hard plastic snap over a wood hit stand in; say so.
+  Its tag pages answer HTTP 429 with a Cloudflare check after ~50 scripted requests: don't crawl, open the tag page in
+  the browser pane and read ids from `data-audio-player-item-id-value`; full files come from
+  `assets.mixkit.co/active_storage/sfx/<id>/<id>.wav` (Referer mixkit.co), which is not rate-limited.
+- Choosing recordings without ears: profile each file (length, onsets, loudest 10 ms, band energy) and read a
+  log-frequency spectrogram (`showspectrumpic`); a pump spray is broadband, an aerosol can has a ring near 1.5 kHz.
 - **Four props through Chrome in a forked agent** took 10 min and 212 Meshy credits while the main thread kept
   building; write the prep with a fallback (the old block word) for each prop so the build never waits on them.

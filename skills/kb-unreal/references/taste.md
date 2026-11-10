@@ -45,6 +45,8 @@ render; the quote or incident is kept so you know how hard the rule is.
   brand) to be what explodes into the lockup ("this is going to be awesome!").
 - **Real sound** over synthesis: he asked "can we not find a real sound
   library" — Mixkit recordings placed by their measured hit point.
+  Said again on Notes Below (2026-11-09) after a synthesised pass: "I'd rather have no sounds than these". Real
+  recordings of what is on screen, or silence.
 - The end screen holding 20 s with the lit solid models, not a spinning sphere
   ("the sphere spinning loses the branding").
 - Centred, eye-level end frames that keep creeping in so they breathe.

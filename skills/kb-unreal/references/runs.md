@@ -3,6 +3,13 @@
 One entry per piece or session: date, piece, versions, Kris's notes → fixes,
 outcome, and what the skill learned. Add the entry at close-out (step 9).
 
+## 2026-11-09 · Notes Below · sound redone with real recordings · same picture, 720p drafts, awaiting voice
+- Kris on hero v5 and spray v3: "I like the videos, but the sounds are absolutely terrible ... I'd rather have no
+  sounds than these." He pointed at the libraries used for TrailGoat and Capra.
+- Fix: `sfx.py` rewritten around 16 Mixkit recordings, one per thing on screen, nothing for abstract moves; the synth
+  version is archived. Not heard by Claude: chosen by title, measurements and spectrograms.
+- Learned: the "real sound" taste rule was already written down and was skipped; it is now a lesson with the fix.
+
 ## 2026-11-09 · Notes Below · audit and rework of both Sauvage films · hero v5 and spray v3 at 720p, awaiting voice
 - Kris rejected his own spray narration ("it feels like I'm trying too hard") and asked for a full audit of story,
   flow, visuals and text "to maximize social media effectiveness", then: "I agree with all of this, let's fix it all".

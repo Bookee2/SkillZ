@@ -66,6 +66,8 @@
   sweep pass-by, 2745 low drone engine hum, 3108 crystal chime, 2523 futuristic
   space intro, 3001 space shot whoosh, 3114 fast sci-fi sweep, 3057
   apocalyptic stomp impact.
+- Notes Below set (16 Mixkit recordings: spray, glass, wood hits, broom, applause, two crowds, clock) in
+  `Fragrance/unreal/sfx/library/` + `LICENSE.md` listing what each stands for.
 - Mixes: `Caprastudios/unreal/capra_sfx_library.py` (r1–r4, outro,
   endscreen, s1, s2); synthesised options `capra_sfx_design.py`.
 - Kris's music: `KB SS/TrailGoat-Studio/Renders/blocks/Trail Goat
