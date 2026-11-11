@@ -34,6 +34,11 @@
   bevel), Capra ribbon unicorn (`Caprastudios/blender/capra-ribbon-
   unicorn.blend`), Sky to Summit 25K course model (DEM + GPX).
 - **Amandine** (Meshy fitness character, Saint Mercy church from Blender).
+- **Notes Below (fragrance)**: Meshy bottle (SAUVAGE lettering), bergamot, black pepper, lavender, pink pepper, vetiver,
+  cedar in `KB SS/Notes Below/models/*.glb` (4K textures, 49 k to ~10 M triangles); placed solids, PNG maps and
+  `shapes.exr` in `KB SS/Notes Below/data/`; scripts in `Fragrance/unreal/`; the ambroxan conformer (PubChem CID 10857465)
+  in `Fragrance/motion/scentsim/ambroxide-3d.sdf`.
+
 
 ## Brand files
 - Capra: `Caprastudios/assets/brand/` (mark.svg, wordmark.svg, favicon,
@@ -61,6 +66,8 @@
   sweep pass-by, 2745 low drone engine hum, 3108 crystal chime, 2523 futuristic
   space intro, 3001 space shot whoosh, 3114 fast sci-fi sweep, 3057
   apocalyptic stomp impact.
+- Notes Below set (16 Mixkit recordings: spray, glass, wood hits, broom, applause, two crowds, clock) in
+  `Fragrance/unreal/sfx/library/` + `LICENSE.md` listing what each stands for.
 - Mixes: `Caprastudios/unreal/capra_sfx_library.py` (r1–r4, outro,
   endscreen, s1, s2); synthesised options `capra_sfx_design.py`.
 - Kris's music: `KB SS/TrailGoat-Studio/Renders/blocks/Trail Goat

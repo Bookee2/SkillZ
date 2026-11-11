@@ -3,6 +3,87 @@
 One entry per piece or session: date, piece, versions, Kris's notes → fixes,
 outcome, and what the skill learned. Add the entry at close-out (step 9).
 
+## 2026-11-11 · Notes Below · hero v8 test (new story: "that's my ex", no rating numbers, no swarm) · 720p, 95.5 s
+- Kris re-wrote the premise himself: most controversial fragrance; hate it / an ex wore it / love it; the real
+  controversy is the smell-test reaction. Depp and Heard side by side replaced the courthouse card (Commons, CC BY-SA).
+- Built: bottle sprays on frame one, three scandals faster, a Meshy hoodie on a chair under a key that turns red, mist
+  across it, the notes as "why you know it", four on-camera slates; narration take 5 and a treatment page first.
+- Learned: check-still ghosts from fog history, captions band framing, multi-press mist, sources I could not open.
+- Kris on the test: "Okay, I like this one". Next: his phone take, then the cut to his words.
+
+## 2026-11-10 · Notes Below · hero v7 test (mixed effects, on-camera slots) · 720p, 61.5 s, awaiting footage
+- Kris: "we need to add a human touch to this video" (he records himself; an AI voice was turned down) and "for the
+  hero we rely too much on the swarms, maybe we can mix different effects and not just swarm everything". He does not
+  own the bottle.
+- Built: the swarm only for the 1,900 haters and the 34,870 votes; lights that strike on each prop, a drawn line,
+  a shaft of light with dust, dust on the gavel knock, spray mist, a picture that breaks into its own colours, a seam
+  wipe on the lockup; four full-frame slates where his footage goes; narration page marks the on-camera moments.
+- Tried and dropped: Epic's Niagara smoke and wood impact. No new sample packs were on disk (he may have claimed
+  them on Fab only).
+- Learned: per-beat effect planning, sprites flown in the material, lights keyed from the timeline with props
+  swapped in the dark, range check stills.
+
+## 2026-11-09 · Notes Below · second audit (story) · hero v6 at 720p, 55.7 s, awaiting voice
+- Kris: "Audit the films again, being a critical judge. Does the story make sense, there's so little about the trial
+  and the ad that got pulled." He asked for a real trial picture in a box after the gavel and a re-created picture of
+  the pulled ad.
+- Fixes: two picture cards (HTML overlay) over a held prop; the trial and the ad each say what happened, with sources;
+  a payoff line for the hook. Courtroom photos are AP/Getty only, so the card uses a CC0 courthouse photo until Kris
+  licenses one. The ad is an AI re-creation in silhouette, labelled on the image.
+- Learned: holds in the timeline, picture cards, and to audit story before polish.
+
+## 2026-11-09 · Notes Below · sound redone with real recordings · same picture, 720p drafts, awaiting voice
+- Kris on hero v5 and spray v3: "I like the videos, but the sounds are absolutely terrible ... I'd rather have no
+  sounds than these." He pointed at the libraries used for TrailGoat and Capra.
+- Fix: `sfx.py` rewritten around 16 Mixkit recordings, one per thing on screen, nothing for abstract moves; the synth
+  version is archived. Not heard by Claude: chosen by title, measurements and spectrograms.
+- Learned: the "real sound" taste rule was already written down and was skipped; it is now a lesson with the fix.
+
+## 2026-11-09 · Notes Below · audit and rework of both Sauvage films · hero v5 and spray v3 at 720p, awaiting voice
+- Kris rejected his own spray narration ("it feels like I'm trying too hard") and asked for a full audit of story,
+  flow, visuals and text "to maximize social media effectiveness", then: "I agree with all of this, let's fix it all".
+- Audit as an HTML page (half-second contact sheets, findings with severity and status). Fixes: both films open on the
+  product and the action; four Meshy props replace the block words; camera distance carries the spray film; auto-fit
+  bold lines; labels on the notes; one ask plus a "send this" line; synthesised transition sounds; talk-prompt
+  narration pages for both films.
+- Learned: lessons.md (ten entries from "Social films" down), taste.md (narration and audit signals), interview.md.
+
+## 2026-11-09 · Notes Below · Sauvage spray film ("one spray, eight hours") · v2 720p narrated, awaiting notes
+- Kris recorded the narration from the HTML page (one clean 46 s take, m4a upload). Cut to 14 phrases (40 s), picture
+  and captions warped to his words, 720p render with the voice at -14 LUFS.
+- Fixes this pass: speech threshold from the speech level (quiet room), early whisper onsets, a lip click before the
+  first word, ghost reflections of dissolved models (visibility tracks), a camera push squeezed to 0.5 s by the warp.
+- Learned: lessons.md (three entries above); vo_edit.py and timeline_spray.py are now film-aware (NOTES_FILM=spray).
+
+## 2026-11-09 · Notes Below · Sauvage hero episode · v2 720p sent, awaiting notes
+- Kris: redo the Sauvage Reel with Meshy models rendered in Unreal; consult the second brain and the TrailGoat swarms.
+  Interview (one round): merged hero episode, swarm becomes the object, dark glossy stage, SAUVAGE lettering only.
+  Mid-build: "Let's start out at 360p for speed so I can review it".
+- Built in one session: 7 Meshy models through Chrome (~330 credits), prep (voxel lattices, words, crowd, towers),
+  numpy previz, a blank NotesLab project, headless build, three rounds of check stills, the 360p cut with captions.
+- Failures and fixes: trimesh too slow on multi-million-triangle Meshy meshes → sample-based fill; no clear-coat pin in
+  Python; pastel colours from over-lit bright blocks → per-shape albedo and lower glow; violet rim flooding the floor;
+  hero pushed into the caption zones → distance from the 640–1300 band.
+- Learned: lessons.md (Notes Below section), techniques.md (shape-table swarm), pipeline.md (timings, Meshy from
+  Chrome), taste.md (360p first cut), capabilities.md entry.
+- v3 (captions only, 720p sent): Kris liked the visuals but the story felt like "random facts" and the ask needed to be
+  bold → reframed script (premise, three numbered controversies each with its why, "and yet", the crowd's verdict, bold
+  two-colour ask repeated on the end frame); the ad's "why" verified by search before it went on screen; a claim that
+  people campaigned for Dior to drop Depp was left out because it could not be sourced. Then: he wants to narrate it
+  himself → narration beat sheet (`Fragrance/unreal/NARRATION.md`); picture to be re-timed to his take.
+- v4 (narrated, 720p sent): Kris recorded a 2 min 18 s take on his iPhone (redid it once and overwrote the file mid-run).
+  Cut to 23 phrases (68 s), picture and captions warped to his words, voice at -14 LUFS. He asked for narrations
+  "always in html" → `narration.py` writes a phone-first page per episode.
+- Same session, second film started ("Spray then how it lasts on your skin"): interview picked a real Meshy forearm,
+  clock plus three distances, his narration. The build was generalised to a film parameter (`NOTES_FILM=spray`:
+  `prep_spray.py`, `timeline_spray.py`, `captions_spray.py`, per-solid appearance windows as material-instance params).
+- v2 (same day, 720p sent): Kris on v1: "Several lines need to be in bold colors and maybe bold the font to make them
+  stand out" (best-selling, the trial should have ended it, sales rose during the trial), then "Also fix the overlaps
+  and the notes wide shots and render in 720p". → those lines in Red Hat Display 800 at 64 px, green for what favours
+  the scent and red for what counts against it (the vote colours); notes re-laid from a ring into three rows sized to
+  the portrait width (objects 18 % → 27 % of frame width, camera 37° down); bottle returns late in the notes beat so it
+  never stands behind the headline; key points projected through the camera offline to place captions before rendering.
+
 ## 2026-10-29 (evening) · Land films batch 1 · five lots, five agents · 720p drafts
 - Kris asked for 5 lots in WNC and north Georgia with different listing agents, 720p tonight, free house models,
   "batches of 5". Built `Caprastudios/unreal/landfilm/`: one pipeline, a `lot.json` per lot, APFS project clones,

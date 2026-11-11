@@ -259,6 +259,7 @@ Each line: what went wrong → the fix. Grouped by where it bites.
   keys ease as Bezier; set `dither_intensity = 0` for data bakes.
 
 ## Mac / Metal
+- The fog switch is `enable_volumetric_fog` in Python (`volumetric_fog` fails silently through a guarded setter).
 - Target SM6 (`+TargetedRHIs=SF_METAL_SM6`) with `r.GenerateMeshDistanceFields`
   for Niagara Fluids Gas 3D colour; Fluids beyond Gas 3D are Windows-marked.
 - nDisplay (ICVFX) is Windows/Linux only → `-DisablePlugins=ICVFX` to open.
@@ -331,3 +332,145 @@ Each line: what went wrong → the fix. Grouped by where it bites.
 - `-run=pythonscript` does nothing in a project without PythonScriptPlugin enabled, even
   with `-EnablePlugins=` on the command line (Project Titan). Export what you need from a
   project that has it, or enable the plugin in a clone.
+
+## Notes Below Sauvage (2026-11-09)
+- **`unreal.MaterialProperty` has no `MP_CUSTOM_DATA0/1` in 5.8 Python** (dir() shows no MP_C* at all), so a clear coat
+  can't be wired with `connect_material_property` → look the pin up with `hasattr` and fall back to default lit with low
+  roughness (0.10–0.16 read as lacquered glass under strip lights); a material function or a hand-made parent is the
+  untested alternative.
+- **Scripted material graphs log "Failed to compile Material … missing input" once per wire** (the editor recompiles a
+  half-built graph after every connect). Those are not failures: judge by the render log (`grep -c "Failed to compile"`
+  = 0) or by errors logged after the final `recompile_material`.
+- **Bright blocks under lights sized for a dark hero clip to pastel**: a 110 cd top light chosen for a near-black bottle
+  put ~2 nits on albedo-0.9 blocks, so red read pink and the vote colours went mint. → a per-shape albedo scale
+  (0.2–0.35 for word and colour shapes, 1.0 for textured object shapes) and emissive ≤ ~0.6× colour; flight glow
+  0.7·bump, blast +1.6. Tokyo Night's "red" #f7768e is salmon: for HATE/danger use a truer red (linear 0.90, 0.045, 0.10).
+- **Meshy 7.1 "Ultra 2K" models are 1–10 M triangles** (GLBs of 40–330 MB). trimesh voxelisation and closest-point
+  queries crawl at that size → 2.5 M area-weighted surface samples (with the texture colour under each), cells from
+  `floor(p/pitch)`, `ndimage.binary_fill_holes`, colours from a cKDTree over the samples: 8 models + words in 59 s.
+  Import them as Nanite; seven models took ~4.5 min headless, and instance/triangle count barely moved render time.
+- **Portrait with captions: the subject only owns y 640–1300 of 1920** (34 % of the height). Pushing the hero closer
+  for "presence" ran the bottle into the sub-line and the source line. Compute the camera distance from that band, and
+  judge framing on captioned key frames, not clean stills.
+- A violet rim light behind the subject mirrors in a glossy dark floor as a large blob at the bottom of frame → keep the
+  rim small, off-axis and a few candela; give the floor albedo ~0.03 and roughness ~0.3 so the top light pools on it.
+- **ffmpeg `alimiter` auto-levels by default** (`level=true` normalises the output to 0 dBFS): a mix set to -14 LUFS came
+  out at -12.5 with a 0 dBTP peak → `alimiter=limit=0.84:level=false`. Measure the muxed file, not the intermediate.
+- **A hand nearest the camera balloons** (spray film v1: the Meshy forearm lay along depth, hand toward a 34 mm camera
+  2 m away; it filled half the frame, hid the notes and clipped to white) → shoot bodies from high (52–56°) and far with
+  a 50 mm lens, scale them to leave the props a quarter of the frame width each, and give skin a 0.55 albedo tint under
+  lights sized for a dark bottle.
+- **Opaque blocks are not smoke**: 34,870 blocks at 1.5 cm in a 1.7 m dome previewed as a solid wall. For a haze, size
+  the blocks so n·σ·L ≈ 0.4 (0.8 cm here) and thin the count as the cloud shrinks; put a gradient scrim under captions
+  that sit over it.
+- **A masked-out model still shows in a glossy floor** (spray film v2: after the forearm and bottle dissolved, their
+  dark silhouettes sat in the floor's reflection under the end words; ray-traced reflections ignore the opacity mask)
+  → give every such actor a Sequencer visibility track and hide it outside its appearance window (bool keys from the
+  same windows the material uses). Check an eye-level still after every dissolve-out, not only the top-down ones.
+- **Voice cut in a very quiet room**: a noise floor of -80 dB put the "floor + 14 dB" speech threshold at -66 dB, so
+  breaths and tails counted as words and no pause was tightened (the edit ran 3 s long) → take the threshold from the
+  speech level instead (95th percentile - 34 dB). Whisper also starts a sentence's first word up to 0.9 s early when a
+  breath precedes it: if no onset is found near its time, take the first sound after it; and list the above-threshold
+  runs inside each clip to catch a lip click before the first word.
+- **Re-timing to a voice squeezes camera moves**: a push-in keyed between two beats that the narration pulls together
+  dropped from 1.0 s to 0.5 s. After the warp, print the camera key times and re-key any move under ~1.5 s to start
+  on an earlier word. Model fade-ins and block transitions keep their own length; only their start time is warped.
+- **Social films: the first second has to hold the product, motion and the claim** (audit of both Notes Below films,
+  9 Nov 2026: the hero showed the bottle at 5.5 s behind a near-static red ball; the spray film sprayed at 6.5 s after
+  building its own set). Never open by assembling the set. Start the first transition before frame 0 (t0 = -1.1 s) so
+  frame 0 is already mid-motion with the object half-built, put the headline up at t = 0 with no fade, and give it a
+  dark gradient scrim while blocks pour in behind it.
+- **Block words that repeat the caption are dead screen time** (26 of 68 s were white block letters on black, the
+  Meshy models on screen for 10 s). Give each story beat a real object (two bottles for "the name", a gavel for the
+  trial, a clapperboard for the ad, four trophies) and keep block words for the one number the film is about.
+- **Tell a beat in the order the picture needs**: "ad pulled within a day, accused of..." swept the stage empty for
+  3.5 s while the accusation was read. Cause first, effect last, so the sweep is the end of the beat.
+- **Let the camera carry the idea**: three "distances" shot from one distance read as one shot. Wide for the room,
+  closer for arm's length, a close-up for skin; move the props in to fit the close-up.
+- **A haze that hides the props**: clear a pocket along the camera's line of sight to each prop (push blocks
+  perpendicular to the view ray out to a radius of ~0.6 x the prop's size), not a sphere around it.
+- **Labels on models**: project a point on each model through `cam_at` per frame and pin a mono label there. Label only
+  the group being named (two or three at a time), front row on the floor in front, back rows above, each on a dark pill.
+- **Meshy with 2K textures gives 40-180 k faces** (not 1-10 M): imports in seconds and looks the same at 720p. Its gold
+  comes out ivory and its black comes out too dark for a dark stage: multiply the base texture by a gold tone
+  (1.0, 0.76, 0.36), lift dark props with a material tint of ~1.9, and apply the same factor to the block lattice.
+- **Selective dissolve**: to keep some blocks alive while others dissolve into a solid, gate the dissolve by position
+  (`if outside the model's box: sol = 0`), not by block id; blocks flown into the box later vanish as they enter it.
+- **Never synthesise sound effects, a third time** (Notes Below, 2026-11-09: synth whooshes, thumps and blips on every
+  block move; Kris: "absolutely terrible ... these fake synth sounds don't represent what's happening at all. I'd rather
+  have no sounds than these"). Read `taste.md` "Real sound" before any sound pass. Fix: real recordings only, one per
+  thing on screen (crowd, glass, gavel, clapperboard, broom, applause, spritz, blocks stacking, clock), silence for moves
+  with no real-world sound, placed from the timeline table so a re-time keeps them in sync (`Fragrance/unreal/sfx.py`).
+  One-shots peak -16 to -8 dBFS, beds about -30 dBFS RMS under a -14 LUFS voice.
+- Mixkit has no gavel or clapperboard: a wood-hammer hit and a hard plastic snap over a wood hit stand in; say so.
+  Its tag pages answer HTTP 429 with a Cloudflare check after ~50 scripted requests: don't crawl, open the tag page in
+  the browser pane and read ids from `data-audio-player-item-id-value`; full files come from
+  `assets.mixkit.co/active_storage/sfx/<id>/<id>.wav` (Referer mixkit.co), which is not rate-limited.
+- Choosing recordings without ears: profile each file (length, onsets, loudest 10 ms, band energy) and read a
+  log-frequency spectrogram (`showspectrumpic`); a pump spray is broadband, an aerosol can has a ring near 1.5 kHz.
+- **Audit the story before the polish** (Notes Below second audit): the first audit fixed pacing and pictures and left
+  a trial beat that said nothing about the trial and an opinion line ("should have ended it") the verdict contradicts.
+  For each beat ask what a stranger learns, and whether every promise the hook makes is paid off in words.
+- News photos of a trial are agency-owned (AP, Getty, pool); Wikimedia Commons had none for Depp v. Heard. Free and
+  real: the courthouse (CC0), court documents. Check licence per file with the Commons API (`iiprop=extmetadata`);
+  prefer CC0/CC BY over BY-SA for video. Meshy's image tool (Nano Banana Pro) costs 9 credits an image, 16:9 only,
+  1376x768; ask for silhouettes from behind when a real person is involved and label the result on screen.
+- **Four props through Chrome in a forked agent** took 10 min and 212 Meshy credits while the main thread kept
+  building; write the prep with a fallback (the old block word) for each prop so the build never waits on them.
+
+## Notes Below Sauvage v7 (2026-11-10)
+- Plan the effect per beat before the first build. Six versions used one effect (the swarm) for every beat until Kris
+  said "we rely too much on the swarms". Keep the swarm for counts of people; give objects light, haze, dust, mist.
+- Niagara Examples Pack for product work: NS_Smoke_Plume reads as a fog machine and greys the frame, NS_Impact_Wood
+  is a small spark plus a decal square, NS_SmokePuffLight is a sprite-baking utility, not an effect. For a spray or
+  impact dust, fly sprites in the material instead (techniques.md). The pack can be cloned into a project by copying
+  `Content/NiagaraExamples` at the same path; delete it again if nothing uses it.
+- Check stills of one beat: set the check queue's custom playback range and a step of 3–9 frames (`NOTES_RANGE=a:b`,
+  `NOTES_STEP`, `NOTES_LAST`, `NOTES_STALL=30`): 15–25 frames in about 38 s, instead of a whole-film pass.
+- A Meshy prop is one mesh: the gavel cannot swing and the clapper cannot close. Ask for separate parts when the
+  beat needs the motion, or carry the hit with light, dust, a camera jolt and sound, and say so.
+- `scripts/preflight.sh` is zsh; `bash preflight.sh` prints "print: command not found".
+- ffmpeg's image2 glob drops frames when a folder mixes RGB and RGBA PNGs (opaque and transparent overlay stills):
+  tile such sheets with PIL.
+- Patch scripts that insert triple-quoted code: write the fragment to a file and read it, not a heredoc inside a
+  heredoc.
+- A transparent overlay rendered with kb-ytvideo's render.js must never have a fully opaque frame: Playwright writes
+  that screenshot as RGB, the PNG pipe changes format, ffmpeg resets its filter graph and the .mov comes out short
+  (550 of 1,845 frames) while render.js still prints the full count. Leave one clear pixel row on full-frame cards,
+  and probe `nb_frames` before compositing.
+- Props swapped in the dark still flash if their material has a dissolve glow: give swapped props a hard window
+  (2 ms) and switch the edge glow off per instance (`Edge` = 0).
+- A real product needs a real reference. The first 1966 Eau Sauvage model came from a prompt written from memory
+  ("tall rectangular flask, vertical ribbing") and was wrong; Kris sent a photo: "Can we make the 1966 bottle look like
+  the 1966 bottle please" (10 Nov 2026). Look at a photo of the actual object before writing the Meshy prompt and
+  describe what is in it (squat flask, diagonal twisted ribs, silver cylinder cap, clipped-corner label). Meshy bakes
+  clear glass as an opaque texture: darken the tint (0.58) and add a little emissive lift (0.05) so it reads as
+  liquid, and keep the key light near neutral or a silver cap turns cream.
+- Re-importing one model: `NOTES_ONLY=<name> ./build.sh import,materials,level,sequence,queue` (36 s) instead of the
+  whole set (the note models are millions of faces).
+- People in the story: Kris asked for the two people side by side, not the courthouse ("There have to be free rights
+  pictures of both of them"). Wikimedia Commons has them (Depp: Harald Krichel, Berlinale 2020; Heard: Gage Skidmore,
+  Comic-Con 2018), nearly all CC BY-SA: crop only, name and photo year on each half, photographers and licence on the
+  card, full credit with licence versions in the post caption, and tell him share-alike is the open question.
+- Commons API: fetch with curl (python.org's Python has no CA certs: CERTIFICATE_VERIFY_FAILED). `iiurlwidth` thumbs
+  come back in bucketed sizes, not the width asked for or reported; ffprobe the file before computing a crop.
+
+## Notes Below Sauvage v8 (2026-11-11)
+- The story can lose its data. Kris on v7: open on "one of the most controversial fragrances in the world", the real
+  controversy is "that smells like my ex", and "I don't think we need the Fragrantica numbers or charts". With the
+  numbers gone the swarm had nothing left to count, so v8 has no blocks at all (`SWARM = False` hides the ISM; one
+  finished transition keeps the shader valid). Ask early whether the numbers are the story or just the first idea.
+- A subject must fit the band under the captions (y 664-1290 of 1920) before anything else: 122 cm of prop needs the
+  camera about 400 cm away at 40 mm. Framing it bigger put the bold line on top of the hoodie; a full re-render to fix.
+- Check stills rendered with a frame step exaggerate anything with temporal history. Volumetric fog showed the previous
+  beat's props as ghosts for ten seconds of stills and a shaft that stayed lit after its light went off; in the full
+  render the history flushes in a fraction of a second. Judge haze at cuts from a consecutive-frame strip.
+- One atomiser, several presses: `SPRAY['t']` is a tuple and the sprite time is `T - (T >= t2 ? t2 : t1)`. The same
+  mist function takes another nozzle, beam and a second light whose ramp tints the sprites (`mixc` through the
+  VertexInterpolator), so one material follows a light that changes colour.
+- A spray aimed toward the camera hides the product. For a hook, orbit the camera 30-35 degrees so the mist crosses
+  the frame and the bottle stays clear.
+- Meshy Ultra returned 1.47 M triangles for a chair with a hoodie (62 MB GLB): import and prep still fine, about 100 s
+  of build. Its fabric texture came out near white; a 0.42 base-colour tint brought back heather grey.
+- A source I cannot open is not a source I have read. The Independent blocks the fetcher and the syndicated copy was
+  gone; say "read as search summaries only" on the page and ask Kris to open it before render.

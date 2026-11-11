@@ -376,3 +376,79 @@ ProRes 4444 overlays (`-itsoffset`, `overlay=eof_action=pass`).
   one twig snap.
 - Never reverse a click; reverse only power-ups. Cut risers just before the
   hit. Kris's own music goes on with `mux_music.sh` (loudnorm −14 LUFS).
+
+## Shape-table block swarm (Notes Below Sauvage, 2026-11-09)
+- **Picture cards over a held prop** (hero v6): `HOLDS = [(t, seconds)]` in `timeline.py` and `hold(t)` push every
+  later time (transitions, model windows, camera keys, captions, sound cues) so a prop stays on stage while a still sits
+  over it; `warp = vo(hold(t))` keeps the narration re-time working. The card is a div in the caption overlay (image as
+  base64, a caption and credit strip, a "RE-CREATION" badge on anything generated), so only materials, sequence and
+  queue rebuild: 25 s build, 69 s check, 338 s for 1,672 frames at 720p.
+One block per data point (34,870 Fragrantica votes) through ~15 shapes in one film. Code: `Fragrance/unreal/`
+(`prep_sauvage.py`, `timeline.py`, `previz.py`, `build_sauvage.py`, `captions.py`, `render_sauvage.sh`).
+- **Data**: a float EXR W = 4096, R = ceil(N/W) rows per row set, two row sets per shape (xyz + order, rgb + block
+  size), so shape k for block i is texel (i % W, (2k + j)·R + i // W). 15 shapes = 270 rows. Written with the OpenEXR
+  Python package (no Blender); imported clean (NONE power-of-two, HDR_F32, nearest).
+- **Objects as solid lattices**: place each Meshy GLB in scene coordinates offline, fill it with a voxel lattice at the
+  pitch that yields exactly the block budget (bisect the pitch; drop the deepest cells), colour each block from the
+  texture. Words: Pillow raster extruded 11–16 cm deep at ~1 cm pitch. A crowd: a carpet of tiles; a verdict: towers.
+- **Assignment**: sort every shape's targets by screen-x with 6 % jitter against block index, so transitions flow
+  sideways instead of crossing; shapes that sort by a property (towers by vote) deliberately break it.
+- **One clock**: the transition table (a, b, t0, D, stagger, order mix, arcs, swirl, style) is generated into the HLSL
+  as a chain of `if (T >= t0)`; only MPC `T` is keyed (every frame, ticks). `dl = lerp(hash, order_b, mix)`,
+  `u = saturate((T − t0 − dl·stag·D)/(D(1 − stag)))`; styles: smoothstep with arc and swirl, fall (u²), burst
+  (1 − (1 − u)³). In flight each block shows its voter colour. Per-shape glow, idle drift and albedo ride the same table.
+- **Dissolve to the solid models**: the Capra cell hash, with piecewise-linear `Solid(T)` ramps generated into both
+  materials and a per-tier delay (`saturate(Sol·(1 + K) − tier·K)`, K 1.2) so top, heart and base notes resolve in turn;
+  a blue seam glows on cells as they arrive. Solids are written as geometry-only GLB in scene coordinates with their
+  normals (glTF = (X, Z, Y)/100; bounds matched to 0.1 cm) and get their Meshy base/normal/ORM PNGs in one masked material.
+- **Previz first**: `previz.py` replays the same table and camera in numpy and draws dots (29 frames in 1.4 s). It
+  caught three framing problems before the first Unreal launch; the first Unreal render was right first time.
+
+## Narration leads: re-time a finished picture to a voice take (Notes Below Sauvage v4, 2026-11-09)
+Kris narrates in his own words from an HTML beat sheet (`Fragrance/unreal/narration.py`); the picture follows.
+- `vo_edit.py`: the take (iPhone Voice Memos `.qta`: stream 0 is plain AAC) → faster-whisper word times
+  (kb-ytvideo `transcribe.py`) → a CLIPS table of the phrases to keep (he repeats lines until happy: use the last try) →
+  real edges from a 10 ms energy envelope (onset = first frame over floor + 14 dB after 100 ms of quiet; release bounded
+  by the next phrase's start, or two phrases 0.3 s apart both keep the same words) → pauses inside a phrase over 0.27 s
+  cut to 0.2 s → gaps of 0.2–0.45 s on a loop of his own room tone → a static gain to -14 LUFS and a limiter.
+  Re-transcribe the edit to prove nothing was clipped or doubled.
+- `warp.json`: anchors (old timeline time → the moment he says it: a clip's start or end, or a word inside a clip).
+  `timeline.py` applies the piecewise-linear warp to transition starts, solid ramps, camera keys and caption times;
+  transition durations stay natural (clamped to the gap) except long sequences (the vote towers), which stretch.
+  Shader constants are generated from the timeline, so the materials stage must be rebuilt after a re-time.
+- Captions start with the words that carry them: set their old-timeline times to the beat starts, then warp.
+- His pace was 2.0 words a second: a 110-word beat sheet became 68 s, not 51. Budget length from his pace.
+
+## Lights that strike, props swapped in the dark (Notes Below Sauvage v7, 2026-11-10)
+- One table in the timeline: `LIGHTS[name] = [(t, fraction)]`, linear between keys; the sequence keys every light's
+  `Intensity` every frame (`float_track(seq, light_component, 'Intensity')`, base cd × fraction). A strike is
+  `(t-0.02, 0) (t+0.03, 1.5) (t+0.10, 0.3) (t+0.26, 1)`: flash, dip, settle.
+- Props are swapped while every light is at 0 (visibility tracks), and the camera cuts with two keys 0.1 s apart in
+  that same dark gap, so one sequence holds many set-ups. Lumen's bounce lags a few frames after lights-off; cover the
+  gap with a cutaway (here: the presenter on camera) or leave 0.3 s.
+- Shaft of light: ExponentialHeightFog with `enable_volumetric_fog`, density 0.05, black inscattering; a 260 cd spot
+  (6°/11° cone, shadows on) with volumetric scattering 24 reads as a shaft under a manual-exposure rig whose key is
+  about 100 cd. Set every other light's scattering to 0 or the whole frame goes grey.
+- A line that draws itself: a thin cube on the floor, unlit masked material, mask `WP.y <= head(T)`, emissive boosted
+  near the head (`exp(-|y - head|/2.5)`).
+- Code: `Fragrance/unreal/timeline.py` (LIGHTS, SLATES, LINE), `build_sauvage.py` (EXTRA, line_material).
+
+## Sprites flown in the material: spray mist, dust motes, impact dust (Notes Below Sauvage v7)
+- Same idea as the block swarm, for soft effects with no Niagara: one ISM of `/Engine/BasicShapes/Plane`, one custom
+  float per instance (its index), translucent unlit two-sided material. The vertex shader hashes the index, computes
+  where the sprite is at T (cone from a nozzle with drag `v0(1-e^-kt)/k`, or a random point in a light's cone), and
+  billboards it with `CameraPositionWS`: `f = normalize(q - CP); r = normalize(cross(up, f)); u = cross(f, r)`.
+- Fade and brightness go through a VertexInterpolator. Brightness is a cone test against the spot's own position and
+  aim (`smoothstep(cos outer, cos inner, dot(normalize(q - P), d))`) times that light's timeline ramp, so the sprites
+  only show inside the beam and strike with it.
+- Numbers that read: mist 520 sprites, 1.6 → 22–42 cm, alpha 0.06, 3.6–6.2 s life, aimed off to the side of the hero
+  (sprayed at the camera it hides the product); dust motes 260 specks of 0.35–0.85 cm, gain 7; impact dust 340
+  sprites, alpha 0.065. Alpha is a squared smooth radial falloff; any sine pattern in the alpha shows as a checker.
+- `bounds_scale` 60 on the ISM (the engine plane must not be edited), `max_world_position_offset_displacement` large.
+- Code: `build_sauvage.py` `sprite_material`, `mist_material`, `motes_material`, `dust_material`.
+
+## A picture that breaks into its own colours (HTML overlay)
+- In the caption page: draw the image to an offscreen canvas, make one cell per 8 px with its sampled colour and a
+  start time that rises left to right plus a little noise; per frame draw the image, `clearRect` the cells that have
+  started, then draw each moving cell (drift up and right, shrink, fade, a warm flash as it leaves). Deterministic
+  under `seek(t)`. `Fragrance/unreal/captions.py` `dissolve()`.

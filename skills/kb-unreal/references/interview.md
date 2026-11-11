@@ -70,3 +70,12 @@ changing the plan. Typical rounds:
   night) or designed hits? Any genre to avoid?" (Films ident v1's stock
   sci-fi/magic effects were "terrible")
 - "What should the end screen keep clear for YouTube elements?"
+- "What is the viewer told they are watching, in the first five seconds, and what are they asked to do at the end?"
+  (Notes Below Sauvage v2: strong visuals, but the facts "come out of nowhere" without a stated premise and structure.)
+- "Will you narrate it? Then your take leads and the picture is timed to your voice." (asked for after v3)
+
+## Added 9 Nov 2026 (social cuts)
+- What is on screen in the first second: the product, an action, and which line? (If the answer is "the set builds",
+  restructure before building.)
+- For each story beat, which real object stands for it? (A beat with only a word on screen is a caption, not a shot.)
+- Who narrates, and from prompts or a script? (Kris: prompts, plain talking voice.)

@@ -45,6 +45,8 @@ render; the quote or incident is kept so you know how hard the rule is.
   brand) to be what explodes into the lockup ("this is going to be awesome!").
 - **Real sound** over synthesis: he asked "can we not find a real sound
   library" — Mixkit recordings placed by their measured hit point.
+  Said again on Notes Below (2026-11-09) after a synthesised pass: "I'd rather have no sounds than these". Real
+  recordings of what is on screen, or silence.
 - The end screen holding 20 s with the lit solid models, not a spinning sphere
   ("the sphere spinning loses the branding").
 - Centred, eye-level end frames that keep creeping in so they breathe.
@@ -166,3 +168,47 @@ render; the quote or incident is kept so you know how hard the rule is.
   try this". Real prompts are recoverable from the session `.jsonl` files.
 - Channel package: intro (10–15 s), end screen (20 s, room for end-screen
   elements), upload 4K so YouTube uses its better encoding ladder.
+
+## Notes Below (fragrance Reels, 2026-11-09)
+- Kris asked to redo the Sauvage Reel with "a real bottle made in meshy, real fruit & notes made in meshy and then a
+  render in Unreal Engine for high fidelity". He took every recommended option: one merged hero episode (the
+  controversy story plus a "what's in the bottle" beat), blocks that build the object then dissolve into the solid
+  model, a dark glossy stage, SAUVAGE lettering with no Dior logo.
+- "Let's start out at 360p for speed so I can review it": offer a 360p first cut on new formats, then 720p.
+- Here he generated the Meshy models through Claude in Chrome (logged in, asked for it); elsewhere he makes them himself.
+- Channel rules carry over from the HTML episodes: every on-screen fact sourced, size C captions, silent masters.
+- Caption emphasis (v1 note): "Several lines need to be in bold colors and maybe bold the font to make them stand out".
+  The lines that carry the argument get the heavy display face and a colour; plain mono sub-lines undersell them.
+- Story before spectacle (v2 note, word for word): "I like the visuals very much, the issue I have is with the story, it
+  kind of feels like it comes out of nowhere with just random facts. Can we frame it better so people understand we're
+  explaining the controversy and then asking them to weigh in in the comments? … the controversy and what's going on
+  seems very nebulous." → open with the premise, promise the structure ("three controversies, then you decide"), number
+  the chapters, give each fact its why, mark the turn, and make the ask bold and repeated on the end frame. Ask
+  "what is the viewer being told they are watching?" in the interview for any piece that carries facts.
+- He wants to narrate these himself: "Not read it but short to the point tell the story" → give a beat sheet (point,
+  sample line, window), let his take lead, re-time the picture to the voice, and thin the captions once the voice is in.
+- A ring of small objects in a portrait frame reads as tiny ("fix … the notes wide shots"): lay objects out in rows to
+  the frame's width and use the height for depth.
+
+## Notes Below (fragrance Reels) · signals from 9 Nov 2026
+- On his own narration: "My VO is bad, it just feels off. It feels like I'm trying too hard." and "I don't have a great
+  commercial or voice actor voice... maybe I need to just read them naturally." Give talking prompts (a question to
+  answer, cues, fact chips, "one way to say it"), never tight scripted lines; keep his natural pauses in the edit.
+- He asked for a whole-film audit ("the story, the flow, all of it") and accepted every finding: product and action in
+  the first second, real objects instead of block words, one big line per beat, one ask, a share prompt, sound under the
+  voice. Offer this kind of audit before a narration pass, not after.
+- **One effect for every beat wears out (10 Nov 2026, on hero v6):** "for the hero we rely too much on the swarms, maybe we
+  can mix different effects and not just swarm everything". He pointed at the Capra repo's effects, the Unreal samples and
+  the second brain as the palette. Plan each beat with the effect that fits it, and keep the swarm for what it is good at:
+  a count of people (one block per vote). Pitch the mix in the treatment, before the first build, not after six versions.
+- **A human on screen (10 Nov 2026):** "we need to add a human touch to this video"; he records himself, video and audio,
+  and wants that cut together with the animation. He turned down an AI voice. Ask in the interview whether the client or
+  Kris appears on camera, and plan the on-camera beats (hook, the judgement lines, the ask) with the effects.
+- 2026-11-11 (Notes Below): when a beat is about people, show the people. He replaced the courthouse photo with
+  Depp and Heard side by side.
+- 2026-11-11 (Notes Below): the relatable, slightly scandalous human angle beats the data: "many have an ex who wore
+  it", the smell-test reactions. He dropped the rating-site numbers and charts himself. He liked a cheating-poll angle
+  "even if it is a bit scandalous", then said to leave the story as it was.
+- 2026-11-11 (Notes Below, hero v8 test): "Okay, I like this one". What that cut had that v7 did not: no swarm at
+  all, one real object per beat under a light that changes with the line (the hoodie's key turning red on "a red
+  flag"), a premise he wrote himself, and no numbers. Approval of a draft is not sign-off for 1080p.

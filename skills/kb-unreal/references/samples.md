@@ -19,6 +19,7 @@ outside Unreal). Don't flag the "NoAI" tag.
 | City Sample | `KB SS/Unreal Engine/Amandine_OW` (Amandine game) | 121 GB | Yes, heavy (~4–30 fps) | City streets, crowds, traffic, PCG city |
 | Game Animation Sample | `KB SS/Unreal Projects/GameAnimationSample` (moved 2026-10-08; symlinked from ~/Documents) | 7 GB | Yes | Motion matching, retargeting |
 | Niagara Examples Pack | `KB SS/Unreal Projects/NiagraExamples` (sic; First Person template + pack) | 1.3 GB | Yes, all rendered | 59 finished VFX: explosions, sparks, fire, smoke, arcs, mesh bursts, markers, fog |
+| Photo Studio template | `KB SS/Unreal Engine/UE_5.8/Templates/TP_PhotoStudioBP` (engine template, not yet opened) | small | Untested | Product shots: half-dome cyc, white and dark floors, softboxes, tubes, orbit and truck sequences |
 
 ## Motion Design template → Intro_motion
 - Stage map `3D_MotionDesign`: cyc, chrome ring and pedestal, three-light rig,
