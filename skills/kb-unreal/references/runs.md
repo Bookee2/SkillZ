@@ -3,6 +3,16 @@
 One entry per piece or session: date, piece, versions, Kris's notes → fixes,
 outcome, and what the skill learned. Add the entry at close-out (step 9).
 
+## 2026-10-29 (evening) · Land films batch 1 · five lots, five agents · 720p drafts
+- Kris asked for 5 lots in WNC and north Georgia with different listing agents, 720p tonight, free house models,
+  "batches of 5". Built `Caprastudios/unreal/landfilm/`: one pipeline, a `lot.json` per lot, APFS project clones,
+  an orchestrator that runs editor builds, renders and post one Unreal process at a time.
+- Failures and fixes: see capra-realtorfilm `references/batch-2026-10-29.md` (DEM service limits, Overpass, lidar
+  project choice and depth, approach speed, template constants in shader strings, open ground as sand, a silent
+  material compile failure, tint caps, card wording).
+- Learned: lessons.md (template numbers in HLSL strings, Default Material on compile failure, open ground and tint
+  caps, zsh batch gotchas); capra-realtorfilm SKILL.md batch mode, data.md and pipeline.md for landfilm.
+
 ## 2026-10-29 · Petit Ridge v2 · 4K final delivered
 - Kris: "Let's do it in 4k now" (and "Also let's call this skill /capra-realtorfilm" → the realtor pipeline became
   its own skill).
