@@ -197,3 +197,10 @@ render; the quote or incident is kept so you know how hard the rule is.
 - He asked for a whole-film audit ("the story, the flow, all of it") and accepted every finding: product and action in
   the first second, real objects instead of block words, one big line per beat, one ask, a share prompt, sound under the
   voice. Offer this kind of audit before a narration pass, not after.
+- **One effect for every beat wears out (10 Nov 2026, on hero v6):** "for the hero we rely too much on the swarms, maybe we
+  can mix different effects and not just swarm everything". He pointed at the Capra repo's effects, the Unreal samples and
+  the second brain as the palette. Plan each beat with the effect that fits it, and keep the swarm for what it is good at:
+  a count of people (one block per vote). Pitch the mix in the treatment, before the first build, not after six versions.
+- **A human on screen (10 Nov 2026):** "we need to add a human touch to this video"; he records himself, video and audio,
+  and wants that cut together with the animation. He turned down an AI voice. Ask in the interview whether the client or
+  Kris appears on camera, and plan the on-camera beats (hook, the judgement lines, the ask) with the effects.
