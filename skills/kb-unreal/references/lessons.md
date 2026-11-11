@@ -440,4 +440,12 @@ Each line: what went wrong → the fix. Grouped by where it bites.
   and probe `nb_frames` before compositing.
 - Props swapped in the dark still flash if their material has a dissolve glow: give swapped props a hard window
   (2 ms) and switch the edge glow off per instance (`Edge` = 0).
+- A real product needs a real reference. The first 1966 Eau Sauvage model came from a prompt written from memory
+  ("tall rectangular flask, vertical ribbing") and was wrong; Kris sent a photo: "Can we make the 1966 bottle look like
+  the 1966 bottle please" (10 Nov 2026). Look at a photo of the actual object before writing the Meshy prompt and
+  describe what is in it (squat flask, diagonal twisted ribs, silver cylinder cap, clipped-corner label). Meshy bakes
+  clear glass as an opaque texture: darken the tint (0.58) and add a little emissive lift (0.05) so it reads as
+  liquid, and keep the key light near neutral or a silver cap turns cream.
+- Re-importing one model: `NOTES_ONLY=<name> ./build.sh import,materials,level,sequence,queue` (36 s) instead of the
+  whole set (the note models are millions of faces).
 
