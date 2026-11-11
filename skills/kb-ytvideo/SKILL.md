@@ -169,3 +169,4 @@ Motion: springs with at most a tiny overshoot; leading and trailing edges on dif
 - The composite holds a clip's last frame if its slot is longer.
 - Transparent clips look fine on black but can vanish on footage; always check them over a real frame (`--bg=`).
 - 9:16 text: keep it at least ~60 px tall, since phones show Shorts small in feeds.
+- A transparent clip must never contain a fully opaque frame (a full-frame card): that screenshot is written as RGB, the pipe's pixel format changes and the `.mov` comes out short. Leave one clear pixel row, and check `nb_frames` with ffprobe.

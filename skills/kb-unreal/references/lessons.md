@@ -434,3 +434,10 @@ Each line: what went wrong → the fix. Grouped by where it bites.
   tile such sheets with PIL.
 - Patch scripts that insert triple-quoted code: write the fragment to a file and read it, not a heredoc inside a
   heredoc.
+- A transparent overlay rendered with kb-ytvideo's render.js must never have a fully opaque frame: Playwright writes
+  that screenshot as RGB, the PNG pipe changes format, ffmpeg resets its filter graph and the .mov comes out short
+  (550 of 1,845 frames) while render.js still prints the full count. Leave one clear pixel row on full-frame cards,
+  and probe `nb_frames` before compositing.
+- Props swapped in the dark still flash if their material has a dissolve glow: give swapped props a hard window
+  (2 ms) and switch the edge glow off per instance (`Edge` = 0).
+
