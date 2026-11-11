@@ -29,6 +29,18 @@ carousel formats below stay written, switched off, and come back by adding their
     python3 social_calendar.py build [--date YYYY-MM-DD]    # make today's posts (carousel.py), print their folders
     python3 social_calendar.py queue [--date YYYY-MM-DD]    # queue today's made posts at their times (after you've looked)
 
+Kris, 2026-11-11: "Maybe we should up the number of reals and shorts we do" / "I love this proceed" (Reel ideas report
+https://claude.ai/artifact/2Y2wvovM6UWPr8KnBq6r9g). Three more Reel kinds, from the tg-films skill's social scripts:
+    Tue  aids    every aid station in 30 seconds, for this week's races (made Thursday by reels_week.py; two a day)
+    Wed  before  where will you finish?, from last year's finish times (made Thursday by reels_week.py; two a day,
+                 races without an aid Reel first)
+    Sun  finish  where would you finish?, from this weekend's official finish times (finish_times.py + finishreel.py,
+                 made here; skipped when the feed isn't complete or the race has no feed in finish-sources.json)
+    any  odds    lottery odds on a race's lottery close (two days ahead) and draw days, for races with official figures
+                 in lottery-sources.json (oddsreel.py, made here); it replaces that moment's entry carousel
+A race-week Reel (aids, before) is never queued for the race's day or later: it drops out instead.
+The Reels made here go to YouTube too (reelkit.yt_schedule, at their Instagram slot).
+
 Run with the weekly-shorts venv. State (formats used so far) is in calendar-state.json beside this file.
 """
 from __future__ import annotations
@@ -49,7 +61,8 @@ import moments as Mo   # noqa: E402
 NY = ZoneInfo('America/New_York')
 # The kinds the calendar makes. Reels only since 2026-11-11 (Kris: "Yes, Reels only"); the carousel kinds are raceweek,
 # guess, forecast, entry, story, where and requests.
-FORMATS = {'race-short'}
+FORMATS = {'race-short', 'aids', 'before', 'finish', 'odds'}
+REELS = os.path.expanduser('~/.claude/skills/tg-films/scripts/social')
 FILMS = C.FILMS
 
 
@@ -114,14 +127,41 @@ def plan(day: dt.date):
     pri = {'lottery_draw': 0, 'lottery_open': 1, 'lottery_close': 2, 'registration_open': 3}
     ms = Mo.on(day, ('lottery_draw', 'lottery_open', 'registration_open'), True) + Mo.on(day + dt.timedelta(days=2), ('lottery_close',), True)
     ms = [x for x in sorted(ms, key=lambda x: pri[x['kind']]) if filmed(x['slug']) and not any(x['slug'] in b for b in busy)]
+    try: lot = json.load(open(f'{HERE}/lottery-sources.json'))
+    except OSError: lot = {}
     for x in ms[:max(0, 2 - len(busy))]:          # two posts a day in all, counting what's already queued for today
-        out.append((f"entry-{x['slug']}-{x['kind']}-{x['date']}", 'entry', ('entry', x['slug'], x['kind']), '12:00'))
+        if x['slug'] in lot and x['kind'] in ('lottery_close', 'lottery_draw'):
+            when = 'close' if x['kind'] == 'lottery_close' else 'draw'
+            ed = x.get('edition') or (dt.date.fromisoformat(x['date']).year + 1)
+            out.append((f"odds-{x['slug']}-{ed}-{when}", 'odds', ('odds', x['slug'], int(ed), when), '12:00'))
+        else:
+            out.append((f"entry-{x['slug']}-{x['kind']}-{x['date']}", 'entry', ('entry', x['slug'], x['kind']), '12:00'))
     # any day: the story carousel for a "How it was won" that goes public today (the Monday after a race), after the Reel.
     # It replaced the results carousel (a dashboard of tables) on 2026-11-02, after the @hardcoreharrys backyard-record
     # post Kris pointed at: one beat per slide, huge type, the place each beat happened.
     for slug, year in recent_won(day, 0):
         if f'{slug}-{year}' not in st.get('results_skip', []):
             out.append((f'story-{slug}-{year}', 'story', ('story', slug, year), '18:00'))
+    def reel(slug, pattern):
+        got = sorted(glob.glob(f'{FILMS}/{slug}/{pattern}'))
+        d = os.path.dirname(got[-1]) if got else ''
+        return got[-1] if got and os.path.isdir(os.path.join(d, 'captions')) and not os.path.exists(os.path.join(d, 'HOLD')) else None
+    if wd == 1:
+        # every aid station in 30 seconds, made on Thursday by reels_week.py
+        for slug in [s for s in races if reel(s, f'aids-*/{s}-*-aid-stations-social.mp4')][:2]:
+            out.append((f'aids-{slug}-{day.year}', 'aids', ('aids', slug, reel(slug, f'aids-*/{slug}-*-aid-stations-social.mp4')), '12:00'))
+    if wd == 2:
+        # where will you finish? from last year's times; races without an aid Reel first
+        have = [s for s in races if reel(s, f'finish-*/before/{s}-*-finishers-social-before.mp4')]
+        have.sort(key=lambda s: bool(reel(s, f'aids-*/{s}-*-aid-stations-social.mp4')))
+        for slug in have[:2]:
+            out.append((f'before-{slug}-{day.year}', 'before', ('before', slug, reel(slug, f'finish-*/before/{slug}-*-finishers-social-before.mp4')), '12:00'))
+    if wd == 6:
+        # where would you finish? from this weekend's official times, for races with a feed for this year
+        try: fs = json.load(open(f'{HERE}/finish-sources.json'))
+        except OSError: fs = {}
+        for slug in [s for s in races if str(day.year) in fs.get(s, {})][:2]:
+            out.append((f'finish-{slug}-{day.year}', 'finish', ('finish', slug, day.year), '18:00'))
     if wd == 1:
         # the two longest races of the week get a card (four cards in a day buried everything else)
         big = sorted(races, key=lambda sl: -next((f['mi'] for f in C.films() if f['slug'] == sl), 0))   # build stops at two
@@ -153,6 +193,31 @@ def plan(day: dt.date):
     return [p for p in out if p[1] in FORMATS and p[0] not in q and f"{p[1]}:{p[0]}" not in done]
 
 
+def make_reel(cmd, args, day, first):
+    """make today's finish or lottery Reel with the tg-films social scripts, put its YouTube cut up for its slot, and
+    return the Instagram/Facebook cut"""
+    sys.path.insert(0, REELS); import reelkit as K
+    py = sys.executable
+    if cmd == 'finish':
+        slug, year = args[1], args[2]
+        subprocess.run([py, f'{REELS}/finish_times.py', slug, str(year)], check=True)
+        subprocess.run([py, f'{REELS}/finishreel.py', slug, str(year)], check=True)
+        d = f'{FILMS}/{slug}/finish-{year}/'; yt = d + f'{slug}-{year}-finishers.mp4'; social = d + f'{slug}-{year}-finishers-social.mp4'
+    else:
+        slug, ed, when = args[1], args[2], args[3]
+        subprocess.run([py, f'{REELS}/oddsreel.py', slug, str(ed), '--when', when], check=True)
+        d = f'{FILMS}/{slug}/lottery-{ed}/{when}/'; yt = d + f'{slug}-{ed}-lottery.mp4'; social = d + f'{slug}-{ed}-lottery-social.mp4'
+    if os.environ.get('CAL_NO_UPLOAD'): return social                    # a dry run (testing the calendar)
+    try: K.yt_schedule(d, yt, K.ny_utc(day, first))
+    except Exception as e: print('YOUTUBE FAILED', slug, repr(e)[:300])   # Instagram/Facebook still go
+    return social
+
+
+def race_date(slug):
+    try: return (json.load(open(f'{HERE}/moments.json'))['races'].get(slug, {}).get('race_date') or '')[:10]
+    except OSError: return ''
+
+
 def build(day: dt.date):
     made = []
     for pid, kind, args, first in plan(day):
@@ -162,11 +227,16 @@ def build(day: dt.date):
             if cmd == 'short':
                 slug = args[1]; mp4 = sorted(glob.glob(f'{FILMS}/{slug}/short/*-short-social.mp4'))[0]
                 d = mp4                                              # a video: queued as it is
+            elif cmd in ('aids', 'before'):
+                d = args[2]                                          # made on Thursday, on YouTube already
+            elif cmd in ('finish', 'odds'):
+                d = make_reel(cmd, args, day, first)
             else:
                 d = getattr(C, cmd)(*args[1:])
                 if cmd == 'where':
                     st = C.state(); st.setdefault('where_used', []).append(f'{args[1]}-{args[2]}'); C.save_state(st)
-            made.append(dict(id=os.path.basename(d.rstrip('/')) if cmd not in ('short',) else pid, kind=kind, key=pid, path=d, first=first))
+            made.append(dict(id=pid if d.endswith('.mp4') else os.path.basename(d.rstrip('/')), kind=kind, key=pid, path=d, first=first,
+                             slug=args[1] if len(args) > 1 else None))
         except Exception as e:                                       # one format failing never stops the day
             print('FAILED', pid, repr(e)[:300])
     try:
@@ -190,8 +260,12 @@ def queue(day: dt.date):
     q = queued_ids()
     for m in today['made']:
         if m['id'] in q: continue
-        caps = os.path.join(os.path.dirname(m['path']), 'captions') if m['kind'] == 'race-short' else os.path.join(m['path'], 'captions')
-        when = next(s for s in slots(day, m['first']) if s not in taken); taken.add(when)
+        caps = os.path.join(os.path.dirname(m['path']), 'captions') if m['path'].endswith('.mp4') else os.path.join(m['path'], 'captions')
+        when = next(s for s in slots(day, m['first']) if s not in taken)
+        rd = race_date(m.get('slug') or '')
+        if m['kind'] in ('aids', 'before') and rd and when[:10] >= rd:
+            print('DROPPED', m['id'], f'(next slot {when[:16]} is on or after race day {rd})'); continue
+        taken.add(when)
         subprocess.run([sys.executable, f'{HERE}/queue.py', 'add', m['id'], when, m['path'], caps, '--kind', m['kind'],
                         '--title', m['id']], check=True)
 

@@ -434,7 +434,7 @@ def story(slug, year=2026, race_key=None):
     lead = f"{st['name']} was {ms(st['worst'])} behind {riv['name']} at {re.sub(r'\s*\(.*?\)', '', w['name'])}, mile {w['mile']:.0f}, and still won {race}."
     body = (f"{riv['name']} led with {ns['OFF_TOTAL'] - w['mile']:.0f} miles to go. " +
             ' '.join(f"{re.sub(r'\s*\(.*?\)', '', c['name'])}, mile {c['mile']:.0f}: {ms(gap(c))} back." for c in sorted(pick, key=lambda c: c['mile'])) +
-            (f" By {re.sub(r'\s*\(.*?\)', '', L['name'])}, {st['name'].split()[-1]} led." if L else '') + f" {hms(st['finish'])}" + (', a course record.' if cr else '.'))
+            (f" By {re.sub(r'\s*\(.*?\)', '', L['name'])}, mile {L['mile']:.0f}, {st['name'].split()[-1]} led." if L else '') + f" {hms(st['finish'])}" + (', a course record.' if cr else '.'))
     hh = CFG.get('handles', {})                      # confirmed Instagram handles of runners (cfg.json), never guessed
     if hh.get(st['key']): lead = lead.replace(st['name'], f"{st['name']} (@{hh[st['key']]})", 1)
     if other and hh.get(o['key']):
@@ -692,7 +692,7 @@ def raceweek(slug, monday):
         # A card that tells runners to carry for a stretch that doesn't exist is worse than no card.
         raise ValueError(f"aid data looks incomplete for {slug}: laps={c.get('laps')}, longest stretch {longest[2]:.1f} mi to {longest[1]}")
     slides = []
-    s = Slide(fl['thumb']); s.gap(130); s.kicker('Race week', GOLD); s.title(f"Racing {name} on {day}?", 84)
+    s = Slide(fl['thumb']); s.gap(130); s.kicker('Race week', GOLD); s.title(f"Racing {name} on {day}?", 84); s.gap(16)      # keep descenders in the title clear of the first row's rule
     s.rows([(lab, f"{v} {u}".strip(), MUTED, {'mile': OK, 'gain': CLIMB, 'aid': AID}.get(t, INK)) for lab, v, u, t in r['stats']], px=36, gap=12)
     if r.get('where'): s.para(r['where'], 36, MUTED)
     n = 2 + math.ceil(len(legs)/7); s.foot('Swipe: aid station to aid station', 0, n); slides.append(s)
@@ -756,7 +756,7 @@ def forecast(slug, monday):
     s = Slide(fl['thumb'], 0.7); s.gap(220); s.title('Pack for the high point', 76)
     s.para('Your own arrival times change the weather you meet. Plan them free, with fuel and a crew sheet.', 40)
     s.foot('Link in bio', 2, 3); slides.append(s)
-    body = '\n'.join(f"{x['name']} (mile {x['mile']:.0f}, about {x['eta'].strftime('%-I %p')}): {x['t']:.0f}°F, feels {x['feel']:.0f}°F, rain {x['rain']:.0f}%, wind {x['wind']:.0f} mph" for x in rows)
+    body = '\n'.join(f"{x['name']} (mile {x['mile']:.0f}, about {x['eta'].strftime('%-I:%M %p')}): {x['t']:.0f}°F, feels {x['feel']:.0f}°F, rain {x['rain']:.0f}%, wind {x['wind']:.0f} mph" for x in rows)
     lead = f"Race-day forecast for {name}, at the start, the high point and the finish, at the time a ~{fh:.0f}-hour runner gets there."
     ig, fb = caps([lead, body, 'Racing? What are you packing?', f"Plan your own arrival times free: {r['page'].replace('https://', '')} (link in bio)", f"{TAGS} {tag(name)}"],
                   [lead, body, 'Racing? What are you packing?', f"Plan your own arrival times free: {r['page']}?{UTM}", f"{TAGS} {tag(name)}"])
