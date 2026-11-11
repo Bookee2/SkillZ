@@ -1,6 +1,6 @@
 ---
 name: trailgoat-social-calendar
-description: Each morning confirm upcoming race moments, then make the day's Instagram/Facebook posts that ride a real moment (lottery and registration dates, race-week cards, guess the race, race Shorts, forecasts, results stories, where would you be, requests), check them, and queue them for the poster.
+description: Each morning confirm upcoming race moments, then make and queue the day's Reels that ride a real moment: race-week aid stations (Tue) and last year's finish times (Wed), race Shorts (Thu), this weekend's finish times (Sun), and lottery odds on close and draw days.
 ---
 
 Make today's TrailGoat posts for Instagram and Facebook from the social calendar, check every one yourself, and queue them for the poster task (trailgoat-social-poster posts at 12:00 and 18:00).
@@ -18,8 +18,13 @@ Tools: /Volumes/KB SS/TrailGoat-Studio/Films/_social/moments.py, social_calendar
 
 The calendar (New York time), Reels only since 2026-11-11. Kris, after the first week's numbers (carousels averaged 63 Instagram views and no follows; the Javelina "How it was won" Reel drew 7,511 and 22 follows): "Yes, Reels only".
 - Mon: "How it was won" Reels, queued by the Monday task, not this one.
-- Thu: this week's races' Shorts. These are the only posts social_calendar.py makes now (its FORMATS).
+- Tue: "Every aid station in 30 seconds" for this week's races (kind aids, up to two). The Thursday task made them and put them on YouTube.
+- Wed: "Where will you finish?" from last year's finish times (kind before, up to two, races without an aid Reel first). Also made Thursday.
+- Thu: this week's races' Shorts.
+- Sun: "Where would you finish?" from this weekend's official finish times (kind finish). The build makes it today and puts it on YouTube.
+- Any day: lottery odds (kind odds) on a race's lottery close (two days ahead) and draw day, for races in Films/_social/lottery-sources.json. The build makes it today with the race's live counts and puts it on YouTube.
 - Every other day: nothing new.
+Kris, 2026-11-11, on more Reels (ideas report https://claude.ai/artifact/2Y2wvovM6UWPr8KnBq6r9g): "Maybe we should up the number of reals and shorts we do" and "I love this proceed". The Reel scripts are in ~/.claude/skills/tg-films/scripts/social (aidreel.py, finishreel.py, finish_times.py, oddsreel.py; read their docstrings).
 - The carousel formats are switched off in social_calendar.py; don't make them by hand. They are race-week cards, guess the race, forecast, lottery and registration posts, the story carousel, where would you be and requests.
 - Moments still matter: step 0 keeps the lottery and race dates right for the "How it was won" Reels held for those days.
 
@@ -44,7 +49,7 @@ Only official pages count: the race's site, its registration page, or the organi
 - If the KB SS drive isn't mounted, stop and report it.
 - `$PY social_calendar.py plan`. If it prints "Nothing today", report that (and `python3 moments.py upcoming 7`) and stop.
 - `$PY social_calendar.py build`. It makes each post in Films/_social/posts/<id>/: slide_N.jpg, captions/instagram.txt, captions/facebook.txt. A race Short is used as it is.
-- A FAILED line means that format was skipped. Report the line. A race-week card refusing incomplete aid data (lap courses, a stretch over 12 miles) is correct, not a bug.
+- A FAILED line means that format was skipped. Report the line. A finish Reel failing because the results feed isn't up yet or has fewer than 10 finishers is correct: the race isn't done or doesn't publish times. A YOUTUBE FAILED line means Instagram and Facebook still go; report it (if it says invalid_grant, Kris has to sign in again with yt_upload.py auth). A race-week card refusing incomplete aid data (lap courses, a stretch over 12 miles) is correct, not a bug.
 
 ## 2. Look at every slide before queueing
 Read each slide_N.jpg yourself. Check:
@@ -62,6 +67,12 @@ Read both captions. Check:
 
 For a race Short (a video), check its captions dir exists and names the right race.
 
+For the new Reels (aids, before, finish, odds), pull frames from the mp4 with the ffmpeg in the weekly-shorts venv (imageio_ffmpeg's binary) and read them yourself:
+- aids, 30 s: frames at 5 s, 15 s, 23 s and 28 s. The trail draws over the course in 3D, the numbered pins sit on it, the list at the foot has a name, a distance and a gap on every row, the gold stretch and the "LONGEST STRETCH WITHOUT AID" callout sit clear of the map, and the closing card shows at the end.
+- before and finish, 22 s: frames at 6 s, 15 s and 20 s. The bars fill in, FIRST / HALF IN BY / LAST carry times, nothing runs off the edge, and the question shows.
+- odds, 24 s: frames at 12 s, 18 s and 22 s. Every bar row has a count and an odds figure (or NEW), the totals line fits, and the big percentage matches lottery-sources.json for that race. Read data.json beside it: the counts come from the race's own page.
+Read instagram.txt and facebook.txt beside the mp4 (captions/): the same race, no "@trailgoatrun", full https links on Facebook, "link in bio" on Instagram.
+
 For a lottery or registration post (entry-…), also check:
 - every date on slide 1 and in the captions matches moments.json and its source page;
 - the moment is happening today, or for "lottery closes" two days from now;
@@ -76,7 +87,8 @@ If a post fails a check, delete that post's folder and don't queue it, then repo
 
 ## 4. Report, in a few lines
 - What was made and when each item goes out.
-- Anything skipped, and why.
+- Anything skipped, and why (a DROPPED line: a race-week Reel whose next slot fell on race day).
+- The YouTube links of Reels this run put up.
 - How many items are waiting in the queue. If more than 6 are waiting, say so plainly: the calendar is making more than the two daily slots can post.
 
 Rules:
