@@ -9,6 +9,7 @@ outcome, and what the skill learned. Add the entry at close-out (step 9).
 - Built: bottle sprays on frame one, three scandals faster, a Meshy hoodie on a chair under a key that turns red, mist
   across it, the notes as "why you know it", four on-camera slates; narration take 5 and a treatment page first.
 - Learned: check-still ghosts from fog history, captions band framing, multi-press mist, sources I could not open.
+- Kris on the test: "Okay, I like this one". Next: his phone take, then the cut to his words.
 
 ## 2026-11-10 · Notes Below · hero v7 test (mixed effects, on-camera slots) · 720p, 61.5 s, awaiting footage
 - Kris: "we need to add a human touch to this video" (he records himself; an AI voice was turned down) and "for the
