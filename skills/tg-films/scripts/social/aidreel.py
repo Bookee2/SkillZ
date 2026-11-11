@@ -146,7 +146,10 @@ def callout_y(f, proj, pts):
     worked out once at the callout's first frame so it doesn't creep with the camera's drift."""
     if 'y' not in _CALLOUT:
         low = max((xy[1] for _, p in pts if (xy := proj(f, p))), default=1000)
-        _CALLOUT['y'] = round(max(560, min(1500 - 290, low + 36)))   # the block is ~280 px tall
+        y = round(max(560, low + 36))                  # the block is ~280 px tall
+        # a map reaching below 1210 leaves no room above the list: the list steps aside and the callout takes its place
+        # (Bariloche, 2026-11-11: at the clamp it sat on pin 8 and the gold stretch)
+        _CALLOUT['y'], _CALLOUT['over_list'] = (y, False) if y <= 1500 - 290 else (1520, True)
     return _CALLOUT['y']
 
 
@@ -198,7 +201,10 @@ def layers(f, proj, at, total, pts, st, tot_off, finish_gap, top, cta, cta_box, 
                 right = (f'{UNIT} {s["off"]:.1f}' if s['off'] is not None else '') + (f'  +{s["gap"]:.1f}' if s['gap'] else '')
                 rw = ld.textlength(right, font=F['row']) + 0.06*F['row'].size*len(right)
                 hud.Card.text(None, ld, (W - 64 - rw, y), right, F['row'], hud.MUTED, 0.06)
-        lay.alpha_composite(S.shadowed((W, H), draw_rows, 6, 0.8))
+        rl = S.shadowed((W, H), draw_rows, 6, 0.8)
+        if t >= T_LONG and t < SECS - 4.5 and _CALLOUT.get('over_list'):
+            k = max(0.0, 1 - (t - T_LONG)/0.4); rl.putalpha(rl.getchannel('A').point(lambda v: round(v*k)))
+        lay.alpha_composite(rl)
     if t >= T_LONG:                                    # the longest stretch, then the closing line
         lg = longest(st, finish_gap)
         if lg and t < SECS - 4.5:
@@ -244,6 +250,8 @@ def video(cut='youtube'):
         band = 520
         S.frost(im, (0, 0, W, band), S.band_mask(band))                # the glass under the title, as the race Shorts
         S.frost(im, (0, 1400, W, H), S.band_mask(H - 1400).transpose(Image.FLIP_TOP_BOTTOM), glass=0.5)
+        if f/FPS >= SECS - 4.5:                                        # glass under the closing card, as finishreel
+            bx = cta_box; S.frost(im, bx, S.band_mask(bx[3] - bx[1], 24).resize((bx[2] - bx[0], bx[3] - bx[1])), glass=0.55)
         im.alpha_composite(layers(f, proj, at, total, pts, st, tot_off, finish_gap, top, cta, cta_box, F))
         p.stdin.write(im.convert('RGB').tobytes())
         if f % 120 == 0: print(f'frame {f}/{N}', flush=True)
