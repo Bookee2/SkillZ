@@ -3,6 +3,13 @@
 One entry per piece or session: date, piece, versions, Kris's notes → fixes,
 outcome, and what the skill learned. Add the entry at close-out (step 9).
 
+## 2026-11-11 · Notes Below · hero v8 test (new story: "that's my ex", no rating numbers, no swarm) · 720p, 95.5 s
+- Kris re-wrote the premise himself: most controversial fragrance; hate it / an ex wore it / love it; the real
+  controversy is the smell-test reaction. Depp and Heard side by side replaced the courthouse card (Commons, CC BY-SA).
+- Built: bottle sprays on frame one, three scandals faster, a Meshy hoodie on a chair under a key that turns red, mist
+  across it, the notes as "why you know it", four on-camera slates; narration take 5 and a treatment page first.
+- Learned: check-still ghosts from fog history, captions band framing, multi-press mist, sources I could not open.
+
 ## 2026-11-10 · Notes Below · hero v7 test (mixed effects, on-camera slots) · 720p, 61.5 s, awaiting footage
 - Kris: "we need to add a human touch to this video" (he records himself; an AI voice was turned down) and "for the
   hero we rely too much on the swarms, maybe we can mix different effects and not just swarm everything". He does not

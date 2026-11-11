@@ -454,3 +454,23 @@ Each line: what went wrong → the fix. Grouped by where it bites.
   card, full credit with licence versions in the post caption, and tell him share-alike is the open question.
 - Commons API: fetch with curl (python.org's Python has no CA certs: CERTIFICATE_VERIFY_FAILED). `iiurlwidth` thumbs
   come back in bucketed sizes, not the width asked for or reported; ffprobe the file before computing a crop.
+
+## Notes Below Sauvage v8 (2026-11-11)
+- The story can lose its data. Kris on v7: open on "one of the most controversial fragrances in the world", the real
+  controversy is "that smells like my ex", and "I don't think we need the Fragrantica numbers or charts". With the
+  numbers gone the swarm had nothing left to count, so v8 has no blocks at all (`SWARM = False` hides the ISM; one
+  finished transition keeps the shader valid). Ask early whether the numbers are the story or just the first idea.
+- A subject must fit the band under the captions (y 664-1290 of 1920) before anything else: 122 cm of prop needs the
+  camera about 400 cm away at 40 mm. Framing it bigger put the bold line on top of the hoodie; a full re-render to fix.
+- Check stills rendered with a frame step exaggerate anything with temporal history. Volumetric fog showed the previous
+  beat's props as ghosts for ten seconds of stills and a shaft that stayed lit after its light went off; in the full
+  render the history flushes in a fraction of a second. Judge haze at cuts from a consecutive-frame strip.
+- One atomiser, several presses: `SPRAY['t']` is a tuple and the sprite time is `T - (T >= t2 ? t2 : t1)`. The same
+  mist function takes another nozzle, beam and a second light whose ramp tints the sprites (`mixc` through the
+  VertexInterpolator), so one material follows a light that changes colour.
+- A spray aimed toward the camera hides the product. For a hook, orbit the camera 30-35 degrees so the mist crosses
+  the frame and the bottle stays clear.
+- Meshy Ultra returned 1.47 M triangles for a chair with a hoodie (62 MB GLB): import and prep still fine, about 100 s
+  of build. Its fabric texture came out near white; a 0.42 base-colour tint brought back heather grey.
+- A source I cannot open is not a source I have read. The Independent blocks the fetcher and the syndicated copy was
+  gone; say "read as search summaries only" on the page and ask Kris to open it before render.

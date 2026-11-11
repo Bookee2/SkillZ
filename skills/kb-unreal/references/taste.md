@@ -206,3 +206,6 @@ render; the quote or incident is kept so you know how hard the rule is.
   Kris appears on camera, and plan the on-camera beats (hook, the judgement lines, the ask) with the effects.
 - 2026-11-11 (Notes Below): when a beat is about people, show the people. He replaced the courthouse photo with
   Depp and Heard side by side.
+- 2026-11-11 (Notes Below): the relatable, slightly scandalous human angle beats the data: "many have an ex who wore
+  it", the smell-test reactions. He dropped the rating-site numbers and charts himself. He liked a cheating-poll angle
+  "even if it is a bit scandalous", then said to leave the story as it was.
