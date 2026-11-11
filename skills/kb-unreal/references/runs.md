@@ -3,6 +3,18 @@
 One entry per piece or session: date, piece, versions, Kris's notes → fixes,
 outcome, and what the skill learned. Add the entry at close-out (step 9).
 
+## 2026-11-10 · Notes Below · hero v7 test (mixed effects, on-camera slots) · 720p, 61.5 s, awaiting footage
+- Kris: "we need to add a human touch to this video" (he records himself; an AI voice was turned down) and "for the
+  hero we rely too much on the swarms, maybe we can mix different effects and not just swarm everything". He does not
+  own the bottle.
+- Built: the swarm only for the 1,900 haters and the 34,870 votes; lights that strike on each prop, a drawn line,
+  a shaft of light with dust, dust on the gavel knock, spray mist, a picture that breaks into its own colours, a seam
+  wipe on the lockup; four full-frame slates where his footage goes; narration page marks the on-camera moments.
+- Tried and dropped: Epic's Niagara smoke and wood impact. No new sample packs were on disk (he may have claimed
+  them on Fab only).
+- Learned: per-beat effect planning, sprites flown in the material, lights keyed from the timeline with props
+  swapped in the dark, range check stills.
+
 ## 2026-11-09 · Notes Below · second audit (story) · hero v6 at 720p, 55.7 s, awaiting voice
 - Kris: "Audit the films again, being a critical judge. Does the story make sense, there's so little about the trial
   and the ad that got pulled." He asked for a real trial picture in a box after the gavel and a re-created picture of

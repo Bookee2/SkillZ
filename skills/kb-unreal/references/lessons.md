@@ -259,6 +259,7 @@ Each line: what went wrong → the fix. Grouped by where it bites.
   keys ease as Bezier; set `dither_intensity = 0` for data bakes.
 
 ## Mac / Metal
+- The fog switch is `enable_volumetric_fog` in Python (`volumetric_fog` fails silently through a guarded setter).
 - Target SM6 (`+TargetedRHIs=SF_METAL_SM6`) with `r.GenerateMeshDistanceFields`
   for Niagara Fluids Gas 3D colour; Fluids beyond Gas 3D are Windows-marked.
 - nDisplay (ICVFX) is Windows/Linux only → `-DisablePlugins=ICVFX` to open.
@@ -416,3 +417,20 @@ Each line: what went wrong → the fix. Grouped by where it bites.
   1376x768; ask for silhouettes from behind when a real person is involved and label the result on screen.
 - **Four props through Chrome in a forked agent** took 10 min and 212 Meshy credits while the main thread kept
   building; write the prep with a fallback (the old block word) for each prop so the build never waits on them.
+
+## Notes Below Sauvage v7 (2026-11-10)
+- Plan the effect per beat before the first build. Six versions used one effect (the swarm) for every beat until Kris
+  said "we rely too much on the swarms". Keep the swarm for counts of people; give objects light, haze, dust, mist.
+- Niagara Examples Pack for product work: NS_Smoke_Plume reads as a fog machine and greys the frame, NS_Impact_Wood
+  is a small spark plus a decal square, NS_SmokePuffLight is a sprite-baking utility, not an effect. For a spray or
+  impact dust, fly sprites in the material instead (techniques.md). The pack can be cloned into a project by copying
+  `Content/NiagaraExamples` at the same path; delete it again if nothing uses it.
+- Check stills of one beat: set the check queue's custom playback range and a step of 3–9 frames (`NOTES_RANGE=a:b`,
+  `NOTES_STEP`, `NOTES_LAST`, `NOTES_STALL=30`): 15–25 frames in about 38 s, instead of a whole-film pass.
+- A Meshy prop is one mesh: the gavel cannot swing and the clapper cannot close. Ask for separate parts when the
+  beat needs the motion, or carry the hit with light, dust, a camera jolt and sound, and say so.
+- `scripts/preflight.sh` is zsh; `bash preflight.sh` prints "print: command not found".
+- ffmpeg's image2 glob drops frames when a folder mixes RGB and RGBA PNGs (opaque and transparent overlay stills):
+  tile such sheets with PIL.
+- Patch scripts that insert triple-quoted code: write the fragment to a file and read it, not a heredoc inside a
+  heredoc.

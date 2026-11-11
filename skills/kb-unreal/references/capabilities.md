@@ -218,7 +218,8 @@ lot, APFS clones of the PetitRidge project, `orchestrate.sh`). Petit Ridge's bea
 five. Cost per lot: ~45 min of downloads and offline steps (parallel), 16–30 min editor build, 26–31 min 720p.
 Details: capra-realtorfilm `references/batch-2026-10-29.md`.
 
-### Notes Below · Sauvage hero episode (fragrance Reel, 9:16) · **Draft v2 (720p), awaiting notes (2026-11-09)**
+### Notes Below · Sauvage hero episode (fragrance Reel, 9:16) · **v7 test (720p), mixed effects with on-camera slots, awaiting Kris's footage (2026-11-10)**
+v7: swarm only for counts of people; props under striking lights, a shaft with dust, spray mist, picture dissolve; see techniques.md.
 1,900 red blocks hover (the haters); all 34,870 blocks (one per Fragrantica vote) pour in and build the Sauvage bottle,
 which resolves into Kris's Meshy model with its SAUVAGE lettering; the blocks spell EAU / SAUVAGE (EAU falls to the
 floor), 2022 (bursts), KEPT HIM, 2019 (swept away), 4 AWARDS; they build bergamot, pepper, lavender, pink pepper,

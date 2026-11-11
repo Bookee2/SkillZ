@@ -418,3 +418,37 @@ Kris narrates in his own words from an HTML beat sheet (`Fragrance/unreal/narrat
   Shader constants are generated from the timeline, so the materials stage must be rebuilt after a re-time.
 - Captions start with the words that carry them: set their old-timeline times to the beat starts, then warp.
 - His pace was 2.0 words a second: a 110-word beat sheet became 68 s, not 51. Budget length from his pace.
+
+## Lights that strike, props swapped in the dark (Notes Below Sauvage v7, 2026-11-10)
+- One table in the timeline: `LIGHTS[name] = [(t, fraction)]`, linear between keys; the sequence keys every light's
+  `Intensity` every frame (`float_track(seq, light_component, 'Intensity')`, base cd × fraction). A strike is
+  `(t-0.02, 0) (t+0.03, 1.5) (t+0.10, 0.3) (t+0.26, 1)`: flash, dip, settle.
+- Props are swapped while every light is at 0 (visibility tracks), and the camera cuts with two keys 0.1 s apart in
+  that same dark gap, so one sequence holds many set-ups. Lumen's bounce lags a few frames after lights-off; cover the
+  gap with a cutaway (here: the presenter on camera) or leave 0.3 s.
+- Shaft of light: ExponentialHeightFog with `enable_volumetric_fog`, density 0.05, black inscattering; a 260 cd spot
+  (6°/11° cone, shadows on) with volumetric scattering 24 reads as a shaft under a manual-exposure rig whose key is
+  about 100 cd. Set every other light's scattering to 0 or the whole frame goes grey.
+- A line that draws itself: a thin cube on the floor, unlit masked material, mask `WP.y <= head(T)`, emissive boosted
+  near the head (`exp(-|y - head|/2.5)`).
+- Code: `Fragrance/unreal/timeline.py` (LIGHTS, SLATES, LINE), `build_sauvage.py` (EXTRA, line_material).
+
+## Sprites flown in the material: spray mist, dust motes, impact dust (Notes Below Sauvage v7)
+- Same idea as the block swarm, for soft effects with no Niagara: one ISM of `/Engine/BasicShapes/Plane`, one custom
+  float per instance (its index), translucent unlit two-sided material. The vertex shader hashes the index, computes
+  where the sprite is at T (cone from a nozzle with drag `v0(1-e^-kt)/k`, or a random point in a light's cone), and
+  billboards it with `CameraPositionWS`: `f = normalize(q - CP); r = normalize(cross(up, f)); u = cross(f, r)`.
+- Fade and brightness go through a VertexInterpolator. Brightness is a cone test against the spot's own position and
+  aim (`smoothstep(cos outer, cos inner, dot(normalize(q - P), d))`) times that light's timeline ramp, so the sprites
+  only show inside the beam and strike with it.
+- Numbers that read: mist 520 sprites, 1.6 → 22–42 cm, alpha 0.06, 3.6–6.2 s life, aimed off to the side of the hero
+  (sprayed at the camera it hides the product); dust motes 260 specks of 0.35–0.85 cm, gain 7; impact dust 340
+  sprites, alpha 0.065. Alpha is a squared smooth radial falloff; any sine pattern in the alpha shows as a checker.
+- `bounds_scale` 60 on the ISM (the engine plane must not be edited), `max_world_position_offset_displacement` large.
+- Code: `build_sauvage.py` `sprite_material`, `mist_material`, `motes_material`, `dust_material`.
+
+## A picture that breaks into its own colours (HTML overlay)
+- In the caption page: draw the image to an offscreen canvas, make one cell per 8 px with its sampled colour and a
+  start time that rises left to right plus a little noise; per frame draw the image, `clearRect` the cells that have
+  started, then draw each moving cell (drift up and right, shrink, fade, a warm flash as it leaves). Deterministic
+  under `seek(t)`. `Fragrance/unreal/captions.py` `dissolve()`.
