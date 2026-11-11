@@ -204,3 +204,5 @@ render; the quote or incident is kept so you know how hard the rule is.
 - **A human on screen (10 Nov 2026):** "we need to add a human touch to this video"; he records himself, video and audio,
   and wants that cut together with the animation. He turned down an AI voice. Ask in the interview whether the client or
   Kris appears on camera, and plan the on-camera beats (hook, the judgement lines, the ask) with the effects.
+- 2026-11-11 (Notes Below): when a beat is about people, show the people. He replaced the courthouse photo with
+  Depp and Heard side by side.

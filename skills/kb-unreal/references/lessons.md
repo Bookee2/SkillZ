@@ -448,4 +448,9 @@ Each line: what went wrong → the fix. Grouped by where it bites.
   liquid, and keep the key light near neutral or a silver cap turns cream.
 - Re-importing one model: `NOTES_ONLY=<name> ./build.sh import,materials,level,sequence,queue` (36 s) instead of the
   whole set (the note models are millions of faces).
-
+- People in the story: Kris asked for the two people side by side, not the courthouse ("There have to be free rights
+  pictures of both of them"). Wikimedia Commons has them (Depp: Harald Krichel, Berlinale 2020; Heard: Gage Skidmore,
+  Comic-Con 2018), nearly all CC BY-SA: crop only, name and photo year on each half, photographers and licence on the
+  card, full credit with licence versions in the post caption, and tell him share-alike is the open question.
+- Commons API: fetch with curl (python.org's Python has no CA certs: CERTIFICATE_VERIFY_FAILED). `iiurlwidth` thumbs
+  come back in bucketed sizes, not the width asked for or reported; ffprobe the file before computing a crop.
