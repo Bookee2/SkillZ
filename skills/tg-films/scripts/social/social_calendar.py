@@ -20,6 +20,11 @@ A day with no moment posts nothing; there's no filler.
     Sun  first Sunday of the month: comment your race; otherwise "where would you be" for a race whose results came
          out in the last two weeks. (The rankings had no moment, so they no longer go out on their own.)
 
+Kris, 2026-11-11, after the first week's numbers (report https://claude.ai/artifact/ESsjURp7UFqG8HFYiVAEQL: carousels
+averaged 63 Instagram views and no follows, the Javelina "How it was won" Reel 7,511 and 22): "Yes, Reels only". So the
+calendar now makes only the formats in FORMATS, the race Shorts; "How it was won" Reels come from the Monday task. The
+carousel formats below stay written, switched off, and come back by adding their kind to FORMATS.
+
     python3 social_calendar.py plan [--date YYYY-MM-DD]     # what today holds, nothing made
     python3 social_calendar.py build [--date YYYY-MM-DD]    # make today's posts (carousel.py), print their folders
     python3 social_calendar.py queue [--date YYYY-MM-DD]    # queue today's made posts at their times (after you've looked)
@@ -42,6 +47,9 @@ import carousel as C   # noqa: E402
 import moments as Mo   # noqa: E402
 
 NY = ZoneInfo('America/New_York')
+# The kinds the calendar makes. Reels only since 2026-11-11 (Kris: "Yes, Reels only"); the carousel kinds are raceweek,
+# guess, forecast, entry, story, where and requests.
+FORMATS = {'race-short'}
 FILMS = C.FILMS
 
 
@@ -142,7 +150,7 @@ def plan(day: dt.date):
         done = {m['kind'] + ':' + m.get('key', '') for m in t['made']} if t['day'] == day.isoformat() else set()
     except OSError:
         done = set()
-    return [p for p in out if p[0] not in q and f"{p[1]}:{p[0]}" not in done]
+    return [p for p in out if p[1] in FORMATS and p[0] not in q and f"{p[1]}:{p[0]}" not in done]
 
 
 def build(day: dt.date):
