@@ -16,17 +16,12 @@ Kris, 2026-11-03: "I guess one of the lessons is that we need to post with purpo
 
 Tools: /Volumes/KB SS/TrailGoat-Studio/Films/_social/moments.py, social_calendar.py and carousel.py (read their docstrings). Python: PY=/Users/kb/Desktop/Projects/TrailGoat/.claude/worktrees/weekly-shorts/.venv/bin/python. Run everything from /Volumes/KB SS/TrailGoat-Studio/Films/_social.
 
-The calendar (New York time):
-- Any day:
-  - a post for each confirmed lottery or registration moment: lottery opens, draw or registration opens on the day, lottery closes two days ahead (at most two a day);
-  - the story carousel for a "How it was won" going public that day.
-- Mon: "How it was won" Reels (queued by the Monday task).
-- Tue: race-week cards for this week's races, at most two.
-- Wed: guess the race, using one of this week's or next week's races.
-- Thu: this week's races' Shorts.
-- Fri: race-day forecast.
-- Sat: nothing.
-- Sun: comment-your-race on the first Sunday, otherwise "where would you be" for a race with results in the last two weeks. Rankings no longer go out: they had no moment.
+The calendar (New York time), Reels only since 2026-11-11. Kris, after the first week's numbers (carousels averaged 63 Instagram views and no follows; the Javelina "How it was won" Reel drew 7,511 and 22 follows): "Yes, Reels only".
+- Mon: "How it was won" Reels, queued by the Monday task, not this one.
+- Thu: this week's races' Shorts. These are the only posts social_calendar.py makes now (its FORMATS).
+- Every other day: nothing new.
+- The carousel formats are switched off in social_calendar.py; don't make them by hand. They are race-week cards, guess the race, forecast, lottery and registration posts, the story carousel, where would you be and requests.
+- Moments still matter: step 0 keeps the lottery and race dates right for the "How it was won" Reels held for those days.
 
 ## 0. Confirm upcoming moments
 `python3 moments.py check`. For each line:
