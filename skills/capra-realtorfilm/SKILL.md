@@ -11,9 +11,19 @@ argument-hint: <address or county + parcel ID> [for <agent or brokerage>] [spec|
 One run goes **read the request → load what's proven → assemble the parcel kit → interview → treatment →
 720p build and review loop → 4K final → deliverables → close out by improving this skill**.
 
-This is the product version of the Petit Ridge spec film (2026-10-28): every step below has run once, end to end,
-and the code is in `~/Desktop/Projects/Caprastudios/unreal/petit_ridge/` (each script's docstring says how to run
-it). A new parcel reuses that pipeline with new data and new site constants; it does not start from scratch.
+This is the product version of the Petit Ridge spec film (2026-10-28). Since the first batch (five lots in one night,
+2026-10-29) the code is one shared pipeline, `~/Desktop/Projects/Caprastudios/unreal/landfilm/`, driven by each
+lot's `Data/lot.json` (each script's docstring says how to run it; `references/pipeline.md` has the order). A new
+parcel is data, not code: a `lot_in.json`, then `make_kit.py`, `lot_offline.sh`, `new_lot.sh`, `lot_editor.sh`,
+`render_lot.sh`, `post_lot.sh` — or `orchestrate.sh` for a batch.
+
+**Batch mode** ("find N lots and make them tonight"): research listings with different agents in parallel
+(LandWatch and brokerage MLS feeds work; Zillow, Realtor.com and Homes.com block), check every parcel in county GIS
+before picking (MLS parcel IDs can be wrong; new subdivision lots may not exist yet), get one yes for all downloads,
+then run every lot's offline steps side by side and the Unreal steps one at a time. Petit Ridge's approved beats,
+season, light and sound are the template; ask only what changes per lot (which lots, which home). Write an
+outreach sheet (`output/unreal/lots/outreach.md`): film, agent, brokerage, the listing's business contact, and what
+each on-screen fact rests on. `references/batch-2026-10-29.md` is the first run.
 Kris is the creative director and the client brain. Never guess the client's branding, the facts on screen or
 whether to show a concept home: ask.
 
@@ -33,6 +43,7 @@ Read in full:
 3. `references/data.md` — where every dataset comes from (endpoints, sizes, licences, credit lines) and the
    gotchas (throttled servers, leaf-off lidar, house removal).
 4. `references/petit-ridge.md` — the reference production: beats with times, numbers, versions, Kris's notes.
+5. `references/batch-2026-10-29.md` — the first five-lot batch: what broke, the timings, how the lots were picked.
 
 Then the Unreal machine knowledge this depends on, from the kb-unreal skill (`~/.claude/skills/kb-unreal/references/`):
 `lessons.md` (everything), `pipeline.md` (editor control, render and encode recipes), and in `techniques.md` the
