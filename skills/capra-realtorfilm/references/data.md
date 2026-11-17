@@ -34,6 +34,34 @@ of it (no GDAL or PDAL needed).
 - No public data gives finer ground **shape** than the 1 m DEM under forest, and no aerial source gets near the
   2 cm/px of a cabin close-up: close ground comes from 3D ground cover.
 
+## Timber tracts and the Coastal Plain (Buckeye Road, 2026-11-16)
+- **The lidar's date is in the points**: GPS time is adjusted standard time (+1e9 s from 1980-01-06, minus 18 leap
+  seconds). GA_Statewide_9_2018 over Laurens County was flown **2019-01-27** (one ~2 h flight). Put the flight
+  date on any card that quotes a lidar height, and age planted pines from it (the 2014 loblolly were ~4 m then).
+- **A plantation planted before the flight is short in the lidar**: take stand edges and rows from the newest NAIP,
+  sizes from the listing's planting year (a 12-year Coastal Plain loblolly is ~11-14 m), heights only for the mature
+  stands from the lidar.
+- **NAIP NDVI is not calibrated**: July 2025 GA tiles put a parcel's NDVI median at 0.16 (sand ~0, closed canopy
+  ~0.25), so fixed cuts (0.3 "forest") fail. Threshold each photo tile by Otsu; forest = green AND (rough crown
+  texture OR darker than the fields): closed canopy reads smooth, so texture alone left dense woods bare.
+- **Map stands at stand scale**: a pixel NDVI split called the thin-crowned half of a 4.3 m-row plantation "open".
+  The 2019 stand top height (max 7 m, median 9 m, mean over 25 m) split plantation (2-5 m) from mature (12-23 m)
+  cleanly. Water under an acre that doesn't touch the kit's water is dark wet sand.
+- **Rows**: the 2D spectrum of the 30 cm near infrared in 128 m windows (rows 2.2-4.8 m) gave 4.3 m, bearing 12.6°,
+  in all 24 windows (SNR 100-350). Draw them back on the photo before planting 60,000 trees on them.
+- **Change since the flight**: drop lidar trees where the newest photo shows no forest. At Buckeye Road that was
+  21,000 trees, every one in tracts clearcut since January 2019 (and a railroad right-of-way).
+- **NAIP 2025 is 30 cm and ~1.8 GB a tile**: read windows from the cloud-optimised GeoTIFFs over HTTP ranges
+  (rasterio /vsicurl/ with the SAS token, overview_level 0 = 60 cm for the ring, full 30 cm over the parcel):
+  0.67 GB in 3 min instead of 7.3 GB (naip_fetch.py does this by default; --full downloads whole tiles).
+- **Planetary Computer's STAC mixes int and str `naip:year`**: key by str, sort with key=int.
+- **Distances on cards**: route by road (OSRM over OpenStreetMap). Route to the crossing road at an interchange,
+  never the motorway_junction node itself (that forced an I-16 detour: 14.2 mi vs the real 8.0).
+- **Laurens County GA parcels**: services.arcgis.com/ISpzx3B5ZsVA6e1Z (the same GIS vendor as Union County),
+  Laurens_Web_Map_WFL1 layer 5 Parcels, Parcel_No like '175C   049' (spaces padded). Query by point first: there is
+  a Laurens County in South Carolina too. Class "J" in the digest: unverified (possibly FLPA forest covenant).
+- LandWatch answers automated reads with 403: use what a search shows, or ask Kris.
+
 ## Finding lots and their lines (the 2026-10-29 batch)
 - **Check the parcel against the listing, not just the ID.** Big Knoll's MLS parcel ID (038 077 A20) was a different
   lot 500 m away; the right one (038 077 A01) matched on lot number, acreage and lake frontage.
