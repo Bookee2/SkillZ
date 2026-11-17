@@ -69,6 +69,29 @@ centred on the lot; `lot_in.json hero_offset_m` shifts it when water or the appr
 10. **QA the final against the approved draft** (`scan_frames.py` on both frame folders, compare by frame number): only
    differences from the draft are faults.
 
+## Timber mode (a tract, no home: lot.json "mode": "timber"; Buckeye Road, 2026-11-16)
+For a fund or a land broker selling acreage: no house, no contours on flat land, the stands instead. lot_in.json adds
+`"mode": "timber"`; lot.json gets `timber.planted` (the listing's planting year) and `split` (the concept division).
+1. `make_kit.py` → `osm_fetch.py` (background) → `ept_fetch.py --find` + the LAZ download → `naip_fetch.py` (windowed
+   by default) → `terrain_tiles.py` (no pad) → `lidar_trees.py` → `site_meshes.py` → `naip_textures.py` (no fall
+   grade in timber mode). Skip `site_plan.py`, `viewshed.py`, `forest_points.py`, `groundcover_points.py`.
+2. `timber_stands.py`: stands (plantation / mature / water / open / cut since the lidar) from the lidar's stand height
+   and the newest photo, rows from the photo's spectrum → timber/stands.json, stand_map.png, stand_preview.jpg.
+   Look at stand_preview.jpg against the photo before going on.
+3. `timber_points.py`: plantation rows (young Baltic Pine C/D sized for the planting year), the mature stands from the
+   lidar tops (pine A/B or summer Hornbeam), the hero outside the parcel (cut-since trees dropped, young stands added),
+   the far ring from the photo's forest (per-tile Otsu). ~510k trees.
+4. `timber_split.py` (lot.json split: frontage vertex ranges, the new road's polyline, tracts per side): road lots
+   square to the county road, tracts cut at equal acres square to the new road, slivers merged. Check split_preview.jpg.
+5. `timber_meshes.py`: canopy-top surface, then LotLine/LotCurtain on the canopy, StandSheet, StandEdges, SplitLines,
+   ConceptRoad (Data/site). 6. `timber_plan.py`: camera, MPC curves (StandMix, StandDraw, RoadDraw, SplitDraw),
+   sun, exposure, cards, pins, credits into lot.json; prints speed / turn / clearance over the 2026 canopy.
+   Keep under ~120 m/s low, 20°/s of turn, 25 m over the canopy; check the pins stay inside the frame.
+7. `lot_editor.sh <Slug>` as usual (the home, place, lights and reveal stages skip themselves), `render_lot.sh`
+   (no reveal pass), `post_lot.sh` (pins are projected through film_path's camera in post).
+Pines: Megaplants Baltic Pine converted to static Nanite in FabStaging (`pine_convert.py`), copied into the lot's
+Content (`/Game/Megaplant_Library`, `/Game/CapraPines`). Clone the lot from PetitRidge as usual, then copy those in.
+
 ## Timings (M5 Pro, Petit Ridge v2: 508k Nanite trees, 12k understory, 76k ground pieces, Lumen HWRT)
 | Step | Time |
 |---|---|

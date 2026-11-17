@@ -258,7 +258,34 @@ Each line: what went wrong → the fix. Grouped by where it bites.
   render black until saved and reloaded; COPY_ROTATION for billboards; sparse
   keys ease as Bezier; set `dither_intensity = 0` for data bakes.
 
+- **Megaplants (Fab, UE 5.7+) trees are Nanite Assemblies** (Buckeye Road, 2026-11-16): each Tree_* is a skeletal
+  mesh carrying only the bark; branches, twigs and needles are nested assembly parts. What works on this Mac:
+  `r.Nanite.AllowAssemblies=1` in the project's DefaultEngine.ini [SystemSettings] (a read-only cvar in the shader
+  key: every shader recompiles once; needs the Metal toolchain), then the Procedural Vegetation Editor's Export
+  (toolbar → Modify Export Settings: every variant listed, tick each): Export Mesh Type = Static Mesh, Create Nanite
+  Foliage ON, Preserve Area, own folder and name (Replace would overwrite the pack's tree). Four trees exported in
+  2 min; they sit in memory until saved (`EditorAssetLibrary.save_directory`). The static assembly renders with
+  needles in the Mac editor and instances in an ISM like any static mesh. Baltic Pine exports: A 28.4 m, B 30.9 m,
+  C 15.0 m, D 12.4 m tall with foliage. Dead ends: Geometry Script copy (bark only: 0 tris on the foliage slot,
+  check sections with `ProceduralMeshLibrary.get_section_from_static_mesh`); the static export with assemblies off
+  (flattens every needle: 234 GB build estimate). The export is UI-only (FPVExporter), so it needs Kris or
+  computer use; Unreal lists itself as "LiveLinkHub" (shared bundle id) in the access prompt.
+  Also in the pack: MI_Baltic_Pine_01_Bark's Base Color / Normal / Branch slots point at a Megaplants developer
+  folder and the Aleppo Pine pack (missing): refill from T_Baltic_PineBark_02 / _01 (pine_fix.py).
+- The Epic Launcher's "Add to project" only lists projects in folders it scans (`KB SS/Unreal Projects/`): make a
+  staging project there for Fab downloads rather than adding to a sample (adding to ICVFXProductionTest was refused).
+
 ## Mac / Metal
+- **Xcode updates drop the Metal toolchain** (2026-11-16, Xcode 27.2): Unreal can't compile any new shader
+  ("cannot execute tool 'metal' due to missing Metal Toolchain"). The editor shows a modal on open (log stuck at
+  "loading MetalRHI"); a headless render just stalls (35 min on its first frame, no error). Check before any build
+  that adds materials or changes a shader-key setting: `xcodebuild -showComponent MetalToolchain` (Status:
+  installed). Fix: `xcodebuild -downloadComponent MetalToolchain` (a download: ask Kris first).
+- `r.Nanite.AllowAssemblies` is read-only and part of every shader's key (Shader.cpp): turning it on recompiles all
+  of a project's shaders once.
+- **Don't flatten Megaplants trees**: the PVE static export with Create Nanite Foliage off bakes branch→twig→needle
+  assemblies into one mesh: tree C (252 branches) asked for 234 GB to build and never finished on 64 GB. Export
+  as a static mesh with assemblies on instead, with `r.Nanite.AllowAssemblies=1` in [SystemSettings].
 - Target SM6 (`+TargetedRHIs=SF_METAL_SM6`) with `r.GenerateMeshDistanceFields`
   for Niagara Fluids Gas 3D colour; Fluids beyond Gas 3D are Windows-marked.
 - nDisplay (ICVFX) is Windows/Linux only → `-DisablePlugins=ICVFX` to open.
@@ -278,6 +305,17 @@ Each line: what went wrong → the fix. Grouped by where it bites.
   sensitive.
 
 ## Process
+- **Cloned levels carry the template's actors**: a stage that has nothing to build must still delete the template's
+  actor of that name. The timber lot skipped understory and ground cover, so Petit Ridge's saplings floated over the
+  plantation at Petit Ridge's heights (an arc of trunks in the sky). List a clone's actors (landfilm actors_list.py)
+  before the first check render.
+- **Scratchpad venvs vanish**: the system's /tmp cleanup emptied the session venv the landfilm scripts pointed at
+  (only its symlinks were left). Pipelines get a durable venv on the SSD (`KB SS/Capra Studios/landfilm-venv`).
+- **numpy 2**: `ndarray.ptp()` is gone (`np.ptp`), and `np.cross` refuses 2-D vectors (write u0*v1 - u1*v0).
+  macOS has no `timeout`: run long headless editor jobs in the background instead.
+- **Overlays on a forest ride the canopy** (timber film): a ground lot line, contour shading or stand map is hidden
+  under a 12 m plantation from any flying height. Build a canopy-top surface from the placed trees (max over 11 m,
+  smoothed) and put the lines and a translucent stand sheet 1-3 m over it (timber_meshes.py).
 - **Template code carries the template's numbers in strings too**: Petit Ridge's terrain material had its Z0 (698.89)
   and elevation range (456–942 m) inside the HLSL of the Read the Land block, so every new lot's contours sat at the
   wrong heights. When a script becomes a template, grep the shader strings and docstrings as well as the constants.

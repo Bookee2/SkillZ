@@ -3,6 +3,25 @@
 One entry per piece or session: date, piece, versions, Kris's notes → fixes,
 outcome, and what the skill learned. Add the entry at close-out (step 9).
 
+## 2026-11-16 · Buckeye Road Tract · first timber film (no home) · 720p draft
+- Kris: a friend's fund buys SE Georgia timber tracts on I-16, harvests, subdivides; film a real tract "in our same
+  real estate fashion", no house ("no home at all"), no elevation lines, the timber on screen. Picks: Buckeye Road
+  (Laurens 175C 049, Rayonier, 264.7 ac), labelled concept split ("Road lots + back tracts"), "Lidar + photos, dated",
+  Megaplants Baltic Pine (free). "You can drive unreal"; "What ever you need to finish this job, you can do".
+- Built timber mode in landfilm (timber_stands / points / split / meshes / plan, pine_convert, pine_fix): stands from
+  the 2019 lidar's stand height + July 2025 NAIP (30 cm windows), rows from the photo's spectrum (4.3 m, 12.6°),
+  cut-since-2019 detection, overlays riding the canopy, pinned labels in post, one continuous camera.
+- Failures → fixes: scratch venv emptied by /tmp cleanup → venv on KB SS; NAIP NDVI uncalibrated → Otsu per tile,
+  stands from lidar stand height; Megaplants trees bark-only when copied → PVE static export with assemblies (driven
+  by computer use); flattened export asked 234 GB → assemblies + r.Nanite.AllowAssemblies; Xcode 27.2 dropped the
+  Metal toolchain (render stalled 35 min, editor modal) → downloaded it; template Understory/GroundCover floated over
+  the lot (timber stages skipped instead of clearing) → destroy them; stand-sheet holes → fill gaps; Scots pine's
+  orange upper bark from above → lower-trunk bark everywhere (a by-name swap first put bark on the needles); lot line
+  a wavy wall over fields → smoothed canopy max, short curtain; Blue Ridge haze over flat land → lighter haze.
+- Timings: check stills 41 frames 135-145 s (after a 9 min first-time DF/card build for the pines); see pipeline.md.
+- Learned: lessons.md (Megaplants route, Metal toolchain check, assemblies in the shader key, template leftovers,
+  canopy-riding overlays); capra-realtorfilm data.md (timber data) and pipeline.md (timber mode).
+
 ## 2026-10-29 (evening) · Land films batch 1 · five lots, five agents · 720p drafts
 - Kris asked for 5 lots in WNC and north Georgia with different listing agents, 720p tonight, free house models,
   "batches of 5". Built `Caprastudios/unreal/landfilm/`: one pipeline, a `lot.json` per lot, APFS project clones,
