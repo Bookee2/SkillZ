@@ -12,7 +12,7 @@ lot_offline.sh <Slug>          home terrain lidar naip trees site photos view ca
 new_lot.sh <Slug>              APFS clone of the PetitRidge project as Lots/<Slug>/<Slug>.uproject
 lot_editor.sh <Slug>           build scene forest film: every editor stage, unattended, then quit
 render_lot.sh <Slug> check|720|4k   out of process, Blender batch frozen
-post_film.py <frames> <out> --lot <Data> --reveal <no-home frames>;  mix_film_v2.py <out> <name> [--water]
+post_film.py <frames> <out> --lot <Data> --reveal <no-home frames>;  mix_film_v2.py <out> <name> [--water] [--day]
 ```
 The clone keeps the Megascans forest, ground cover and presets, Electric Dreams' renderer block in
 `Config/DefaultEngine.ini` (required: a blendable GBuffer crashed Megascans foliage), the materials and the map, at
@@ -88,7 +88,9 @@ For a fund or a land broker selling acreage: no house, no contours on flat land,
    sun, exposure, cards, pins, credits into lot.json; prints speed / turn / clearance over the 2026 canopy.
    Keep under ~120 m/s low, 20°/s of turn, 25 m over the canopy; check the pins stay inside the frame.
 7. `lot_editor.sh <Slug>` as usual (the home, place, lights and reveal stages skip themselves), `render_lot.sh`
-   (no reveal pass), `post_lot.sh` (pins are projected through film_path's camera in post).
+   (no reveal pass), `post_lot.sh` (pins are projected through film_path's camera in post);
+   post_lot.sh passes `--day` to the mix (no blue-hour end, so no crickets or night bed). A 1080p version:
+   `render_lot.sh <Slug> 1080` then `post_lot.sh <Slug> NN vN 1080` (crf 16, `_1080p` in the name).
 Pines: Megaplants Baltic Pine converted to static Nanite in FabStaging (`pine_convert.py`), copied into the lot's
 Content (`/Game/Megaplant_Library`, `/Game/CapraPines`). Clone the lot from PetitRidge as usual, then copy those in.
 
@@ -107,5 +109,7 @@ Content (`/Game/Megaplant_Library`, `/Game/CapraPines`). Clone the lot from Peti
 | Glitch scan of the 4K (`scan_frames.py`, 8 processes) | ~3 min |
 | Post at 720p (composite + cards) | 3 min |
 | Post at 4K (composite + crf 14 encode, 8 workers) / mux + 1080p preview + review copy | 4.4 min / 44 s |
+| 1080p timber film (Buckeye Road: 510k assembly pines), 1,921 frames, 8 samples | 68 min (2.13 s/frame); 6.4 GB of PNGs |
+| Post at 1080p (composite, pins, crf 16, day mix, mux, review copy) | 1.7 min; master 256 MB, review copy 11 MB |
 Total for a 4K final once the 720p is signed off: about 3 h, nearly all of it the film render.
 Instance count barely matters on Nanite: 508k trees rendered no slower than 292k.

@@ -309,6 +309,15 @@ Each line: what went wrong → the fix. Grouped by where it bites.
   actor of that name. The timber lot skipped understory and ground cover, so Petit Ridge's saplings floated over the
   plantation at Petit Ridge's heights (an arc of trunks in the sky). List a clone's actors (landfilm actors_list.py)
   before the first check render.
+- **The sound has to match the light** (Buckeye Road v2, Kris: "the end of the video sounds like it has the
+  nighttime sounds on it"): the lot mix was written for the house films' blue-hour ending (crickets and a night bed
+  from 64 s), and the timber film ends in afternoon light → `mix_film_v2.py --day` (river at the open, treeline wind
+  on the low passes, high air to the end, no night bed), set by post_lot.sh from lot.json. When a film's light changes,
+  re-read the mix's timeline too. Check: the 3.5–7 kHz band of the last 16 s fell from −38 dB to −48 dB.
+- **A render chain must stop when a step fails**: `render_lot.sh … | tee` returns tee's 0, so after the editor stage
+  crashed, post ran on the old frames. Chains get `set -o pipefail` (render_lot.sh has `set -u -o pipefail`). The crash
+  itself: leaf_tracks looked up the Understory actor the forest stage had just destroyed (None) → find it, skip if gone.
+  A stage that deletes template actors makes every later lookup of them optional.
 - **Scratchpad venvs vanish**: the system's /tmp cleanup emptied the session venv the landfilm scripts pointed at
   (only its symlinks were left). Pipelines get a durable venv on the SSD (`KB SS/Capra Studios/landfilm-venv`).
 - **numpy 2**: `ndarray.ptp()` is gone (`np.ptp`), and `np.cross` refuses 2-D vectors (write u0*v1 - u1*v0).

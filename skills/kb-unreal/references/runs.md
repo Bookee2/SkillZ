@@ -3,7 +3,7 @@
 One entry per piece or session: date, piece, versions, Kris's notes → fixes,
 outcome, and what the skill learned. Add the entry at close-out (step 9).
 
-## 2026-11-16 · Buckeye Road Tract · first timber film (no home) · 720p draft
+## 2026-11-16 · Buckeye Road Tract · first timber film (no home) · 720p v1–v3, 1080p
 - Kris: a friend's fund buys SE Georgia timber tracts on I-16, harvests, subdivides; film a real tract "in our same
   real estate fashion", no house ("no home at all"), no elevation lines, the timber on screen. Picks: Buckeye Road
   (Laurens 175C 049, Rayonier, 264.7 ac), labelled concept split ("Road lots + back tracts"), "Lidar + photos, dated",
@@ -18,6 +18,9 @@ outcome, and what the skill learned. Add the entry at close-out (step 9).
   the lot (timber stages skipped instead of clearing) → destroy them; stand-sheet holes → fill gaps; Scots pine's
   orange upper bark from above → lower-trunk bark everywhere (a by-name swap first put bark on the needles); lot line
   a wavy wall over fields → smoothed canopy max, short curtain; Blue Ridge haze over flat land → lighter haze.
+- v3 (Kris: "the end of the video sounds like it has the nighttime sounds on it") → daytime mix (`--day`); same picture.
+  1080p on "Go ahead with a 1080p render": first try crashed in the film stage (lookup of a destroyed template actor)
+  and the pipe let post run anyway → guard + pipefail; second try 68 min render, in iCloud Land films.
 - Timings: check stills 41 frames 135-145 s (after a 9 min first-time DF/card build for the pines); see pipeline.md.
 - Learned: lessons.md (Megaplants route, Metal toolchain check, assemblies in the shader key, template leftovers,
   canopy-riding overlays); capra-realtorfilm data.md (timber data) and pipeline.md (timber mode).
