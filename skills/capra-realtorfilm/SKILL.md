@@ -1,6 +1,6 @@
 ---
 name: capra-realtorfilm
-description: Make a Capra Studios land film for a realtor or land broker from an address or parcel ID — a 3D flyover of the real lot built from public lidar, aerial photos, county parcel lines and OpenStreetMap in Unreal Engine (real terrain, the real trees, the lot line drawn on, an honest view study, an optional labelled concept home), delivered as a 16:9 film, a 9:16 cut, stills and an unbranded MLS cut. Use when Kris types /capra-realtorfilm with a lot, or asks for a land/lot/listing flyover, a "Petit Ridge style" film, or a realtor or broker video. Interactive: the interview needs Kris.
+description: Make a Capra Studios land film for a realtor or land broker from an address or parcel ID — a 3D flyover of the real lot built from public lidar, aerial photos, county parcel lines and OpenStreetMap in Unreal Engine (real terrain, the real trees, the lot line drawn on, an honest view study, an optional labelled concept home), delivered as a 16:9 film, a 9:16 cut, stills and an export for the listing's MLS. Use when Kris types /capra-realtorfilm with a lot, or asks for a land/lot/listing flyover, a "Petit Ridge style" film, or a realtor or broker video. Interactive: the interview needs Kris.
 argument-hint: <address or county + parcel ID> [for <agent or brokerage>] [spec|paid]
 ---
 
@@ -39,7 +39,8 @@ a pitch meeting), and any deadline. If there's no parcel, ask for one before any
 
 Read in full:
 1. `references/product.md` — the market, prices, compliance rules (concept-home label, approximate boundaries,
-   unbranded MLS cut, honest view numbers), deliverables and naming.
+   per-MLS exports, the firm name on branded cuts, the open neighbouring-structures question, honest view
+   numbers), deliverables and naming.
 2. `references/pipeline.md` — the parcel-to-film pipeline step by step: which script does what, which site
    constants change per parcel, timings, the render plan.
 3. `references/data.md` — where every dataset comes from (endpoints, sizes, licences, credit lines) and the
@@ -66,7 +67,9 @@ the number decides whether "the view" is a concept at all.
 
 ## 3. Interview (AskUserQuestion, rounds of up to 4)
 
-- **Purpose and audience**: spec demo to win the listing, or paid; the agent's brand or Capra-forward; where it plays.
+- **Purpose and audience**: spec demo to win the listing, or paid; the agent's brand (then the listing firm's
+  name as registered, and in Georgia its phone number) or Capra-forward; where it plays, and which MLS the
+  listing is on.
 - **Story**: which of the proven beats (open low over the water or the approach road; the lot line draws; Read the
   Land contours and elevation; the view painted; a concept home revealed; leaf-off/winter view; blue-hour hold)
   and anything new. Show 3–5 concepts with what each costs.
@@ -74,13 +77,15 @@ the number decides whether "the view" is a concept at all.
   licensed one; scale and footprint checked), or the client's plan.
 - **Season and light**, **facts on screen** (only ones you can source: lot size with "boundaries approximate",
   elevation, distances, the view percentage with its method), **sound** (real field recordings; music later),
-  **formats** (16:9 film, 9:16 cut, stills, unbranded MLS cut, Capra sizzle).
+  **formats** (16:9 film, 9:16 cut, stills, the export for the listing's MLS, Capra sizzle).
 Stop when answers stop changing the plan.
 
 ## 4. Treatment (confirm before building)
 
 Beats with times and camera moves, facts and their sources, deliverables and names, the render budget (720p
-drafts ~30 min; 4K finals ~5–8 h with the Blender batch frozen), and what's new versus Petit Ridge. Get a yes.
+drafts ~30 min; 4K finals ~5–8 h with the Blender batch frozen), and what's new versus Petit Ridge. If anything
+is going to an MLS, say which export it gets and put the neighbouring-structures question to Kris
+(`references/product.md`, Compliance). Get a yes.
 
 ## 5. Build at 720p, review, final
 
@@ -108,9 +113,17 @@ from the SkillZ repo), commit on a branch, open a SkillZ PR, and tell Kris in tw
   earth and not an assumed tree height (Petit Ridge: 82 % bare earth, 32 % assumed, 20 % real).
 - A concept home is labelled "Concept home · artist's rendering / Not an existing structure"; lot lines say
   "Boundaries approximate (county GIS, not a survey)".
-- No neighbouring houses invented or shown; their lots get trees, not bald patches.
-- Spec pieces: no price, no call to action, no agent branding; get the listing firm's written OK before posting
-  anything that names the address publicly.
+- No neighbouring houses invented. Off the MLS they are not shown either; their lots get trees, not bald
+  patches. For media submitted to an MLS that is an open conflict: FMLS, Georgia MLS and Canopy all bar removing
+  buildings on adjacent properties, power lines, poles and highways from listing images. Kris decides
+  (`references/product.md`, "Neighbouring structures"); raise it in the treatment and never settle it yourself.
+- There is no single "MLS cut". Export for the listing's MLS (FMLS: no text on stills, disclosure in the public
+  remarks; Georgia MLS: no logos or overlays, a before-and-after pair; Canopy: the disclosure on the image),
+  with the public-remarks wording and the unaltered reference. `post_film.py --unbranded` alone is not one.
+- Branded cuts carry the listing firm's name as registered, at least as prominent as the agent's (Georgia Rule
+  520-1-.09, North Carolina Rule 58A .0105).
+- Spec pieces: no price, no call to action, no agent or firm branding; get the listing firm's written OK before
+  posting anything that names the address publicly.
 - Ask before every download and every 4K or multi-hour render; never two renders at once; freeze the TrailGoat
   Blender batch while Unreal renders (pr_render.sh does it).
 - Report what you couldn't verify (motion seen only as stills, a mix judged by levels and spectrum).
