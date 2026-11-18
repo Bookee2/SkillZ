@@ -42,7 +42,7 @@ data and renders: `KB SS/Capra Studios/Structures/<Slug>/`. Blender, not Unreal:
   module and `GLTFLoader.parseAsync`. three@0.170.0 `three/webgpu` via an import map from jsDelivr: WebGPURenderer with
   automatic WebGL 2 fallback; `NeutralToneMapping`.
 
-## Film (Blender EEVEE, 720p, 768 frames ~2.2 s each)
+## Film (Blender EEVEE, 720p, ~1-2 s a frame; Kris wants demo films 10-15 s: `DECK_CUT=short`, 14 s)
 - AgX turns bright emissive overlays pastel: saturated base colour, emission ~0.5, alpha ~0.94.
 - Late afternoon: sun 7 W/m² (1.0, 0.74, 0.5) from az 242° el 19°, sky background 0.11, exposure −0.2. Sky 0.3 read cold blue.
 - Keep the camera ~120 m+ over a deck in 20 m trees and pitch the opener down so the terrain box's edge stays out.

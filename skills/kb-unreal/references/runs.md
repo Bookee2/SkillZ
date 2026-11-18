@@ -3,7 +3,7 @@
 One entry per piece or session: date, piece, versions, Kris's notes → fixes,
 outcome, and what the skill learned. Add the entry at close-out (step 9).
 
-## 2026-11-18 · KSU West Parking Deck · measured structure, web model + 32 s film (Blender) · 720p v1
+## 2026-11-18 · KSU West Parking Deck · measured structure, web model + 14 s film (Blender) · 720p v1
 - Kris: "can we make a land film of this real parking deck in its real dimensions"; then the real use: a friend's WebGPU
   site showing open spots per section and per deck; "fabricate the deck in blender for use in webgpu". Picks: measured,
   no photos; grey campus massing; zones = per level + the three bays; film + live page; 3 levels (OSM; lidar fits up to 5);
@@ -16,6 +16,8 @@ outcome, and what the skill learned. Add the entry at close-out (step 9).
   Python has no shapely -> prep in the venv; first light read cold blue and trees were broccoli -> warmer sun, less sky,
   rounder crowns, higher camera; preview server blocked on the KB SS volume -> shell server in scratch; artifacts serve
   no .glb -> base64 JS module.
+- Kris after the 32 s treatment: "This will just be a short film 10-15 seconds in 720P" -> 14 s cut (DECK_CUT=short:
+  own camera keys, beats and cards; the 32 s render stopped at frame 639).
 - Learned: capra-realtorfilm `references/structures.md` (new); lessons.md process notes.
 
 ## 2026-11-16 · Buckeye Road Tract · first timber film (no home) · 720p v1–v3, 1080p

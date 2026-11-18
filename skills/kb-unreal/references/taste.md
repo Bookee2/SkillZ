@@ -124,6 +124,11 @@ render; the quote or incident is kept so you know how hard the rule is.
   no sample-project ambience, no designed hits or drones. He asked "What can we do with REAL sounds."
 - Deliverables: Capra videos go to iCloud `Capra Studios/Videos`, never `TrailGoat Videos`.
 
+## Structure demos (KSU West Deck, 2026-11-18)
+- A film that shows a friend or client a model is short: "This will just be a short film 10-15 seconds in 720P" (after a
+  32 s treatment he had OK'd). Default demo films to ~14 s: title with the measured size, levels lift, bays light, total,
+  end card. Pitch the length in the first interview round instead of assuming the land films' 80 s or a 30 s cut.
+
 ## Capra Studios brand
 
 - Palette (docs/BRAND.md): Chalk #f3f1ea, Ink #15141c, **Ribbon blue #7aa2f7
