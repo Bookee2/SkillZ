@@ -129,6 +129,14 @@ render; the quote or incident is kept so you know how hard the rule is.
   32 s treatment he had OK'd). Default demo films to ~14 s: title with the measured size, levels lift, bays light, total,
   end card. Pitch the length in the first interview round instead of assuming the land films' 80 s or a 30 s cut.
 
+- Live availability pages must read at a glance (Kris on the West Deck starter: "really hard to read and discern
+  information at a glance ... Lets make this bigger and better"): a levels x bays grid of big open counts in solid
+  state colours, a count badge on each bay of the model, the picked bay as a bold line. Keep the colours on the model
+  muted ("Dim the colors of the sections ... its too bright") and draw the stall lines over them ("I would love to see
+  the parking lines"). Stagger levels into a staircase rather than only lifting them, so every bay can be tapped. Name the zones on the
+  structure itself ("We need to label the actual parking structure with East, Centre, West"): pavement lettering in
+  each bay, on the end nearest the default camera.
+
 ## Capra Studios brand
 
 - Palette (docs/BRAND.md): Chalk #f3f1ea, Ink #15141c, **Ribbon blue #7aa2f7
