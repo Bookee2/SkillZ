@@ -133,7 +133,9 @@ render; the quote or incident is kept so you know how hard the rule is.
   information at a glance ... Lets make this bigger and better"): a levels x bays grid of big open counts in solid
   state colours, a count badge on each bay of the model, the picked bay as a bold line. Keep the colours on the model
   muted ("Dim the colors of the sections ... its too bright") and draw the stall lines over them ("I would love to see
-  the parking lines"). Stagger levels into a staircase rather than only lifting them, so every bay can be tapped.
+  the parking lines"). Stagger levels into a staircase rather than only lifting them, so every bay can be tapped. Name the zones on the
+  structure itself ("We need to label the actual parking structure with East, Centre, West"): pavement lettering in
+  each bay, on the end nearest the default camera.
 
 ## Capra Studios brand
 
