@@ -309,6 +309,11 @@ Each line: what went wrong → the fix. Grouped by where it bites.
   actor of that name. The timber lot skipped understory and ground cover, so Petit Ridge's saplings floated over the
   plantation at Petit Ridge's heights (an arc of trunks in the sky). List a clone's actors (landfilm actors_list.py)
   before the first check render.
+- **Preview servers can't read the KB SS drive**: macOS blocks the app-launched process from removable volumes
+  (python.org Python hung silently on the prompt; Apple's Python failed `os.getcwd()`), and preview_start insists on a
+  cwd inside the project. For a quick look, serve a scratch folder from the shell instead.
+- **Artifacts serve no .glb and block CDN fetches**: a 3D model goes as a base64 JS module parsed in memory (no Draco).
+- **Blender's bundled Python has numpy but no shapely**: do polygon work in the pipeline venv and hand Blender arrays.
 - **The sound has to match the light** (Buckeye Road v2, Kris: "the end of the video sounds like it has the
   nighttime sounds on it"): the lot mix was written for the house films' blue-hour ending (crickets and a night bed
   from 64 s), and the timber film ends in afternoon light → `mix_film_v2.py --day` (river at the open, treeline wind

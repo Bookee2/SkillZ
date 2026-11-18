@@ -3,6 +3,23 @@
 One entry per piece or session: date, piece, versions, Kris's notes → fixes,
 outcome, and what the skill learned. Add the entry at close-out (step 9).
 
+## 2026-11-18 · KSU West Parking Deck · measured structure, web model + 14 s film (Blender) · 720p v1
+- Kris: "can we make a land film of this real parking deck in its real dimensions"; then the real use: a friend's WebGPU
+  site showing open spots per section and per deck; "fabricate the deck in blender for use in webgpu". Picks: measured,
+  no photos; grey campus massing; zones = per level + the three bays; film + live page; 3 levels (OSM; lidar fits up to 5);
+  late afternoon; 32 s beats "Yes, that's it".
+- Built `Caprastudios/structures/` (fetch, measure, photo, layout, campus_prep, deck_blender, deck_post, web/deck_live.html):
+  outline 118.6 x 55.35 m, top deck 319.15 m, ramp bay 4.9 %, floors 3.1 m apart (all lidar), stalls 2.61 m at ~76 deg
+  (NAIP), 651 stalls in the model; GLB 38 KB Draco / 277 KB plain with L<n>_<bay> zone meshes; live page on WebGPU.
+- Failures -> fixes: rockyweb 429 on parallel tiles -> one at a time with resume; a clipped tile dragged the outline fit
+  9.5 m -> all tiles; NAIP roofs lean 4.4 m -> paint roofs out; water by NDVI caught tree shadows -> OSM water; Blender
+  Python has no shapely -> prep in the venv; first light read cold blue and trees were broccoli -> warmer sun, less sky,
+  rounder crowns, higher camera; preview server blocked on the KB SS volume -> shell server in scratch; artifacts serve
+  no .glb -> base64 JS module.
+- Kris after the 32 s treatment: "This will just be a short film 10-15 seconds in 720P" -> 14 s cut (DECK_CUT=short:
+  own camera keys, beats and cards; the 32 s render stopped at frame 639).
+- Learned: capra-realtorfilm `references/structures.md` (new); lessons.md process notes.
+
 ## 2026-11-16 · Buckeye Road Tract · first timber film (no home) · 720p v1–v3, 1080p
 - Kris: a friend's fund buys SE Georgia timber tracts on I-16, harvests, subdivides; film a real tract "in our same
   real estate fashion", no house ("no home at all"), no elevation lines, the timber on screen. Picks: Buckeye Road

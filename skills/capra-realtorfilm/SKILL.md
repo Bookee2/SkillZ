@@ -24,6 +24,8 @@ then run every lot's offline steps side by side and the Unreal steps one at a ti
 season, light and sound are the template; ask only what changes per lot (which lots, which home). Write an
 outreach sheet (`output/unreal/lots/outreach.md`): film, agent, brokerage, the listing's business contact, and what
 each on-screen fact rests on. `references/batch-2026-10-29.md` is the first run.
+
+**Structure mode** (a real building in its real dimensions, e.g. a parking deck for an availability website): Blender, not Unreal, so one model serves the web and the film. `references/structures.md` has the pipeline (`Caprastudios/structures/`), what lidar can and can't measure about floors, and the web export.
 Kris is the creative director and the client brain. Never guess the client's branding, the facts on screen or
 whether to show a concept home: ask.
 
