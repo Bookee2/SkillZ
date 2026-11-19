@@ -142,3 +142,26 @@ film of a tract held by the Southview Timberland Fund, to post on LinkedIn. Read
 - **v1 (2026-11-19):** 95 s, 16:9 and 4:5 at 720p, delivered to iCloud Capra Studios/Videos/Middle GA 150. It has
   the surveyed two-tract split (Kris sent the plat mid-build: "Here's the survey for the actual lot division for next
   run"; it went into v1 because the render hadn't started) and placeholder brand cards until John's files arrive.
+- **v2:** John's brand.
+  - lot.json client.brand: bg, accent, text, font_display, font_text, font_small, font_map (Capra faces swapped for the
+    client's in every card and pin), logo, logo_w and logo_w_45.
+  - Fonts: PT Serif is on macOS (PTSerif.ttc#3 is Bold). Source Sans 3 came from Adobe's GitHub (OFL), downloaded on
+    Kris's yes.
+  - The opening disclosure went back to John's 4 s. Kris: "Its a warning not neccessary reading, so it's just there for
+    legal protection".
+- **v3:** the plat's entrances and rear access as pins.
+  - The end card holds 2 s (client.post.hold_s). It must run past the film's end, or the held frame has it faded out.
+  - lot.json "crop45" slides the 4:5 crop so pins near the edge stay in frame.
+  - lot.json "deliver" makes post_lot.sh copy every master to the client's folders (Proton Drive Client work/<client>
+    and iCloud).
+- **v4:** the full logo lockup. The zip's logo files were the wordmark only; the lockup lives as 500 px images inside
+  the brand PDF (`pdfimages`, each image joined to its transparency mask). Ask the client for a vector lockup before 4K.
+- **v5:** John's notes, sent as a Loom.
+  - **Reading the Loom:** its Transcript tab needs a sign-in. The captions came from Loom's GraphQL FetchVideoTranscript
+    (captions_source_url), fetched inside the page; seeking the page's video element gave the frames he points at.
+  - **Camera:** "really zooms in very closely"; "a little bit higher... more like looking down on it". The low runs
+    went from 36-60 m to 190-230 m over the canopy, with the property line kept in frame (at 140 m the timber shots
+    showed nothing but trees). The road at 150 m, the stand map faded in only after the climb.
+  - **Cards:** fewer words. Title-only cards and pins are supported (an empty sub-line).
+  - **What the client cut:** "Boundaries approximate", the photo-history line, and the "Suggested" access caveats.
+    The client owns the property and the closing disclosure covers graphics.

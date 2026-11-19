@@ -392,3 +392,7 @@ Each line: what went wrong → the fix. Grouped by where it bites.
   a flat blue band under the haze and reads as a sea. A dark ground albedo and more fog only
   soften it; keep high shots pitched down so the frame's top stays below the mesh edge
   (atan(altitude / distance to the edge)), or build a horizon mesh. Middle GA 150, 2026-11-19.
+
+- Don't edit a zsh script while it runs: zsh reads it as it goes, and the running copy picked up half of the edit
+  ("unmatched \""), skipping its last steps. In zsh, "$S[.]" is an array subscript ("bad floating point constant"):
+  write "${S}[.]". Both broke the Middle GA 150 runs on 2026-11-19.
