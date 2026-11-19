@@ -23,6 +23,16 @@
 - Credits on the end card: USGS 3DEP lidar, USDA NAIP, © OpenStreetMap contributors, Copernicus Sentinel-2 (if
   used), and any CC BY model by name.
 
+## Data-center films (a second line, 2026-11-18)
+- Who: data center developers (site selection, community meetings) and the county commissions and planning
+  boards that hear them; the film is an exhibit, so every number has a source and a date. No prices quoted yet.
+- What it shows that a rendering can't: the campus on the real land and trees, the earth moved and forest cleared
+  from a measured grading, the view from the public road as a percentage of road points, and how far it sits
+  from the towns and plants round it, over real imagery.
+- On screen: "Illustrative layout · not the applicant's plan" until there is a plan; the filing (DRI number and
+  date) for the program; worst-case road views; no screening that isn't a condition of approval; no noise figures.
+- First film: Project Sail (`projectsail.md`), a Capra-forward pitch piece, 130 s; a 45 s cut planned.
+
 ## Deliverables (the Petit Ridge set)
 - Film: ~80 s, 16:9, 24 fps (`01_<Parcel>_film_80s_16x9_<version>.mp4`), also `_silent` and an unbranded MLS cut.
 - Vertical: 20–30 s 9:16 (a 4K master crops to a full 1080×1920; a 720p one doesn't).

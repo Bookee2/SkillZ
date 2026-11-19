@@ -20,6 +20,10 @@ Each line: what went wrong → the fix. Grouped by where it bites.
 - Custom-data per instance in one call (a loop hung 10+ min).
 - Long Unreal Python runs launched headless need `_os._exit(0)` at the end (a
   graceful quit hangs on a dialog).
+- **The editor keeps the first import of a module**: a stage that reads a data file at import (landfilm's `lot.py`
+  loads lot.json) sees old data after an offline script rewrites the file mid-session (Project Sail, 2026-11-18:
+  pr_film raised on camera None because dc_plan.py wrote "camera" after the editor had loaded `lot`) → reload the
+  module on every remote call (`importlib.reload`).
 
 ## Sequencer
 - **Close Sequencer before saving or reading actor values**
@@ -54,6 +58,9 @@ Each line: what went wrong → the fix. Grouped by where it bites.
   section's key wants `unreal.MaterialParameterInfo(name, MaterialParameterAssociation.GLOBAL_PARAMETER, -1)`.
 - Megascans foliage master: `Albedo Tint Leaves`/`Albedo Controls Leaves` only apply with the static switch
   `Split Albedo Controls` on (it's off in the Hornbeam MIs) → set the plain `Albedo Tint` / `Albedo Controls`.
+- **Yaw keyed across ±180° smears the whole frame**: a camera looking due west flipped from +180 to −180 between
+  frames, so Sequencer turned it a full circle in one frame and motion blur smeared everything (Project Sail f_1248)
+  → unwrap yaw (`np.unwrap` in degrees) before writing the keys.
 
 ## Rendering (Movie Render Queue)
 - In-editor MRQ (PIE executor) crashed at Finalize → always render out of
@@ -126,6 +133,13 @@ Each line: what went wrong → the fix. Grouped by where it bites.
   water) even with 96 warm-up frames → replace it with frame 1 or start the cut a few frames in.
 - Speed reference: 4 km Nanite terrain + 292k Nanite Hornbeam instances + Lumen HWRT at 720p, 4 temporal samples:
   **0.86 s/frame** on the M5 Pro (1,921 frames in 27.5 min), much faster than the forest's size suggested.
+- **Nanite ignores the ISM per-instance end cull distance** (Project Sail v2): an 8 km block of 400k lidar trees
+  kept full density from 30 km up and read as a bright speckled square on the regional photo. Hide the forest for
+  the far shots and render a short pass with it on to crossfade in post (64 frames).
+- **Climbing to ~30 km**: the camera flies into the volumetric cloud layer and aerial perspective washes the ground
+  pale blue → hide the clouds before the climb reaches them; key the sky atmosphere's aerial perspective (×0.2) and
+  the height fog density (×0.08) down over the climb.
+- **Manual EV100: lower is brighter** (a dark roadside view went from −0.4 to −1.3, not up).
 
 ## Editor, levels, World Partition
 - `AutomationLibrary.take_high_res_screenshot` from a background editor never wrote its file (Petit Ridge,
@@ -229,6 +243,10 @@ Each line: what went wrong → the fix. Grouped by where it bites.
 - MRQ's temporal sub-samples evaluate keys inside the frame, so a LINEAR key
   from 0 on frame N−1 to a peak on frame N already lights frame N−1 → key the
   hold CONSTANT up to the event frame.
+- **One mask, two UV extents**: the far ring's material instance used the hero's works mask, but its UV spans 8 km
+  where the hero's spans 4 km, so the clearing landed 2× out from the centre as a maroon strip past the hero's edge
+  (Project Sail; in v1 too, mostly under trees) → give the far ring its own (empty) mask; check every texture an MI
+  shares across meshes whose UVs cover different areas.
 
 ## Import and Blender
 
@@ -274,6 +292,8 @@ Each line: what went wrong → the fix. Grouped by where it bites.
   folder and the Aleppo Pine pack (missing): refill from T_Baltic_PineBark_02 / _01 (pine_fix.py).
 - The Epic Launcher's "Add to project" only lists projects in folders it scans (`KB SS/Unreal Projects/`): make a
   staging project there for Fab downloads rather than adding to a sample (adding to ICVFXProductionTest was refused).
+- **Blender: `hide_render` on an instanced source collection hides its instances too** → exclude the source
+  collection from the view layer instead. Camera heights are above the local ground, not the scene's Z0.
 
 ## Mac / Metal
 - **Xcode updates drop the Metal toolchain** (2026-11-16, Xcode 27.2): Unreal can't compile any new shader

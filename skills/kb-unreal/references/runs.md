@@ -3,6 +3,22 @@
 One entry per piece or session: date, piece, versions, Kris's notes → fixes,
 outcome, and what the skill learned. Add the entry at close-out (step 9).
 
+## 2026-11-18 → 19 · Project Sail data center, Coweta County GA · first data-center film · 720p v1–v3
+- Kris: "the ultimate /capra-realtorfilm", a real proposed data center today → cleared → graded → built, to scale, for
+  developers and county commissions; picked Project Sail (DRI #4361, 831 ac, 9 halls, 4.34M sq ft, 910 MW). Layout
+  "Approved"; Blender kit "I think it looks good"; "Ultimately this film needs to be in unreal engine".
+- v1 (122 s) → "We don't need the drop the leaves part", "outline the full shape of the property like we did on the
+  pine forrest tract", "keep it daytime", "zoom out so we can see the nearest city or surrounding landmarks ... real
+  map tiles" → v2 (130 s): line on the canopy, NAIP + Sentinel-2 region to ±40 km, landmark and edge pins.
+  v2 → "the fonts are too small to read on the phone" → v3 phone type, post only → "Reads well".
+- Failures -> fixes: stale `lot` module in the editor -> reload per call; yaw flip at due west -> unwrap; clouds and
+  aerial perspective on the climb -> keyed down; Nanite ignores ISM cull distance -> trees pass crossfaded in post;
+  far ring sampled the hero's works mask -> its own mask; EV100 sign; pins overlapping at phone size -> auto-placement
+  + lint.
+- Learned: capra-realtorfilm `references/projectsail.md` (new), data-center mode in pipeline.md, data.md sources;
+  lessons.md (Python reload, yaw unwrap, Nanite cull, high-altitude atmosphere, EV100, shared masks, Blender
+  instancing); techniques.md (lines on the canopy, regional zoom-out, type for a phone, self-placing pins).
+
 ## 2026-11-18 · KSU West Parking Deck · measured structure, web model + 14 s film (Blender) · 720p v1
 - Kris: "can we make a land film of this real parking deck in its real dimensions"; then the real use: a friend's WebGPU
   site showing open spots per section and per deck; "fabricate the deck in blender for use in webgpu". Picks: measured,
