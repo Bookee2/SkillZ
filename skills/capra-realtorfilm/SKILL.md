@@ -46,6 +46,9 @@ Read in full:
    gotchas (throttled servers, leaf-off lidar, house removal).
 4. `references/petit-ridge.md` — the reference production: beats with times, numbers, versions, Kris's notes.
 5. `references/batch-2026-10-29.md` — the first five-lot batch: what broke, the timings, how the lots were picked.
+6. `references/middle-ga-150.md` — the first paid film: a fund's client film (their disclosures, brand and wording,
+   pre/post panels, a 4:5 cut) and an anonymous tract (made-up surroundings, no names, no metadata). Read it for
+   any client or any tract whose location must not show.
 
 Then the Unreal machine knowledge this depends on, from the kb-unreal skill (`~/.claude/skills/kb-unreal/references/`):
 `lessons.md` (everything), `pipeline.md` (editor control, render and encode recipes), and in `techniques.md` the
@@ -109,6 +112,10 @@ from the SkillZ repo), commit on a branch, open a SkillZ PR, and tell Kris in tw
 - A concept home is labelled "Concept home · artist's rendering / Not an existing structure"; lot lines say
   "Boundaries approximate (county GIS, not a survey)".
 - No neighbouring houses invented or shown; their lots get trees, not bald patches.
+- Client films: the client's disclosure and wording go on screen word for word; Capra doesn't review securities
+  compliance, so suggest their counsel approves the cut. Anonymous tracts: no place names, landmarks, coordinates,
+  north arrow or file metadata, and the surroundings made up (`anon_ring.py`); tell the client the tract's own shape
+  is still real.
 - Spec pieces: no price, no call to action, no agent branding; get the listing firm's written OK before posting
   anything that names the address publicly.
 - Ask before every download and every 4K or multi-hour render; never two renders at once; freeze the TrailGoat

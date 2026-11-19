@@ -383,3 +383,12 @@ Each line: what went wrong → the fix. Grouped by where it bites.
 - `-run=pythonscript` does nothing in a project without PythonScriptPlugin enabled, even
   with `-EnablePlugins=` on the command line (Project Titan). Export what you need from a
   project that has it, or enable the plugin in a clone.
+- A process check by project name (`pgrep -f "$S.uproject"`) matches any shell whose
+  command line names the project, a watch loop included: the launcher said "editor already
+  running" and never started one, and the matching `pkill` could kill that shell. Match the
+  binary: `pgrep -f "MacOS/UnrealEditor .*$S[.]uproject"` (`[.]` keeps the pattern from
+  matching its own command line). Middle GA 150, 2026-11-19.
+- Past the last terrain mesh there is no ground: the SkyAtmosphere's planet surface shows as
+  a flat blue band under the haze and reads as a sea. A dark ground albedo and more fog only
+  soften it; keep high shots pitched down so the frame's top stays below the mesh edge
+  (atan(altitude / distance to the edge)), or build a horizon mesh. Middle GA 150, 2026-11-19.
