@@ -78,3 +78,29 @@ of it (no GDAL or PDAL needed).
   listing photos for blowdown, slides and washouts before trusting the trees, and avoid the worst-hit gorges.
 - **The listing's selling view decides ties**: views that reach the 40 km horizon score alike in every direction, so
   `prefer_bearing` (sunset = ~250) turns the home to what the listing sells.
+
+## Data centers, power and the region (Project Sail, 2026-11-18)
+- **Where proposed campuses are filed**: Georgia DCA Developments of Regional Impact, `apps.dca.ga.gov/DRI/`
+  (`AppSummary.aspx?driid=4361` for Project Sail): the program (acres, buildings, sq ft, heights, MW), the applicant,
+  the owners and their parcels, and sometimes a concept site plan in the packet (Project Arrowhead's is public).
+  Rezoning numbers, hearings and lawsuits come from the county and the local paper; quote them with a date.
+- **Coweta County GA** (one ArcGIS org, `services1.arcgis.com/AaPyNbrJpNGryRqh/arcgis/rest/services/`):
+  parcels `WeeklyUpdate_WinGapParcels/FeatureServer/0`, `Building_Footprints` (pages at 1,000: walk
+  `resultOffset`), `FEMA_Flood_Zones`, `Streams`, `Wetlands`, `Lakes`. Five parcels merged = 831.3 ac by GIS
+  (press 829–832); a sixth owner parcel 925 m away was left out (role unknown): say so in lot_in.json.
+- **Transmission lines**: Overpass answered "at capacity" for `power=line` → HIFLD Electric Power Transmission Lines
+  (`services1.arcgis.com/Hp6G80Pky0om7QvQ/arcgis/rest/services/Electric_Power_Transmission_Lines/FeatureServer/0`;
+  voltage per line). The structures themselves come from the lidar (`dc_towers.py`: unclassified returns > 8 m
+  over bare earth within 45 m of a line whose returns span > 9 m vertically; 64 detections, 10 strong anchors; 98
+  H-frames placed at lidar positions or on the line's measured span of 302–340 m).
+- **Leaf-off lidar under a Piedmont pine-hardwood forest** (GA_Central_6_2018, flown 20–26 Jan 2020): hardwood
+  crowns are mostly missing → infill where the 2025 NAIP shows forest and no lidar top within 6 m (59k infill to 34k
+  lidar trees in the campus window). Evergreen crowns alone (19,637) are the winter worst case for a road view.
+- **Region imagery for a zoom-out** (`region_fetch.py`, Kris's pick "Public imagery"), all via Planetary Computer
+  (STAC + anonymous SAS token; the Sentinel-2 token is `/api/sas/v1/token/sentinel-2-l2a`), windowed HTTP reads:
+  NAIP 2025 over ±16.4 km at the COG's 16× overview (~4.8 m; 42 quarter-quads at ~7 MB instead of 1.8 GB each),
+  Sentinel-2 L2A TCI from one clear day (2025-09-10, 4 tiles) over ±40 km; 272 MB in all. Colour-match each ring to
+  the one inside it by per-channel quantile maps (NAIP → the far ring's photo, Sentinel-2 → NAIP) or the seams show.
+  Credits: "Imagery: USDA NAIP" and "Contains modified Copernicus Sentinel-2 data".
+- **Landmark distances**: straight line from the site centre to a named point from OpenStreetMap / Nominatim (the
+  courthouse, a plant's fence, the interchange); a town "6 mi" from memory was 6.7.

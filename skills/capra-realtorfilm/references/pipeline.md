@@ -12,7 +12,7 @@ lot_offline.sh <Slug>          home terrain lidar naip trees site photos view ca
 new_lot.sh <Slug>              APFS clone of the PetitRidge project as Lots/<Slug>/<Slug>.uproject
 lot_editor.sh <Slug>           build scene forest film: every editor stage, unattended, then quit
 render_lot.sh <Slug> check|720|4k   out of process, Blender batch frozen
-post_film.py <frames> <out> --lot <Data> --reveal <no-home frames>;  mix_film_v2.py <out> <name> [--water] [--day]
+post_lot.sh <Slug> <NN> [vN] [720|1080|4k] [16x9|4x5]   post_film.py (lint first for "type": "phone") + mix + review + deliver
 ```
 The clone keeps the Megascans forest, ground cover and presets, Electric Dreams' renderer block in
 `Config/DefaultEngine.ini` (required: a blendable GBuffer crashed Megascans foliage), the materials and the map, at
@@ -64,8 +64,16 @@ centred on the lot; `lot_in.json hero_offset_m` shifts it when water or the appr
 9. **Post** (`post_lot.sh <Slug> <NN>`, or `post_film.py <frames> <out> --lot <Data> --reveal <no-home frames>
    [--unbranded] [--workers 8]`): frame 0 →
    frame 1 (brown water until reflections warm up), the World Wakes seam, cards and credits scaled from 720p, the end
-   card; frames composite in parallel. Then `mix_film_v2.py` (real field-recording beds) and mux at −20 LUFS; review
-   copy ~1 Mbps for SendUserFile. A final also gets a 1080p preview and a 720p-vs-4K detail crop for the client.
+   card; frames composite in parallel. Then `mix_film_v2.py` (real field-recording beds; `dc_mix.py` for a data-center
+   film) and mux at −20 LUFS; a review copy under ~14 MB for SendUserFile (post_lot.sh sizes the bitrate from
+   lot.json `end_s`, which also names the file). A 4K final (`post_lot.sh <Slug> <NN> vN 4k`: crf 14, `_4K`) also gets
+   a 1080p preview and a 720p review copy, both made by post_lot.sh; add a 720p-vs-4K detail crop for the client.
+   **Size the type for a phone** (Kris reviews on his phone; Project Sail v2: "the fonts are too small to read on
+   the phone"): lot.json `"type": "phone"` (every new lot) gives pin titles 32 px at 720p (~10 pt on a phone held
+   upright), chips 44/25 with wrapped source lines, dark plates under pins, a shaded chip corner, and pins that place
+   themselves clear of each other, the chips and the property outline. `post_film.py - - --lot <Data> --lint`
+   (post_lot.sh runs it) checks every label against the frame, the others, the pin dots and the chips every 1/8 s.
+   Judge stills shrunk to 390 px wide. `"classic"` (the default) re-posts older films byte for byte.
 10. **QA the final against the approved draft** (`scan_frames.py` on both frame folders, compare by frame number): only
    differences from the draft are faults.
 
@@ -94,6 +102,32 @@ For a fund or a land broker selling acreage: no house, no contours on flat land,
 Pines: Megaplants Baltic Pine converted to static Nanite in FabStaging (`pine_convert.py`), copied into the lot's
 Content (`/Game/Megaplant_Library`, `/Game/CapraPines`). Clone the lot from PetitRidge as usual, then copy those in.
 
+## Data-center mode (a proposed campus: lot.json "mode": "datacenter"; Project Sail, 2026-11-18)
+Today → cleared → graded → built, measured to scale, the view from the public road, the region round it.
+`references/projectsail.md` is the reference production. Each script's docstring says how to run it.
+1. **Kit** as usual (make_kit.py centres the hero on the outline's box, not its vertex mean), plus `source/vectors`
+   (FEMA flood zones, streams, wetlands, lakes, building footprints, transmission lines: `data.md`) and the program
+   from the DRI filing in lot.json `dc`. `dc_sitecheck.py`: a first read of whether a roof of the program's height
+   shows from the roads, on bare earth and with the lidar canopy kept (it decides the road beat).
+2. **Layout** (Kris approves it before any 3D): `dc_layout.py` (equal floor plates on level pads inside the setbacks,
+   buffers, flood zones, wetlands, stream buffers and line clearances; greedy pads with a 2 m gap: the pads carry their
+   aisles), `dc_siteworks.py` (entrances, least-cost drives, ponds, admin), `dc_grade.py` (pads, 8 % roads, ponds; earth
+   moved, disturbed acres, forest cleared → the cards), `dc_towers.py` (the real line structures from the lidar).
+3. **Kit in Blender** (one model for the film and the web): `dc_prep_blender.py` (in the venv: textures, ground colours,
+   trees) → `dc_blender.py kit / scene / stills / export` → `blender/kit/*.glb`. Look at `Renders/check3d` with Kris.
+4. **Unreal**: clone the BuckeyeRoad project (summer pines, Substrate renderer block). `dc_forest.py` (lidar trees +
+   infill where the photo shows forest the leaf-off lidar missed, split into kept and cleared), `dc_terrain_graded.py`
+   (G_ tiles only where the earthwork touches), `dc_works_textures.py`, `dc_outline.py` (the property line on the kept
+   canopy, never on the ground under it), `region_fetch.py` + `region_tiles.py` (the ±40 km zoom-out ground),
+   `dc_plan.py` (camera A and B, MPC BuildPhase / GradeMix, cards, pins, edge pins, atmosphere keys; lints the framing
+   and every pin). Then `lot_editor.sh` and `pr_dc.py graded kit place clear region trees`.
+5. **Render** `render_lot.sh <Slug> 720` (the film, then the trees pass LS_Film_Trees as the "reveal": the forest
+   crossfades out in post because Nanite ignores ISM cull distance), **post** `post_lot.sh <Slug> <NN> vN` (dc_mix.py,
+   the 130 s name from `end_s`).
+Atmosphere for a climb to ~30 km: volumetric clouds off before the camera reaches them, aerial perspective ×0.2 and fog
+×0.08 keyed over the climb (lot.json `atmos`), or the map washes pale blue. Text and numbers: `projectsail.md` honesty
+rules (illustrative layout label, measured road views, straight-line distances to a named point).
+
 ## Timings (M5 Pro, Petit Ridge v2: 508k Nanite trees, 12k understory, 76k ground pieces, Lumen HWRT)
 | Step | Time |
 |---|---|
@@ -111,5 +145,10 @@ Content (`/Game/Megaplant_Library`, `/Game/CapraPines`). Clone the lot from Peti
 | Post at 4K (composite + crf 14 encode, 8 workers) / mux + 1080p preview + review copy | 4.4 min / 44 s |
 | 1080p timber film (Buckeye Road: 510k assembly pines), 1,921 frames, 8 samples | 68 min (2.13 s/frame); 6.4 GB of PNGs |
 | Post at 1080p (composite, pins, crf 16, day mix, mux, review copy) | 1.7 min; master 256 MB, review copy 11 MB |
-Total for a 4K final once the 720p is signed off: about 3 h, nearly all of it the film render.
+| 720p data-center film (Project Sail v2: 398k trees, 9 halls, the region mesh), 3,121 frames, 4 samples | 30.4 min (0.58 s/frame) + 64-frame trees pass 95 s |
+| Post at 720p, 130 s (composite, phone type, dc_mix, mux, review copy) | ~3 min; master 171 MB, review copy 13.8 MB |
+| 4K data-center film (Project Sail v3), 3,121 frames, 8 samples | 3 h 33 min (4.1 s/frame; the low forest opening ran 6.1 s, so estimate from frames across the film); 44 GB of PNGs |
+| Glitch scan of a 3,121-frame 4K (10 processes) | 50 s |
+| Post at 4K, 130 s (composite, phone type, lint, dc_mix, crf 14 encode, 1080p preview, 720p review copy) | 10 min 43 s; master 2.22 GB (136 Mbps), preview 316 MB, review copy 13.9 MB |
+Total for a 4K final once the 720p is signed off: about 3 h for an 80 s film (Petit Ridge), about 4 h for a 130 s one (Project Sail), nearly all of it the film render.
 Instance count barely matters on Nanite: 508k trees rendered no slower than 292k.

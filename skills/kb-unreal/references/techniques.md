@@ -248,6 +248,17 @@ then written as glTF or float32 records the editor reads, so it is exact and re-
   frames differ, i.e. on the object (`post_film.py world_wakes`).
 - **Look stills**: a 1-frame-per-shot LS_Look rendered by MRQ (4 stills in ~65 s) beats editor screenshots.
 
+- **Lines that ride the canopy** (timber films, Project Sail v2): a property line 20 cm over the ground under a 25 m
+  forest never shows from the air. Take every kept tree's top on a 2 m grid, max over 11 m, smooth, and lay the line
+  1.5 m over that (max over 25 m, smoothed along 41 m), with the cleared trees left out so it dips only where a drive
+  cuts through (`landfilm/dc_outline.py`). Once the 3D line is sub-pixel (high zoom-out), post draws it in 2D from
+  the same points projected through the camera.
+- **Zoom-out over real imagery** (Project Sail v2, `region_fetch.py` → `region_tiles.py` → `pr_dc.py region`): one
+  80 m-grid mesh from the 20 m DEM out to ±40 km, 10 m under the land with a hole inside the far ring; UV0 = NAIP
+  over ±16.4 km at ~4 m, UV1 = Sentinel-2 over ±40 km, blended between 14.5 and 16 km; each photo quantile-matched to
+  the ring inside it. Turn north-up as the camera climbs; the forest crossfades out, the atmosphere keys down
+  (lessons.md, Rendering).
+
 ### Real ground and real trees (Petit Ridge v2, 2026-10-28)
 Kris asked how to get better ground resolution. The answer splits three ways: **colour from above** (aerial photos),
 **shape** (no public data beats the 3DEP 1 m DEM under forest), and **close-up detail** (no aerial source gets near
@@ -352,6 +363,16 @@ URL cards anchored to a 3D point projected through a Python copy of the camera
 keypoints (`post_url.py`), captions (`captions_*.py`), end-screen bays and
 stepped letters with a layout-guide PNG (`capra_outro_post.py`). HTML clips as
 ProRes 4444 overlays (`-itsoffset`, `overlay=eof_action=pass`).
+**Type for a phone** (Kris reviews on his phone; Project Sail v2: "the fonts are too small to read on the phone,
+especially when we zoom out"): a 16:9 frame upright on a phone is ~390 pt wide, 0.3 pt per 720p pixel, so a 19 px
+label is ~6 pt. landfilm `post_film.py` "type": "phone": pin titles 32 px at 720p, subs 23, chips 44/25, dark
+rounded plates (62 %) under every label, a corner shade (55 %) under the chips, wrapped source lines.
+**Pins that place themselves**: 16 places per pin (over the dot centred, starting or ending at it; beside it on a
+level lead; under it; short or long lead), each scored by its label's and lead's overlap with every other live label,
+dot, chip and the property outline over the pin's whole life (every 0.25 s) plus anything off frame; take the first
+clear one, four passes so an early pin moves for a later one. Arrows at the frame edge for places off it (Atlanta,
+the airport), their tails lengthened until the labels stack. `--lint` checks every label every 1/8 s. A lead that
+crosses the site outline makes the label read as the site's name.
 
 ## Sound design
 - `Caprastudios/unreal/capra_sfx_library.py`: `Mix(dur)`, `.cue(id, at,

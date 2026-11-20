@@ -26,6 +26,10 @@ outreach sheet (`output/unreal/lots/outreach.md`): film, agent, brokerage, the l
 each on-screen fact rests on. `references/batch-2026-10-29.md` is the first run.
 
 **Structure mode** (a real building in its real dimensions, e.g. a parking deck for an availability website): Blender, not Unreal, so one model serves the web and the film. `references/structures.md` has the pipeline (`Caprastudios/structures/`), what lidar can and can't measure about floors, and the web export.
+**Data-center mode** (a real proposed campus from a DRI filing, for developers and county commissions): today →
+cleared → graded → built on the real land, measured to scale, the view from the road, a zoom-out to the region over
+real imagery. Layout first (Kris approves it), a Blender kit, then Unreal. `references/projectsail.md` is the
+reference production and its honesty rules; `pipeline.md` "Data-center mode" has the scripts.
 Kris is the creative director and the client brain. Never guess the client's branding, the facts on screen or
 whether to show a concept home: ask.
 
@@ -49,6 +53,7 @@ Read in full:
 6. `references/middle-ga-150.md` — the first paid film: a fund's client film (their disclosures, brand and wording,
    pre/post panels, a 4:5 cut) and an anonymous tract (made-up surroundings, no names, no metadata). Read it for
    any client or any tract whose location must not show.
+7. `references/projectsail.md` — when the film is a proposed data center (or any campus not built yet).
 
 Then the Unreal machine knowledge this depends on, from the kb-unreal skill (`~/.claude/skills/kb-unreal/references/`):
 `lessons.md` (everything), `pipeline.md` (editor control, render and encode recipes), and in `techniques.md` the
@@ -89,12 +94,16 @@ drafts ~30 min; 4K finals ~5–8 h with the Blender batch frozen), and what's ne
 
 Follow `references/pipeline.md`. Clone the scripts and the project (APFS `cp -c -R`), change the site constants,
 build in stages, look at check stills yourself (crop and zoom; compare against the previous version), trace the
-camera against the **placed** trees offline, render 720p, mix, send. Iterate on Kris's notes at 720p only; keep
+camera against the **placed** trees offline, render 720p, mix, send. Kris watches drafts on his phone: lot.json
+`"type": "phone"` and `post_film.py --lint` (pipeline.md step 9), and judge stills shrunk to 390 px wide. Iterate on Kris's notes at 720p only; keep
 `VERSIONS.md` with his words. **4K only after he says so.**
 
 ## 6. Deliver
 
-Full-quality files to iCloud `Capra Studios/Videos/` (SendUserFile only takes ~15 MB: send the review cut).
+Full-quality files to Proton Drive, never iCloud (Kris, 2026-11-20: "no more icloud for any of the Real Estate
+films"): `~/Library/CloudStorage/ProtonDrive-<account>-folder/Capra Studios/Real Estate Films/<Film>/` for Capra's
+own films, `.../Capra Studios/Client work/<client>/` for a paying client. Set lot.json `deliver` to that folder and
+post_lot.sh copies every master (and a 4K's 1080p preview) there. SendUserFile only takes ~15 MB: send the review cut.
 Name files `<NN>_<Parcel>_<cut>_<length>_<aspect>_<version>.mp4`. Credit lines go on the end card (USGS 3DEP,
 USDA NAIP, OpenStreetMap contributors, Copernicus Sentinel-2 if used, any CC BY model).
 
