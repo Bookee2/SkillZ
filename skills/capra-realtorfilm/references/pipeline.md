@@ -12,7 +12,7 @@ lot_offline.sh <Slug>          home terrain lidar naip trees site photos view ca
 new_lot.sh <Slug>              APFS clone of the PetitRidge project as Lots/<Slug>/<Slug>.uproject
 lot_editor.sh <Slug>           build scene forest film: every editor stage, unattended, then quit
 render_lot.sh <Slug> check|720|4k   out of process, Blender batch frozen
-post_lot.sh <Slug> <NN> [vN] [720|1080]   post_film.py (lint first for "type": "phone") + the mix + review copy
+post_lot.sh <Slug> <NN> [vN] [720|1080|4k] [16x9|4x5]   post_film.py (lint first for "type": "phone") + mix + review + deliver
 ```
 The clone keeps the Megascans forest, ground cover and presets, Electric Dreams' renderer block in
 `Config/DefaultEngine.ini` (required: a blendable GBuffer crashed Megascans foliage), the materials and the map, at
@@ -66,7 +66,8 @@ centred on the lot; `lot_in.json hero_offset_m` shifts it when water or the appr
    frame 1 (brown water until reflections warm up), the World Wakes seam, cards and credits scaled from 720p, the end
    card; frames composite in parallel. Then `mix_film_v2.py` (real field-recording beds; `dc_mix.py` for a data-center
    film) and mux at −20 LUFS; a review copy under ~14 MB for SendUserFile (post_lot.sh sizes the bitrate from
-   lot.json `end_s`, which also names the file). A final also gets a 1080p preview and a 720p-vs-4K detail crop.
+   lot.json `end_s`, which also names the file). A 4K final (`post_lot.sh <Slug> <NN> vN 4k`: crf 14, `_4K`) also gets
+   a 1080p preview and a 720p review copy, both made by post_lot.sh; add a 720p-vs-4K detail crop for the client.
    **Size the type for a phone** (Kris reviews on his phone; Project Sail v2: "the fonts are too small to read on
    the phone"): lot.json `"type": "phone"` (every new lot) gives pin titles 32 px at 720p (~10 pt on a phone held
    upright), chips 44/25 with wrapped source lines, dark plates under pins, a shaded chip corner, and pins that place
