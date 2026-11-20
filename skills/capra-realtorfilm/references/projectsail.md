@@ -71,8 +71,9 @@ films first, a web model later; real field recordings.
   the surrounding area."
 - **v3** (2026-11-19, post only, ~3 min): post_film.py "type": "phone" (bigger type, dark plates, pins that place
   themselves, `--lint`) → "Reads well".
-- Open after v3: 4K final (on his OK), the 45 s cut, construction sound (the library has none; a download on his OK),
-  the web model.
+- **4K v3** (2026-11-20, Kris: "Yes, render 4K"): the same cut rendered at 3840×2160, posted with post_lot.sh 4k;
+  master, 1080p preview and a 720p-vs-4K detail image to Proton Drive `Real Estate Films/Project Sail/`.
+- Open after the 4K: the 45 s cut, construction sound (the library has none; a download on his OK), the web model.
 
 ## Failures, causes, fixes
 - make_kit centred the hero on the outline's vertex mean: a merged 5-parcel outline sat 141 m off → the box centre.
@@ -88,6 +89,11 @@ films first, a web model later; real field recordings.
 - A maroon strip past the hero's east edge: the far ring sampled the hero-UV works mask over its own 8 km UV →
   the far ring gets an empty mask.
 - The road view darker than v1: manual EV100 is lower = brighter (−0.4 → −1.3).
+- The 4K check frames (every 192nd) showed a near roadside trunk see-through and banded at 96 s; the 720p check frames
+  showed the same. Jumping between frames leaves dithered materials no temporal history: the continuous render is
+  solid. Judge near-trunk opacity only in a continuous render.
+- The 4K's first 100 frames (dense forest, low) ran 6.1 s a frame and suggested 5.5 h; the whole film averaged
+  4.1 s (3 h 33 min). Estimate a 4K from a frame sample across the film, not from its opening.
 - v2's type was sized for a monitor: ~6 pt pin titles on a phone held upright, grey subs lost over bright towns
   → v3's phone type; the first auto-placement (greedy, no side places) put Plant Yates under its dot with its lead
   across the site outline, so it read as the site's own name → side placements, four passes, leads count as overlap.
@@ -100,4 +106,7 @@ films first, a web model later; real field recordings.
 | 720p v1, 2,929 frames | 34.5 min (0.7 s/frame) |
 | 720p v2, 3,121 frames + 64-frame trees pass | 30.4 min (0.58 s/frame) + 95 s |
 | Post + dc_mix + review encode (130 s) | ~3 min |
+| 4K v3, 3,121 frames, 8 samples (2026-11-20) | 3 h 33 min (4.1 s/frame; 44 GB of PNGs) + 64-frame trees pass 4.9 min |
+| Glitch scan of the 4K (`scan_frames.py`, 10 processes) | 50 s |
+| Post at 4K (post_lot.sh 4k: lint, composite, mix, crf 14, 1080p preview, review copy) | 10 min 43 s; master 2.22 GB |
 | Region imagery (42 NAIP overviews + 4 Sentinel-2 tiles, windowed reads) | 272 MB in all |

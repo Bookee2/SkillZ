@@ -75,7 +75,12 @@ Each line: what went wrong → the fix. Grouped by where it bites.
 - **Don't time a final from stepped check frames**: every 192nd frame at 4K took ~30 s each (the camera jumps
   seconds, so virtual shadow maps, Lumen and TSR history rebuild every frame); the same scene rendered
   continuously ran 4.4 s/frame (Petit Ridge, 508k Nanite trees, 8 samples), 5.1 s/frame over the whole film
-  (1,921 frames in 2 h 44 min). Time a short continuous run and add ~15 %.
+  (1,921 frames in 2 h 44 min). Time a short continuous run and add ~15 %. But not only the opening: Project
+  Sail's first 100 frames (low over dense forest) ran 6.1 s/frame and the whole 4K averaged 4.1 s (3,121 frames in
+  3 h 33 min); time a few short runs spread across the film.
+- Stepped check frames also show dithered materials (near tree trunks, masked foliage) see-through and banded:
+  with no temporal history the dither never resolves. If the draft's stepped frames show the same, it is not a
+  fault; the continuous render is solid (Project Sail 4K, 96 s, 2026-11-20).
 - **QA a final against the approved draft, frame for frame**: run the same scan (frame-to-frame difference, magenta,
   pure black, blown white) on both and compare by frame number. Petit Ridge 4K flagged a fast orbit, a hard cut and
   2–4 % pure-black shadow at 52 s; all three matched the 720p Kris approved, so none was a render fault. Only a

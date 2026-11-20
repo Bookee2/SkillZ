@@ -147,5 +147,8 @@ rules (illustrative layout label, measured road views, straight-line distances t
 | Post at 1080p (composite, pins, crf 16, day mix, mux, review copy) | 1.7 min; master 256 MB, review copy 11 MB |
 | 720p data-center film (Project Sail v2: 398k trees, 9 halls, the region mesh), 3,121 frames, 4 samples | 30.4 min (0.58 s/frame) + 64-frame trees pass 95 s |
 | Post at 720p, 130 s (composite, phone type, dc_mix, mux, review copy) | ~3 min; master 171 MB, review copy 13.8 MB |
-Total for a 4K final once the 720p is signed off: about 3 h, nearly all of it the film render.
+| 4K data-center film (Project Sail v3), 3,121 frames, 8 samples | 3 h 33 min (4.1 s/frame; the low forest opening ran 6.1 s, so estimate from frames across the film); 44 GB of PNGs |
+| Glitch scan of a 3,121-frame 4K (10 processes) | 50 s |
+| Post at 4K, 130 s (composite, phone type, lint, dc_mix, crf 14 encode, 1080p preview, 720p review copy) | 10 min 43 s; master 2.22 GB (136 Mbps), preview 316 MB, review copy 13.9 MB |
+Total for a 4K final once the 720p is signed off: about 3 h for an 80 s film (Petit Ridge), about 4 h for a 130 s one (Project Sail), nearly all of it the film render.
 Instance count barely matters on Nanite: 508k trees rendered no slower than 292k.
