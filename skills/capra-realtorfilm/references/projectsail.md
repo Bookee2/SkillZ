@@ -3,8 +3,9 @@
 Capra-forward pitch piece, 2026-11-18 → 19. Lot folder `KB SS/Capra Studios/Unreal/Lots/ProjectSail/`
 (`TREATMENT.md`, `VERSIONS.md` with Kris's words verbatim, `Data/lot.json` mode "datacenter"). Code: the shared
 landfilm pipeline plus its `dc_*.py` scripts (`pipeline.md`, "Data-center mode"). Outputs:
-`Caprastudios/output/unreal/lots/ProjectSail/08_ProjectSail_film_130s_16x9_v<N>`, masters in iCloud
-`Capra Studios/Videos/Data center films/`.
+`Caprastudios/output/unreal/lots/ProjectSail/08_ProjectSail_film_130s_16x9_v<N>`, drafts v1–v3 in iCloud
+`Capra Studios/Videos/Data center films/`; the 4K final in Proton Drive `Capra Studios/Real Estate Films/Project Sail/`
+(Kris moved every film off iCloud on 2026-11-20).
 
 ## Why this film exists
 Kris wanted "the ultimate /capra-realtorfilm": a real proposed data center shown as it is today, then cleared, graded

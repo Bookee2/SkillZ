@@ -39,7 +39,8 @@
 - 6 stills (4K frames are 8 MP).
 - 15 s Capra sizzle (Capra-forward, for the studio's own channels).
 - Drafts at 720p until Kris signs off; finals 4K, 8 temporal samples; a 1080p preview of the 4K.
-- Big files to iCloud `Capra Studios/Videos/` (never `TrailGoat Videos`).
+- Big files to Proton Drive `Capra Studios/Real Estate Films/<Film>/` (client work: `Client work/<client>/`); no
+  iCloud for any real estate film since 2026-11-20 (earlier films are in iCloud `Capra Studios/Videos/`).
 
 ## Sound
 Real field recordings of the right habitat and season (Sonniss GDC bundles; library in `KB SS/Capra Studios/

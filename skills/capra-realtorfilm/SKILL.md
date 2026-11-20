@@ -100,7 +100,10 @@ camera against the **placed** trees offline, render 720p, mix, send. Kris watche
 
 ## 6. Deliver
 
-Full-quality files to iCloud `Capra Studios/Videos/` (SendUserFile only takes ~15 MB: send the review cut).
+Full-quality files to Proton Drive, never iCloud (Kris, 2026-11-20: "no more icloud for any of the Real Estate
+films"): `~/Library/CloudStorage/ProtonDrive-<account>-folder/Capra Studios/Real Estate Films/<Film>/` for Capra's
+own films, `.../Capra Studios/Client work/<client>/` for a paying client. Set lot.json `deliver` to that folder and
+post_lot.sh copies every master (and a 4K's 1080p preview) there. SendUserFile only takes ~15 MB: send the review cut.
 Name files `<NN>_<Parcel>_<cut>_<length>_<aspect>_<version>.mp4`. Credit lines go on the end card (USGS 3DEP,
 USDA NAIP, OpenStreetMap contributors, Copernicus Sentinel-2 if used, any CC BY model).
 
